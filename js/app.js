@@ -1,4 +1,4 @@
-// MURRAY'S THEORY v9.1 (Controller Fix)
+// MURRAY'S THEORY v9.2 (Stable Core)
 
 const State = {
     active: new Set(),
@@ -10,8 +10,8 @@ const State = {
     audioCtx: null,
     oscs: new Map(),
     isChord: true,
-    seqProgress: 0,
-    targetSeq: []
+    targetSeq: [],
+    seqProgress: 0
 };
 
 // --- AUDIO ENGINE ---
@@ -25,6 +25,7 @@ function initAudio() {
 function playNote(m) {
     initAudio();
     if (State.oscs.has(m)) return;
+    
     const osc = State.audioCtx.createOscillator();
     const gain = State.audioCtx.createGain();
     
@@ -47,12 +48,10 @@ function stopNote(m) {
     if (!State.oscs.has(m)) return;
     const {osc, gain} = State.oscs.get(m);
     const t = State.audioCtx.currentTime;
-    
     gain.gain.cancelScheduledValues(t);
-    gain.gain.linearRampToValueAtTime(0, t + 0.1);
-    osc.stop(t + 0.1);
-    
-    setTimeout(() => { osc.disconnect(); gain.disconnect(); }, 150);
+    gain.gain.linearRampToValueAtTime(0, t + 0.05);
+    osc.stop(t + 0.05);
+    setTimeout(() => { osc.disconnect(); gain.disconnect(); }, 100);
     State.oscs.delete(m);
 }
 
@@ -71,54 +70,55 @@ function noteOff(m) {
     updateUI();
 }
 
-// --- UI RENDERING ---
 function updateUI() {
-    // Keys
-    document.querySelectorAll('.key').forEach(k => {
-        const m = parseInt(k.dataset.midi);
-        if (State.active.has(m)) k.classList.add('active');
-        else k.classList.remove('active');
+    // Efficient Class Toggling
+    requestAnimationFrame(() => {
+        document.querySelectorAll('.key').forEach(k => {
+            const m = parseInt(k.dataset.midi);
+            if (State.active.has(m)) k.classList.add('active');
+            else k.classList.remove('active');
+        });
+
+        // Analysis
+        const activeMidis = Array.from(State.active).sort((a,b)=>a-b);
+        const names = activeMidis.map(m => window.Theory.getNoteName(m));
+        
+        const bar = document.getElementById('analysis-bar');
+        if (names.length > 0) {
+            const analysis = window.Theory.analyze(names);
+            bar.classList.add('visible');
+            bar.innerText = analysis.root === '-' ? names.join(' ') : `${analysis.root} Root • ${analysis.intervals.join(' ')}`;
+        } else {
+            bar.classList.remove('visible');
+        }
+
+        if (State.mode === "FREE") {
+            document.getElementById('staff-display').innerHTML = window.Renderer.render(names);
+        }
     });
-
-    // Analysis
-    const activeMidis = Array.from(State.active).sort((a,b)=>a-b);
-    const names = activeMidis.map(m => window.Theory.getNoteName(m));
-    const analysis = window.Theory.analyze(names);
-    
-    const bar = document.getElementById('analysis-bar');
-    if (names.length > 0) {
-        bar.classList.add('visible');
-        bar.innerText = analysis.root === '-' ? names.join(' ') : `${analysis.root} Root • ${analysis.intervals.join(' ')}`;
-    } else {
-        bar.classList.remove('visible');
-    }
-
-    if (State.mode === "FREE") {
-        document.getElementById('staff-display').innerHTML = window.Renderer.render(names);
-    }
 }
 
-// --- DRILL LOGIC ---
 function checkDrill(lastMidi) {
     if (State.mode === "FREE") return;
-    
-    const card = document.getElementById('drill-card');
     
     if (State.isChord) {
         const match = State.targetMidis.size === State.active.size && 
                       [...State.targetMidis].every(x => State.active.has(x));
-        if (match) successState();
+        if (match) completeDrill();
     } else {
-        // Sequence logic
+        // Sequence Logic
         if (lastMidi === State.targetSeq[State.seqProgress]) {
             State.seqProgress++;
-            // Update dots? Add visual tracker logic here if needed
-            if (State.seqProgress >= State.targetSeq.length) successState();
+            // Update dots
+            const dots = document.querySelectorAll('.seq-dot');
+            if(dots[State.seqProgress-1]) dots[State.seqProgress-1].classList.add('done');
+            
+            if (State.seqProgress >= State.targetSeq.length) completeDrill();
         }
     }
 }
 
-function successState() {
+function completeDrill() {
     const card = document.getElementById('drill-card');
     card.classList.add('success');
     document.getElementById('next-btn').style.display = 'inline-block';
@@ -126,43 +126,69 @@ function successState() {
     document.querySelectorAll('.hint').forEach(k => k.classList.remove('hint'));
 }
 
-// --- EXPOSED FUNCTIONS (Window) ---
-window.setMode = (mode) => {
+// --- MENU & CONTROLLER ---
+function initController() {
+    // Event Delegation for Sidebar
+    document.getElementById('sidebar').addEventListener('click', (e) => {
+        const item = e.target.closest('.menu-item');
+        if (!item) return;
+        
+        const topic = item.dataset.topic;
+        const mode = item.dataset.mode;
+        
+        // Highlight
+        document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+        item.classList.add('active');
+        
+        if (mode === 'FREE') setMode('FREE');
+        else if (topic) setTopic(topic);
+        
+        // Mobile: Close sidebar
+        if (window.innerWidth <= 768) toggleMenu(false);
+    });
+
+    // Populate Menu
+    const bg = document.getElementById('bg-list');
+    const ad = document.getElementById('adv-list');
+    
+    // Safety check
+    if (window.Curriculum) {
+        window.Curriculum.BEGINNER.forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'menu-item';
+            div.innerText = t;
+            div.dataset.topic = t;
+            bg.appendChild(div);
+        });
+        window.Curriculum.ADVANCED.forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'menu-item';
+            div.innerText = t;
+            div.dataset.topic = t;
+            ad.appendChild(div);
+        });
+    }
+}
+
+function setMode(mode) {
     State.mode = mode;
     resetUI();
     document.getElementById('drill-title').innerText = "Free Play";
-    document.getElementById('drill-desc').innerText = "Explore harmony.";
+    document.getElementById('drill-desc').innerText = "Explore harmony freely.";
     document.getElementById('context-box').style.display = 'none';
-    document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
-    document.querySelector(`[onclick="setMode('FREE')"]`).classList.add('active');
-};
+    document.getElementById('sequence-tracker').innerHTML = '';
+}
 
-window.setTopic = (topic) => {
+function setTopic(topic) {
     State.mode = "DRILL";
     State.topic = topic;
     State.idx = 0;
-    resetUI();
-    document.querySelectorAll('.nav-item').forEach(el => {
-        el.classList.toggle('active', el.innerText === topic);
-    });
     loadChallenge();
-};
+}
 
 window.nextDrill = () => {
     State.idx++;
     loadChallenge();
-};
-
-window.showHint = () => {
-    State.targetMidis.forEach(m => {
-        const el = document.querySelector(`.key[data-midi="${m}"]`);
-        if (el) el.classList.add('hint');
-    });
-};
-
-window.toggleMenu = () => {
-    document.getElementById('sidebar').classList.toggle('open');
-    document.getElementById('overlay').classList.toggle('visible');
 };
 
 function loadChallenge() {
@@ -171,13 +197,14 @@ function loadChallenge() {
     
     if (!challenges || State.idx >= challenges.length) {
         document.getElementById('drill-title').innerText = "Section Complete!";
-        document.getElementById('drill-desc').innerText = "Select a new topic.";
+        document.getElementById('drill-desc').innerText = "Select a new topic to continue.";
+        document.getElementById('staff-display').innerHTML = "";
         return;
     }
 
     const data = challenges[State.idx];
     document.getElementById('drill-title').innerText = data.instruction;
-    document.getElementById('drill-desc').innerText = "Match the notes.";
+    document.getElementById('drill-desc').innerText = "Match the notes on the staff.";
     
     const notes = Array.isArray(data.notes) ? data.notes : [data.notes];
     const midis = notes.map(n => window.Theory.getMidi(n));
@@ -185,12 +212,17 @@ function loadChallenge() {
     State.targetNotes = notes;
     State.targetMidis = new Set(midis);
     
-    // Determine Type
-    State.isChord = data.type === 'triad' || data.type === 'interval'; // Simple heuristic
-    if (data.type === 'sequence') {
-        State.isChord = false;
+    // Type Detection
+    State.isChord = !(data.type === 'sequence');
+    
+    if (!State.isChord) {
         State.targetSeq = midis;
         State.seqProgress = 0;
+        // Draw Dots
+        const track = document.getElementById('sequence-tracker');
+        track.innerHTML = midis.map(() => '<div class="seq-dot"></div>').join('');
+    } else {
+        document.getElementById('sequence-tracker').innerHTML = '';
     }
 
     document.getElementById('staff-display').innerHTML = window.Renderer.render(notes);
@@ -205,48 +237,73 @@ function loadChallenge() {
 
 function resetUI() {
     const card = document.getElementById('drill-card');
-    card.className = 'card'; // Remove success/fail
+    card.className = 'card';
     document.getElementById('next-btn').style.display = 'none';
     document.getElementById('hint-btn').style.display = 'none';
     document.querySelectorAll('.hint').forEach(k => k.classList.remove('hint'));
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').classList.remove('visible');
 }
 
-// --- INIT & PIANO ---
+window.showHint = () => {
+    State.targetMidis.forEach(m => {
+        const el = document.querySelector(`.key[data-midi="${m}"]`);
+        if (el) el.classList.add('hint');
+    });
+};
+
+function toggleMenu(forceState) {
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('overlay');
+    const isOpen = sb.classList.contains('open');
+    const newState = forceState !== undefined ? forceState : !isOpen;
+    
+    if (newState) {
+        sb.classList.add('open');
+        ov.classList.add('visible');
+    } else {
+        sb.classList.remove('open');
+        ov.classList.remove('visible');
+    }
+}
+window.toggleMenu = toggleMenu; // Expose
+
+// --- PIANO BUILDER (CSS-Based) ---
 const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-// Mapping C3 (48) to B5 (83)
 const keyMap = {'z':48,'s':49,'x':50,'d':51,'c':52,'v':53,'g':54,'b':55,'h':56,'n':57,'j':58,'m':59,',':60,'q':60,'2':61,'w':62,'3':63,'e':64,'r':65,'5':66,'t':67,'6':68,'y':69,'7':70,'u':71,'i':72,'9':73,'o':74,'p':76};
 
 function buildPiano() {
     const container = document.getElementById('piano-keys');
     container.innerHTML = '';
     
-    const wWidth = window.innerWidth <= 768 ? 44 : 50; 
-    let wCount = 0;
+    // Range: C3 (48) to B5 (83) -> Exactly 3 Octaves -> 21 White Keys
+    // Total White Keys = 21. 
+    // CSS will handle width: 100% / 21
     
-    // Render White Keys
+    let whiteIdx = 0;
+    
+    // Loop through range
     for(let m=48; m<=83; m++) {
-        if(![1,3,6,8,10].includes(m%12)) {
+        const isBlack = [1,3,6,8,10].includes(m%12);
+        
+        if(!isBlack) {
             const k = document.createElement('div');
             k.className = 'key white-key';
             k.dataset.midi = m;
+            k.innerHTML = `<div class="label-n">${noteNames[m%12]}</div>`;
             
-            // Note Label
-            const n = document.createElement('div');
-            n.className = 'label-n';
-            n.innerText = noteNames[m%12];
-            k.appendChild(n);
+            // Computer Key Label
+            const char = Object.keys(keyMap).find(x => keyMap[x] === m);
+            if(char) k.innerHTML += `<div class="label-k">${char.toUpperCase()}</div>`;
             
-            bindEvents(k, m);
+            bindKeyEvents(k, m);
             container.appendChild(k);
-            wCount++;
+            whiteIdx++;
         }
     }
-    container.style.width = (wCount * wWidth) + 'px';
     
-    // Render Black Keys (Absolute)
-    let wIdx = 0;
+    // Black Keys are absolute. We create them separate or append to container.
+    // The Container is relative.
+    
+    let wCounter = 0;
     for(let m=48; m<=83; m++) {
         const isBlack = [1,3,6,8,10].includes(m%12);
         if(isBlack) {
@@ -254,57 +311,47 @@ function buildPiano() {
             k.className = 'key black-key';
             k.dataset.midi = m;
             
-            const bWidth = window.innerWidth <= 768 ? 26 : 30;
-            // Center between wIdx and wIdx+1
-            // White key width is known.
-            const left = (wIdx * wWidth) - (bWidth / 2);
-            k.style.left = left + 'px';
+            // Position: Left = (wCounter * (100% / 21)) - (Half Black Key Width)
+            // We use CSS variable or Calc. 
+            // 1 White Key Unit = 100/21 %.
+            // Left = calc((wCounter * (100% / 21)) - 1.2%); // Approx half black key width in %
             
-            bindEvents(k, m);
+            // Let's use inline style for precise %
+            const pct = (wCounter * (100 / 21));
+            k.style.left = `calc(${pct}% - 1.5%)`; // 1.5% is roughly half of 3% width
+            
+            bindKeyEvents(k, m);
             container.appendChild(k);
         } else {
-            wIdx++;
+            wCounter++;
         }
     }
 }
 
-function bindEvents(el, m) {
+function bindKeyEvents(el, m) {
     const on = (e) => { e.preventDefault(); noteOn(m); };
     const off = (e) => { e.preventDefault(); noteOff(m); };
     el.addEventListener('mousedown', on); el.addEventListener('mouseup', off); el.addEventListener('mouseleave', off);
     el.addEventListener('touchstart', on, {passive:false}); el.addEventListener('touchend', off, {passive:false});
 }
 
-function init() {
+// --- BOOT ---
+window.addEventListener('load', () => {
+    initController();
     buildPiano();
-    window.addEventListener('resize', buildPiano);
-    
-    // MIDI
-    if (navigator.requestMIDIAccess) {
-        navigator.requestMIDIAccess().then(m => {
-            document.getElementById('midi-badge').innerText = "MIDI Ready";
-            document.getElementById('midi-badge').classList.add('connected');
-            for (let input of m.inputs.values()) {
-                input.onmidimessage = (msg) => {
-                    const [c, n, v] = msg.data;
-                    if (c===144 && v>0) noteOn(n);
-                    if (c===128 || (c===144 && v===0)) noteOff(n);
-                };
-            }
-        });
-    }
     
     // Keyboard
     document.addEventListener('keydown', e => { if(!e.repeat && keyMap[e.key.toLowerCase()]) noteOn(keyMap[e.key.toLowerCase()]); });
     document.addEventListener('keyup', e => { if(keyMap[e.key.toLowerCase()]) noteOff(keyMap[e.key.toLowerCase()]); });
 
-    // Menu
-    const bg = document.getElementById('bg-list');
-    const ad = document.getElementById('adv-list');
-    if (window.Curriculum && window.Curriculum.BEGINNER) {
-        window.Curriculum.BEGINNER.forEach(t => bg.innerHTML += `<div class="nav-item" onclick="setTopic('${t}')">${t}</div>`);
-        window.Curriculum.ADVANCED.forEach(t => ad.innerHTML += `<div class="nav-item" onclick="setTopic('${t}')">${t}</div>`);
+    // MIDI
+    if (navigator.requestMIDIAccess) {
+        navigator.requestMIDIAccess().then(m => {
+            document.getElementById('midi-badge').innerText = "MIDI Ready";
+            document.getElementById('midi-badge').classList.add('connected');
+            for(let i of m.inputs.values()) i.onmidimessage=msg=>{
+                const [c,n,v]=msg.data; if(c===144 && v>0) noteOn(n); if(c===128 || (c===144 && v===0)) noteOff(n);
+            };
+        });
     }
-}
-
-window.addEventListener('load', init);
+});
