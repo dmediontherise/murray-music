@@ -2,257 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Murray's Music Theory</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Murray's Theory v9.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Embedding Core CSS here for simplicity, or I can create css/style.css next. 
+           I'll put the critical layout here and move the rest to css/style.css in next step. */
+    </style>
 </head>
 <body>
-    <div class="app-wrapper">
-        <header class="app-header">
-            <div class="logo">MURRAY'S<span class="weight-light">THEORY</span></div>
-            <nav class="tab-nav">
-                <button class="tab-btn active" data-tab="fundamentals">Fundamentals</button>
-                <button class="tab-btn" data-tab="modes">Modes & Circle</button>
-                <button class="tab-btn" data-tab="advanced">Advanced</button>
-            </nav>
-        </header>
 
-        <main class="app-content">
-            <div class="content-left">
-                <!-- Global Staff Display (Visible on all tabs) -->
-                <section class="staff-container">
-                                    <div class="staff-display" id="staff-display">
-                                        <div class="staff-lines">
-                                            <div class="line"></div>
-                                            <div class="line"></div>
-                                            <div class="line"></div>
-                                            <div class="line"></div>
-                                            <div class="line"></div>
-                                        </div>
-                                        <div class="notes-layer" id="notes-layer"></div>
-                                        <div class="clef-placeholder">𝄞</div>
-                                    </div>                </section>
+<div id="overlay" onclick="toggleMenu()"></div>
 
-                <!-- TAB 1: FUNDAMENTALS -->
-                <div class="tab-pane active" id="tab-fundamentals">
-                    <div class="control-group">
-                        <h3>Root Note</h3>
-                        <div class="root-selector">
-                            <button class="root-btn active" data-root="C4">C</button>
-                            <button class="root-btn" data-root="F4">F</button>
-                            <button class="root-btn" data-root="G4">G</button>
-                        </div>
-                    </div>
+<header>
+    <div style="display:flex; align-items:center; gap:15px;">
+        <button id="menu-btn" onclick="toggleMenu()">☰</button>
+        <div class="brand">Murray's Theory</div>
+    </div>
+    <div id="midi-badge">MIDI Off</div>
+</header>
 
-                    <div class="theory-grid">
-                        <div class="theory-section">
-                            <h3>Intervals</h3>
-                            <div class="grid-buttons intervals-grid">
-                                <button class="interval-btn" data-int="m2">m2</button>
-                                <button class="interval-btn" data-int="M2">M2</button>
-                                <button class="interval-btn" data-int="m3">m3</button>
-                                <button class="interval-btn" data-int="M3">M3</button>
-                                <button class="interval-btn" data-int="P4">P4</button>
-                                <button class="interval-btn" data-int="d5">d5</button>
-                                <button class="interval-btn" data-int="P5">P5</button>
-                                <button class="interval-btn" data-int="m6">m6</button>
-                                <button class="interval-btn" data-int="M6">M6</button>
-                                <button class="interval-btn" data-int="m7">m7</button>
-                                <button class="interval-btn" data-int="M7">M7</button>
-                                <button class="interval-btn" data-int="P8">P8</button>
-                            </div>
-                        </div>
-                        <div class="theory-section">
-                            <h3>Triads</h3>
-                            <div class="grid-buttons triads-grid">
-                                <button class="triad-btn" data-triad="maj">Major</button>
-                                <button class="triad-btn" data-triad="min">Minor</button>
-                                <button class="triad-btn" data-triad="dim">Dim</button>
-                                <button class="triad-btn" data-triad="aug">Aug</button>
-                                <button class="triad-btn" data-triad="sus4">Sus4</button>
-                                <button class="triad-btn" data-triad="sus2">Sus2</button>
-                            </div>
-                            <h3 style="margin-top: 1.5rem;">7th Chords</h3>
-                            <div class="grid-buttons triads-grid">
-                                <button class="triad-btn" data-triad="maj7">Maj7</button>
-                                <button class="triad-btn" data-triad="min7">min7</button>
-                                <button class="triad-btn" data-triad="dom7">Dom7</button>
-                                <button class="triad-btn" data-triad="m7b5">m7♭5</button>
-                                <button class="triad-btn" data-triad="dim7">dim7</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div id="app">
+    <nav id="sidebar">
+        <div class="menu-head">Explore</div>
+        <div class="menu-item active" onclick="setMode('FREE')">Free Play</div>
+        <div class="menu-head">Book 1: Basic</div>
+        <div id="bg-list"></div>
+        <div class="menu-head">Book 2: Advanced</div>
+        <div id="adv-list"></div>
+    </nav>
 
-                <!-- TAB 2: MODES & CIRCLE -->
-                <div class="tab-pane" id="tab-modes">
-                    <div class="modes-layout">
-                        <div class="circle-section">
-                            <button class="circle-visual-btn" id="btn-circle-5ths">
-                                <div class="circle-ring">
-                                    <span class="circle-text">5ths</span>
-                                </div>
-                            </button>
-                            <div class="circle-desc">Click to play Circle of 5ths sequence</div>
-                        </div>
-
-                        <div class="modes-grid">
-                            <h3>Church Modes</h3>
-                            <div class="grid-buttons">
-                                <button class="mode-btn" data-mode="Ionian">Ionian (Maj)</button>
-                                <button class="mode-btn" data-mode="Dorian">Dorian</button>
-                                <button class="mode-btn" data-mode="Phrygian">Phrygian</button>
-                                <button class="mode-btn" data-mode="Lydian">Lydian</button>
-                                <button class="mode-btn" data-mode="Mixolydian">Mixolydian</button>
-                                <button class="mode-btn" data-mode="Aeolian">Aeolian (Min)</button>
-                                <button class="mode-btn" data-mode="Locrian">Locrian</button>
-                            </div>
-
-                            <h3 style="margin-top: 1.5rem;">Minor Variations</h3>
-                            <div class="grid-buttons">
-                                <button class="mode-btn" data-mode="HarmonicMinor">Harmonic Minor</button>
-                                <button class="mode-btn" data-mode="MelodicMinor">Melodic Minor</button>
-                            </div>
-
-                            <h3 style="margin-top: 1.5rem;">Jazz & Blues Scales</h3>
-                            <div class="grid-buttons">
-                                <button class="mode-btn" data-mode="PentMajor">Pent. Major</button>
-                                <button class="mode-btn" data-mode="PentMinor">Pent. Minor</button>
-                                <button class="mode-btn" data-mode="Blues">Blues</button>
-                                <button class="mode-btn" data-mode="WholeTone">Whole Tone</button>
-                                <button class="mode-btn" data-mode="DiminishedHW">Diminished (H-W)</button>
-                            </div>
-                            
-                            <h3 style="margin-top: 1.5rem;">Exotic Scales</h3>
-                            <div class="grid-buttons" style="grid-template-columns: 1fr 1fr;">
-                                <button class="mode-btn" data-mode="DoubleHarmonicMaj">Double Harm. Maj</button>
-                                <button class="mode-btn" data-mode="Sadness">Double Harm. Min</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 3: ADVANCED -->
-                <div class="tab-pane" id="tab-advanced">
-                    <div class="advanced-grid">
-                                            <!-- Voicings -->
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    <h2>Voicings</h2>
-                                                </div>
-                                                <div class="control-row">
-                                                    <span class="control-label">Shell Voicings <small>(Drop Root)</small></span>
-                                                    <label class="apple-switch">
-                                                        <input type="checkbox" id="shell-voicings">
-                                                        <span class="slider round"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="divider"></div>
-                                                <div class="grid-buttons" style="grid-template-columns: 1fr;">
-                                                    <button class="action-btn" id="btn-herbie">
-                                                        <span class="btn-label">Herbie Voicing</span>
-                                                        <span class="btn-icon">Dominant 13</span>
-                                                    </button>
-                                                    <button class="action-btn" id="btn-sowhat">
-                                                        <span class="btn-label">So What</span>
-                                                        <span class="btn-icon">Quartal (m11)</span>
-                                                    </button>
-                                                    <button class="action-btn" id="btn-kenny">
-                                                        <span class="btn-label">Kenny Barron</span>
-                                                        <span class="btn-icon">Minor 11</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                        <!-- Reharmonization -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h2>Reharmonization</h2>
-                            </div>
-                            <div class="control-row">
-                                <span class="control-label">Tritone Substitution</span>
-                                <label class="apple-switch">
-                                    <input type="checkbox" id="tritone-sub">
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                            <div class="divider"></div>
-                            <div class="alteration-group">
-                                <span>Alterations:</span>
-                                <div class="alteration-buttons">
-                                    <button class="chip-btn" data-alt="sharp5">♯5</button>
-                                    <button class="chip-btn" data-alt="flat9">♭9</button>
-                                </div>
-                            </div>
-                            <button class="action-btn wide-btn" id="btn-dominant-g7" style="margin-top: 1rem;">
-                                <span class="btn-label">Play G7 (Dominant)</span>
-                                <span class="btn-icon">♫</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RIGHT SIDEBAR INFO -->
-            <aside class="info-sidebar">
-                <div class="info-card">
-                    <h3>Theory Context</h3>
-                    <div class="info-content">
-                        <p id="info-text">Select an element to see its music theory background.</p>
-                    </div>
-                </div>
-            </aside>
-        </main>
-
-        <!-- Virtual Piano Wrapper -->
-        <div class="piano-dock">
-            <div class="piano-surface">
-                <!-- Octave 3 -->
-                <div class="key white" data-note="C3"></div>
-                <div class="key black" data-note="C#3"></div>
-                <div class="key white" data-note="D3"></div>
-                <div class="key black" data-note="D#3"></div>
-                <div class="key white" data-note="E3"></div>
-                <div class="key white" data-note="F3"></div>
-                <div class="key black" data-note="F#3"></div>
-                <div class="key white" data-note="G3"></div>
-                <div class="key black" data-note="G#3"></div>
-                <div class="key white" data-note="A3"></div>
-                <div class="key black" data-note="A#3"></div>
-                <div class="key white" data-note="B3"></div>
+    <div id="content">
+        <div id="scroll-view">
+            <div class="card" id="drill-card">
+                <h2 id="drill-title">Free Play</h2>
+                <div class="subtitle" id="drill-desc">Explore harmony freely.</div>
                 
-                <!-- Octave 4 -->
-                <div class="key white" data-note="C4"></div>
-                <div class="key black" data-note="C#4"></div>
-                <div class="key white" data-note="D4"></div>
-                <div class="key black" data-note="D#4"></div>
-                <div class="key white" data-note="E4"></div>
-                <div class="key white" data-note="F4"></div>
-                <div class="key black" data-note="F#4"></div>
-                <div class="key white" data-note="G4"></div>
-                <div class="key black" data-note="G#4"></div>
-                <div class="key white" data-note="A4"></div>
-                <div class="key black" data-note="A#4"></div>
-                <div class="key white" data-note="B4"></div>
+                <div class="context-box" id="context-box" style="display:none;">
+                    <span style="font-size:1.4rem;">🎵</span>
+                    <div id="context-text">...</div>
+                </div>
 
-                <!-- Octave 5 -->
-                <div class="key white" data-note="C5"></div>
-                <div class="key black" data-note="C#5"></div>
-                <div class="key white" data-note="D5"></div>
-                <div class="key black" data-note="D#5"></div>
-                <div class="key white" data-note="E5"></div>
-                <div class="key white" data-note="F5"></div>
-                <div class="key black" data-note="F#5"></div>
-                <div class="key white" data-note="G5"></div>
-                <div class="key black" data-note="G#5"></div>
-                <div class="key white" data-note="A5"></div>
-                <div class="key black" data-note="A#5"></div>
-                <div class="key white" data-note="B5"></div>
+                <div id="staff-display">
+                    <span style="color:#aaa;">Play keys to begin...</span>
+                </div>
+
+                <div style="margin-top:20px; min-height:50px;">
+                    <button class="btn btn-sec" id="hint-btn" onclick="showHint()" style="display:none;">💡 Hint</button>
+                    <button class="btn btn-pri" id="next-btn" onclick="nextDrill()" style="display:none;">Next Challenge →</button>
+                </div>
             </div>
         </div>
+        
+        <div id="analysis-bar">Waiting...</div>
+
+        <div id="piano-wrap">
+            <div id="piano-keys" class="piano-keys"></div>
+        </div>
     </div>
-    <script src="script.js"></script>
+</div>
+
+<!-- SCRIPTS -->
+<script src="js/theory.js"></script>
+<script src="js/curriculum.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/app.js"></script>
+
 </body>
 </html>
