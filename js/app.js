@@ -1,4 +1,4 @@
-// MURRAY'S THEORY v9.2 (Stable Core)
+// MURRAY'S THEORY v9.3 (Full Curriculum + Flow)
 
 const State = {
     active: new Set(),
@@ -71,7 +71,6 @@ function noteOff(m) {
 }
 
 function updateUI() {
-    // Efficient Class Toggling
     requestAnimationFrame(() => {
         document.querySelectorAll('.key').forEach(k => {
             const m = parseInt(k.dataset.midi);
@@ -79,7 +78,6 @@ function updateUI() {
             else k.classList.remove('active');
         });
 
-        // Analysis
         const activeMidis = Array.from(State.active).sort((a,b)=>a-b);
         const names = activeMidis.map(m => window.Theory.getNoteName(m));
         
@@ -106,10 +104,8 @@ function checkDrill(lastMidi) {
                       [...State.targetMidis].every(x => State.active.has(x));
         if (match) completeDrill();
     } else {
-        // Sequence Logic
         if (lastMidi === State.targetSeq[State.seqProgress]) {
             State.seqProgress++;
-            // Update dots
             const dots = document.querySelectorAll('.seq-dot');
             if(dots[State.seqProgress-1]) dots[State.seqProgress-1].classList.add('done');
             
@@ -128,7 +124,6 @@ function completeDrill() {
 
 // --- MENU & CONTROLLER ---
 function initController() {
-    // Event Delegation for Sidebar
     document.getElementById('sidebar').addEventListener('click', (e) => {
         const item = e.target.closest('.menu-item');
         if (!item) return;
@@ -136,22 +131,18 @@ function initController() {
         const topic = item.dataset.topic;
         const mode = item.dataset.mode;
         
-        // Highlight
         document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
         item.classList.add('active');
         
         if (mode === 'FREE') setMode('FREE');
         else if (topic) setTopic(topic);
         
-        // Mobile: Close sidebar
         if (window.innerWidth <= 768) toggleMenu(false);
     });
 
-    // Populate Menu
     const bg = document.getElementById('bg-list');
     const ad = document.getElementById('adv-list');
     
-    // Safety check
     if (window.Curriculum) {
         window.Curriculum.BEGINNER.forEach(t => {
             const div = document.createElement('div');
@@ -183,6 +174,10 @@ function setTopic(topic) {
     State.mode = "DRILL";
     State.topic = topic;
     State.idx = 0;
+    resetUI();
+    document.querySelectorAll('.nav-item').forEach(el => {
+        el.classList.toggle('active', el.innerText === topic);
+    });
     loadChallenge();
 }
 
@@ -195,12 +190,35 @@ function loadChallenge() {
     resetUI();
     const challenges = window.Curriculum.CHALLENGES[State.topic];
     
+    // SECTION COMPLETE LOGIC
     if (!challenges || State.idx >= challenges.length) {
         document.getElementById('drill-title').innerText = "Section Complete!";
-        document.getElementById('drill-desc').innerText = "Select a new topic to continue.";
-        document.getElementById('staff-display').innerHTML = "";
+        document.getElementById('drill-desc').innerText = "Great job! Ready for the next topic?";
+        document.getElementById('staff-display').innerHTML = '<div style="font-size:3rem; margin:20px;">🎉</div>';
+        document.getElementById('context-box').style.display = 'none';
+        document.getElementById('sequence-tracker').innerHTML = '';
+        
+        // Find Next Topic
+        const allTopics = [...window.Curriculum.BEGINNER, ...window.Curriculum.ADVANCED];
+        const currentIdx = allTopics.indexOf(State.topic);
+        const nextTopic = allTopics[currentIdx + 1];
+        
+        const nextBtn = document.getElementById('next-btn');
+        if (nextTopic) {
+            nextBtn.innerText = "Start " + nextTopic;
+            nextBtn.onclick = () => setTopic(nextTopic); // Re-bind
+            nextBtn.style.display = 'inline-block';
+        } else {
+            nextBtn.style.display = 'none';
+            document.getElementById('drill-desc').innerText = "You have completed the entire course!";
+        }
         return;
     }
+
+    // Normal Drill Loading
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.innerText = "Next Challenge →";
+    nextBtn.onclick = window.nextDrill; // Restore original bind
 
     const data = challenges[State.idx];
     document.getElementById('drill-title').innerText = data.instruction;
@@ -212,13 +230,11 @@ function loadChallenge() {
     State.targetNotes = notes;
     State.targetMidis = new Set(midis);
     
-    // Type Detection
     State.isChord = !(data.type === 'sequence');
     
     if (!State.isChord) {
         State.targetSeq = midis;
         State.seqProgress = 0;
-        // Draw Dots
         const track = document.getElementById('sequence-tracker');
         track.innerHTML = midis.map(() => '<div class="seq-dot"></div>').join('');
     } else {
@@ -241,6 +257,8 @@ function resetUI() {
     document.getElementById('next-btn').style.display = 'none';
     document.getElementById('hint-btn').style.display = 'none';
     document.querySelectorAll('.hint').forEach(k => k.classList.remove('hint'));
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('visible');
 }
 
 window.showHint = () => {
@@ -264,66 +282,48 @@ function toggleMenu(forceState) {
         ov.classList.remove('visible');
     }
 }
-window.toggleMenu = toggleMenu; // Expose
+window.toggleMenu = toggleMenu; 
 
-// --- PIANO BUILDER (CSS-Based) ---
+// --- INIT ---
 const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 const keyMap = {'z':48,'s':49,'x':50,'d':51,'c':52,'v':53,'g':54,'b':55,'h':56,'n':57,'j':58,'m':59,',':60,'q':60,'2':61,'w':62,'3':63,'e':64,'r':65,'5':66,'t':67,'6':68,'y':69,'7':70,'u':71,'i':72,'9':73,'o':74,'p':76};
 
 function buildPiano() {
     const container = document.getElementById('piano-keys');
     container.innerHTML = '';
+    const wWidth = window.innerWidth <= 768 ? 44 : 50; 
+    let wCount = 0;
     
-    // Range: C3 (48) to B5 (83) -> Exactly 3 Octaves -> 21 White Keys
-    // Total White Keys = 21. 
-    // CSS will handle width: 100% / 21
-    
-    let whiteIdx = 0;
-    
-    // Loop through range
     for(let m=48; m<=83; m++) {
         const isBlack = [1,3,6,8,10].includes(m%12);
-        
         if(!isBlack) {
             const k = document.createElement('div');
             k.className = 'key white-key';
             k.dataset.midi = m;
             k.innerHTML = `<div class="label-n">${noteNames[m%12]}</div>`;
-            
-            // Computer Key Label
             const char = Object.keys(keyMap).find(x => keyMap[x] === m);
             if(char) k.innerHTML += `<div class="label-k">${char.toUpperCase()}</div>`;
-            
             bindKeyEvents(k, m);
             container.appendChild(k);
-            whiteIdx++;
+            wCount++;
         }
     }
+    container.style.width = (wCount * wWidth) + 'px';
     
-    // Black Keys are absolute. We create them separate or append to container.
-    // The Container is relative.
-    
-    let wCounter = 0;
+    let wIdx = 0;
     for(let m=48; m<=83; m++) {
         const isBlack = [1,3,6,8,10].includes(m%12);
         if(isBlack) {
             const k = document.createElement('div');
             k.className = 'key black-key';
             k.dataset.midi = m;
-            
-            // Position: Left = (wCounter * (100% / 21)) - (Half Black Key Width)
-            // We use CSS variable or Calc. 
-            // 1 White Key Unit = 100/21 %.
-            // Left = calc((wCounter * (100% / 21)) - 1.2%); // Approx half black key width in %
-            
-            // Let's use inline style for precise %
-            const pct = (wCounter * (100 / 21));
-            k.style.left = `calc(${pct}% - 1.5%)`; // 1.5% is roughly half of 3% width
-            
+            const bWidth = window.innerWidth <= 768 ? 26 : 30;
+            const pct = (wIdx * (100/21));
+            k.style.left = `calc(${pct}% - 1.5%)`; // Fixed absolute alignment
             bindKeyEvents(k, m);
             container.appendChild(k);
         } else {
-            wCounter++;
+            wIdx++;
         }
     }
 }
@@ -335,23 +335,17 @@ function bindKeyEvents(el, m) {
     el.addEventListener('touchstart', on, {passive:false}); el.addEventListener('touchend', off, {passive:false});
 }
 
-// --- BOOT ---
 window.addEventListener('load', () => {
     initController();
     buildPiano();
-    
-    // Keyboard
     document.addEventListener('keydown', e => { if(!e.repeat && keyMap[e.key.toLowerCase()]) noteOn(keyMap[e.key.toLowerCase()]); });
     document.addEventListener('keyup', e => { if(keyMap[e.key.toLowerCase()]) noteOff(keyMap[e.key.toLowerCase()]); });
-
-    // MIDI
     if (navigator.requestMIDIAccess) {
         navigator.requestMIDIAccess().then(m => {
             document.getElementById('midi-badge').innerText = "MIDI Ready";
             document.getElementById('midi-badge').classList.add('connected');
-            for(let i of m.inputs.values()) i.onmidimessage=msg=>{
-                const [c,n,v]=msg.data; if(c===144 && v>0) noteOn(n); if(c===128 || (c===144 && v===0)) noteOff(n);
-            };
+            for (let i of m.inputs.values()) i.onmidimessage=msg=>{ const [c,n,v]=msg.data; if(c===144&&v>0)noteOn(n); if(c===128||(c===144&&v===0))noteOff(n); };
         });
     }
 });
+window.addEventListener('resize', buildPiano);
