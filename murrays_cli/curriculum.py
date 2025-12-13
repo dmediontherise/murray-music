@@ -1,6 +1,6 @@
 class Curriculum:
     BEGINNER_PATH = [
-        "Intervals (Half/Whole Steps)",
+        "Intervals",
         "Diatonic Scales",
         "Chromatic Scale",
         "Major & Minor Scales",
@@ -11,7 +11,7 @@ class Curriculum:
         "Tetrads (4-Note Chords)",
         "Chord Inversions",
         "Relative Keys",
-        "The Number System (Roman Numerals)"
+        "The Number System"
     ]
 
     ADVANCED_PATH = [
@@ -23,140 +23,315 @@ class Curriculum:
         "Modes",
         "Minor Variations",
         "Exotic Scales",
-        "Jazz Voicings (Open/Closed/Quartal)"
+        "Jazz Voicings",
+        "Enclosures",
+        "Approach Tones"
     ]
 
     DESCRIPTIONS = {
-        # BOOK 1: BASIC
-        "Intervals (Half/Whole Steps)": "The distance between notes. Half Step = 1 Key (C to C#). Whole Step = 2 Keys (C to D).",
-        "Diatonic Scales": "The 'White Keys' scale. All notes from C to C with no sharps or flats. The foundation of Western music.",
-        "Chromatic Scale": "Every single note in order (12 tones). All the sharps and flats included.",
-        "Major & Minor Scales": "The two main moods of music. Major = Happy (W-W-H-W-W-W-H). Minor = Sad (W-H-W-W-H-W-W).",
-        "Major & Minor Triads": "3-note chords. Major (1-3-5) is happy. Minor (1-b3-5) is sad.",
-        "Augmented & Diminished Triads": "Augmented: Sharp the 5th (1-3-#5). Diminished: Flat the 3rd and 5th (1-b3-b5).",
-        "Suspended Chords": "Replace the 3rd with a 2nd (Sus2) or 4th (Sus4). Sounds open and floating.",
-        "6th Chords": "Add the 6th note to a triad. C6 = C-E-G-A. Sounds pastoral and sweet.",
-        "Tetrads (4-Note Chords)": "Sticking to the 7th note. Major 7 (1-3-5-7), Minor 7 (1-b3-5-b7), Dominant 7 (1-3-5-b7).",
-        "Chord Inversions": "Rearranging the order of notes (e.g., C-E-G becomes E-G-C). Makes chord changes smoother.",
-        "Relative Keys": "Every Major key has a Minor twin that shares the same notes. C Major's relative is A Minor.",
-        "The Number System (Roman Numerals)": "Labeling chords 1-7 (I-VII) to understand their function in any key.",
-
-        # BOOK 2: ADVANCED
-        "Dominants & Tritones": "The tension chord (V7). Contains a Tritone (Devil in Music) that pulls to the root.",
-        "Secondary Dominants": "A dominant chord that resolves to a chord *other* than the tonic (e.g., V of V).",
-        "Tritone Substitution": "Replacing a Dominant 7th with another Dominant 7th exactly 6 semitones away.",
-        "Altered Notes & Extensions": "Adding spice: 9ths, 11ths, 13ths, b9, #9, #11, b13.",
-        "Circle of 5ths": "A visual map of how all 12 keys relate to each other.",
-        "Modes": "Variations of the Major scale starting on different steps (Dorian, Phrygian, Lydian, etc.).",
-        "Minor Variations": "Harmonic Minor (Sharp 7), Melodic Minor (Sharp 6 & 7).",
-        "Exotic Scales": "Whole Tone, Diminished (Half-Whole), and other non-traditional scales.",
-        "Jazz Voicings (Open/Closed/Quartal)": "Advanced ways to arrange notes. Herbie Hancock, Bill Evans, and Kenny Barron styles."
+        "Intervals": "Distance between notes.",
+        "Diatonic Scales": "The standard 7-note scale.",
+        "Chromatic Scale": "All 12 notes.",
+        "Major & Minor Scales": "Happy vs Sad.",
+        "Major & Minor Triads": "Basic 3-note chords.",
+        "Augmented & Diminished Triads": "Tense triads.",
+        "Suspended Chords": "Floating 2nds/4ths.",
+        "6th Chords": "Adding the 6th tone.",
+        "Tetrads (4-Note Chords)": "7th Chords.",
+        "Chord Inversions": "Rearranging notes.",
+        "Relative Keys": "Major/Minor pairs.",
+        "The Number System": "Nashville/Roman Numerals.",
+        "Dominants & Tritones": "V7 tension.",
+        "Secondary Dominants": "V of V.",
+        "Tritone Substitution": "Chromatic subs.",
+        "Altered Notes & Extensions": "9ths, 11ths, 13ths.",
+        "Circle of 5ths": "Key relationships.",
+        "Modes": "Scale variations.",
+        "Minor Variations": "Harmonic/Melodic.",
+        "Exotic Scales": "Non-Western sounds.",
+        "Jazz Voicings": "Shells/Quartal.",
+        "Enclosures": "Surrounding a target note from above and below.",
+        "Approach Tones": "Leading into a target note chromatically."
     }
     
+    # 10 CHALLENGES PER SECTION MINIMUM
     CHALLENGES = {
-        "Intervals (Half/Whole Steps)": [
-            {"type": "interval", "root": "C4", "semitones": 1, "instruction": "Play a Half Step Up from C", "context": "The smallest interval. 'Jaws' Theme."},
-            {"type": "interval", "root": "C4", "semitones": 2, "instruction": "Play a Whole Step Up from C", "context": "Standard major scale step. 'Happy Birthday'."},
-            {"type": "interval", "root": "E4", "semitones": 1, "instruction": "Play a Half Step (E to F)", "context": "Natural half step (no black key between E and F)."},
-            {"type": "interval", "root": "G3", "semitones": 2, "instruction": "Play a Whole Step Up from G", "context": "The start of many folk melodies."}
+        "Intervals": [
+            {"type": "interval", "root": "C4", "semitones": 4, "instruction": "Play C Major 3rd", "context": "Happy."},
+            {"type": "interval", "root": "C4", "semitones": 7, "instruction": "Play C Perfect 5th", "context": "Stable."},
+            {"type": "interval", "root": "G3", "semitones": 5, "instruction": "Play G Perfect 4th", "context": "Wedding."},
+            {"type": "interval", "root": "A3", "semitones": 3, "instruction": "Play A Minor 3rd", "context": "Sad."},
+            {"type": "interval", "root": "D4", "semitones": 2, "instruction": "Play D Major 2nd", "context": "Step."},
+            {"type": "interval", "root": "E4", "semitones": 1, "instruction": "Play E Minor 2nd", "context": "Jaws."},
+            {"type": "interval", "root": "F3", "semitones": 12, "instruction": "Play F Octave", "context": "Rainbow."},
+            {"type": "interval", "root": "B3", "semitones": 6, "instruction": "Play B Tritone", "context": "Simpsons."},
+            {"type": "interval", "root": "C4", "semitones": 11, "instruction": "Play C Major 7th Interval", "context": "Dreamy."},
+            {"type": "interval", "root": "G4", "semitones": 10, "instruction": "Play G Minor 7th Interval", "context": "Star Trek."}
         ],
         "Diatonic Scales": [
-            {"type": "sequence", "notes": ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"], "instruction": "Play the C Major Diatonic Scale", "context": "The 'White Keys' scale. Do-Re-Mi..."},
-            {"type": "sequence", "notes": ["G3", "A3", "B3", "C4", "D4", "E4", "F#4", "G4"], "instruction": "Play the G Major Scale (1 Sharp)", "context": "Classic classical key. Note the F#."},
-            {"type": "sequence", "notes": ["F3", "G3", "A3", "Bb3", "C4", "D4", "E4", "F4"], "instruction": "Play the F Major Scale (1 Flat)", "context": "Common key for brass instruments."}
+            {"type": "sequence", "notes": ["C4","D4","E4","F4","G4","A4","B4","C5"], "instruction": "Play C Major Scale", "context": "No sharps/flats."},
+            {"type": "sequence", "notes": ["G3","A3","B3","C4","D4","E4","F#4","G4"], "instruction": "Play G Major Scale", "context": "1 Sharp (F#)."},
+            {"type": "sequence", "notes": ["D4","E4","F#4","G4","A4","B4","C#5","D5"], "instruction": "Play D Major Scale", "context": "2 Sharps."},
+            {"type": "sequence", "notes": ["A3","B3","C#4","D4","E4","F#4","G#4","A4"], "instruction": "Play A Major Scale", "context": "3 Sharps."},
+            {"type": "sequence", "notes": ["E4","F#4","G#4","A4","B4","C#5","D#5","E5"], "instruction": "Play E Major Scale", "context": "4 Sharps."},
+            {"type": "sequence", "notes": ["F3","G3","A3","Bb3","C4","D4","E4","F4"], "instruction": "Play F Major Scale", "context": "1 Flat (Bb)."},
+            {"type": "sequence", "notes": ["Bb3","C4","D4","Eb4","F4","G4","A4","Bb4"], "instruction": "Play Bb Major Scale", "context": "2 Flats."},
+            {"type": "sequence", "notes": ["Eb4","F4","G4","Ab4","Bb4","C5","D5","Eb5"], "instruction": "Play Eb Major Scale", "context": "3 Flats."},
+            {"type": "sequence", "notes": ["Ab3","Bb3","C4","Db4","Eb4","F4","G4","Ab4"], "instruction": "Play Ab Major Scale", "context": "4 Flats."},
+            {"type": "sequence", "notes": ["C4","D4","E4","F4","G4","A4","B4","C5"], "instruction": "Play C Major Descending", "context": "Backwards."}
         ],
         "Chromatic Scale": [
-            {"type": "sequence", "notes": ["C4", "C#4", "D4", "D#4", "E4", "F4"], "instruction": "Play C Chromatic (Ascending)", "context": "Every half step. 'Flight of the Bumblebee'."},
-            {"type": "sequence", "notes": ["G4", "F#4", "F4", "E4", "Eb4", "D4"], "instruction": "Play G Chromatic (Descending)", "context": "Used in glissandos and runs."}
+            {"type": "sequence", "notes": ["C4","C#4","D4","D#4","E4","F4"], "instruction": "Play C to F Chromatic", "context": "Half steps."},
+            {"type": "sequence", "notes": ["F4","F#4","G4","G#4","A4","A#4","B4"], "instruction": "Play F to B Chromatic", "context": "Ascending."},
+            {"type": "sequence", "notes": ["C5","B4","Bb4","A4","Ab4","G4"], "instruction": "Play C5 down to G4 Chromatic", "context": "Descending."},
+            {"type": "sequence", "notes": ["E4","Eb4","D4","Db4","C4"], "instruction": "Play E to C Chromatic", "context": "Falling."},
+            {"type": "sequence", "notes": ["G3","G#3","A3","A#3","B3","C4"], "instruction": "Play G3 to C4 Chromatic", "context": "Low register."},
+            {"type": "sequence", "notes": ["D4","Eb4","E4","F4","F#4","G4"], "instruction": "Play D to G Chromatic", "context": "Middle."},
+            {"type": "sequence", "notes": ["A3","Bb3","B3","C4","C#4","D4"], "instruction": "Play A to D Chromatic", "context": "Climbing."},
+            {"type": "sequence", "notes": ["F4","E4","Eb4","D4","Db4","C4"], "instruction": "Play F to C Descending", "context": "Falling."},
+            {"type": "sequence", "notes": ["C4","C#4","D4","Eb4","E4","F4","F#4","G4"], "instruction": "Play C to G Chromatic", "context": "Long run."},
+            {"type": "sequence", "notes": ["B4","Bb4","A4","Ab4","G4","Gb4","F4"], "instruction": "Play B to F Descending", "context": "Long fall."}
         ],
         "Major & Minor Scales": [
-            {"type": "sequence", "notes": ["A3", "B3", "C4", "D4", "E4", "F4", "G4", "A4"], "instruction": "Play A Natural Minor Scale", "context": "Sad, serious. Same notes as C Major."},
-            {"type": "sequence", "notes": ["A3", "B3", "C4", "D4", "E4", "F4", "G#4", "A4"], "instruction": "Play A Harmonic Minor (Sharp 7)", "context": "Classical/Latin flavor. Note the G#."},
-            {"type": "sequence", "notes": ["C4", "D4", "Eb4", "F4", "G4", "Bb4", "C5"], "instruction": "Play C Minor Pentatonic", "context": "The 'Rock/Blues' scale. Essential for solos."}
+            {"type": "sequence", "notes": ["A3","B3","C4","D4","E4","F4","G4","A4"], "instruction": "Play A Natural Minor", "context": "Relative to C."},
+            {"type": "sequence", "notes": ["E4","F#4","G4","A4","B4","C5","D5","E5"], "instruction": "Play E Natural Minor", "context": "Relative to G."},
+            {"type": "sequence", "notes": ["D4","E4","F4","G4","A4","Bb4","C5","D5"], "instruction": "Play D Natural Minor", "context": "Relative to F."},
+            {"type": "sequence", "notes": ["C4","D4","Eb4","F4","G4","Ab4","Bb4","C5"], "instruction": "Play C Natural Minor", "context": "Parallel to C Major."},
+            {"type": "sequence", "notes": ["G3","A3","Bb3","C4","D4","Eb4","F4","G4"], "instruction": "Play G Natural Minor", "context": "Serious."},
+            {"type": "sequence", "notes": ["C4","D4","E4","G4","A4","C5"], "instruction": "Play C Major Pentatonic", "context": "My Girl."},
+            {"type": "sequence", "notes": ["A3","C4","D4","E4","G4","A4"], "instruction": "Play A Minor Pentatonic", "context": "Stairway solo."},
+            {"type": "sequence", "notes": ["G3","Bb3","C4","D4","F4","G4"], "instruction": "Play G Minor Pentatonic", "context": "Bluesy."},
+            {"type": "sequence", "notes": ["E4","G4","A4","B4","D5","E5"], "instruction": "Play E Minor Pentatonic", "context": "Guitar friendly."},
+            {"type": "sequence", "notes": ["F3","G3","A3","C4","D4","F4"], "instruction": "Play F Major Pentatonic", "context": "Soulful."}
         ],
         "Major & Minor Triads": [
-            {"type": "triad", "root": "C4", "formula_key": "maj", "instruction": "Play C Major Triad (1-3-5)", "context": "Happy. 'Let It Be' (Beatles)."},
-            {"type": "triad", "root": "C4", "formula_key": "min", "instruction": "Play C Minor Triad (1-b3-5)", "context": "Sad. 'Eye of the Tiger' (Survivor)."},
-            {"type": "triad", "root": "F3", "formula_key": "maj", "instruction": "Play F Major Triad", "context": "Bright and open. 'Free Fallin' uses this."},
-            {"type": "triad", "root": "A3", "formula_key": "min", "instruction": "Play A Minor Triad", "context": "Serious. 'Stairway to Heaven'."}
+            {"type": "triad", "root": "C4", "formula_key": "maj", "instruction": "Play C Major", "context": "Happy."},
+            {"type": "triad", "root": "F3", "formula_key": "maj", "instruction": "Play F Major", "context": "Bright."},
+            {"type": "triad", "root": "G3", "formula_key": "maj", "instruction": "Play G Major", "context": "Strong."},
+            {"type": "triad", "root": "D4", "formula_key": "maj", "instruction": "Play D Major", "context": "Bold."},
+            {"type": "triad", "root": "A3", "formula_key": "maj", "instruction": "Play A Major", "context": "Warm."},
+            {"type": "triad", "root": "A3", "formula_key": "min", "instruction": "Play A Minor", "context": "Sad."},
+            {"type": "triad", "root": "E4", "formula_key": "min", "instruction": "Play E Minor", "context": "Heavy."},
+            {"type": "triad", "root": "D4", "formula_key": "min", "instruction": "Play D Minor", "context": "Serious."},
+            {"type": "triad", "root": "G3", "formula_key": "min", "instruction": "Play G Minor", "context": "Tragic."},
+            {"type": "triad", "root": "C4", "formula_key": "min", "instruction": "Play C Minor", "context": "Deep."}
         ],
         "Augmented & Diminished Triads": [
-            {"type": "triad", "root": "C4", "formula_key": "aug", "instruction": "Play C Augmented (1-3-#5)", "context": "Dreamy/Unsettled. 'Life on Mars' (Bowie) pre-chorus."},
-            {"type": "triad", "root": "B3", "formula_key": "dim", "instruction": "Play B Diminished (1-b3-b5)", "context": "Tense. Pulls strongly to C Major."},
-            {"type": "triad", "root": "F4", "formula_key": "aug", "instruction": "Play F Augmented", "context": "Floating feeling. Used in intros."}
+            {"type": "triad", "root": "C4", "formula_key": "aug", "instruction": "Play C Augmented", "context": "Dreamy."},
+            {"type": "triad", "root": "G3", "formula_key": "aug", "instruction": "Play G Augmented", "context": "Floating."},
+            {"type": "triad", "root": "F4", "formula_key": "aug", "instruction": "Play F Augmented", "context": "Lifted."},
+            {"type": "triad", "root": "D4", "formula_key": "aug", "instruction": "Play D Augmented", "context": "Unsettled."},
+            {"type": "triad", "root": "A3", "formula_key": "aug", "instruction": "Play A Augmented", "context": "Drifting."},
+            {"type": "triad", "root": "B3", "formula_key": "dim", "instruction": "Play B Diminished", "context": "Tense."},
+            {"type": "triad", "root": "F#3", "formula_key": "dim", "instruction": "Play F# Diminished", "context": "Tight."},
+            {"type": "triad", "root": "C#4", "formula_key": "dim", "instruction": "Play C# Diminished", "context": "Edgy."},
+            {"type": "triad", "root": "G#3", "formula_key": "dim", "instruction": "Play G# Diminished", "context": "Suspense."},
+            {"type": "triad", "root": "E4", "formula_key": "dim", "instruction": "Play E Diminished", "context": "Resolving."}
         ],
         "Suspended Chords": [
-            {"type": "triad", "root": "D4", "formula_key": "sus4", "instruction": "Play D Sus4 (1-4-5)", "context": "Rock: 'Pinball Wizard' (The Who)."},
-            {"type": "triad", "root": "D4", "formula_key": "sus2", "instruction": "Play D Sus2 (1-2-5)", "context": "Ballad: 'Summer of 69' (Bryan Adams)."},
-            {"type": "triad", "root": "A3", "formula_key": "sus4", "instruction": "Play A Sus4", "context": "Pop: 'Jack & Diane' intro."}
+            {"type": "triad", "root": "C4", "formula_key": "sus4", "instruction": "Play C Sus4", "context": "Tension."},
+            {"type": "triad", "root": "C4", "formula_key": "sus2", "instruction": "Play C Sus2", "context": "Open."},
+            {"type": "triad", "root": "G3", "formula_key": "sus4", "instruction": "Play G Sus4", "context": "Anthem."},
+            {"type": "triad", "root": "G3", "formula_key": "sus2", "instruction": "Play G Sus2", "context": "Bright."},
+            {"type": "triad", "root": "D4", "formula_key": "sus4", "instruction": "Play D Sus4", "context": "Classic Rock."},
+            {"type": "triad", "root": "D4", "formula_key": "sus2", "instruction": "Play D Sus2", "context": "Ballad."},
+            {"type": "triad", "root": "A3", "formula_key": "sus4", "instruction": "Play A Sus4", "context": "Pop."},
+            {"type": "triad", "root": "A3", "formula_key": "sus2", "instruction": "Play A Sus2", "context": "Flowing."},
+            {"type": "triad", "root": "F4", "formula_key": "sus4", "instruction": "Play F Sus4", "context": "Gospel."},
+            {"type": "triad", "root": "E4", "formula_key": "sus4", "instruction": "Play E Sus4", "context": "Transition."}
         ],
         "6th Chords": [
-            {"type": "triad", "root": "C4", "formula_key": "maj6", "instruction": "Play C Major 6 (1-3-5-6)", "context": "Swing/Jazz. The ending chord of 'She Loves You' (Beatles)."},
-            {"type": "triad", "root": "C4", "formula_key": "min6", "instruction": "Play C Minor 6 (1-b3-5-6)", "context": "Spy Theme: 'James Bond' Theme ending chord."},
-            {"type": "triad", "root": "G3", "formula_key": "maj6", "instruction": "Play G Major 6", "context": "Rockabilly/Boogie Woogie bass lines."}
+            {"type": "triad", "root": "C4", "formula_key": "maj6", "instruction": "Play C Major 6", "context": "Beatles ending."},
+            {"type": "triad", "root": "F3", "formula_key": "maj6", "instruction": "Play F Major 6", "context": "Warm."},
+            {"type": "triad", "root": "G3", "formula_key": "maj6", "instruction": "Play G Major 6", "context": "Country."},
+            {"type": "triad", "root": "Bb3", "formula_key": "maj6", "instruction": "Play Bb Major 6", "context": "Swing."},
+            {"type": "triad", "root": "D4", "formula_key": "maj6", "instruction": "Play D Major 6", "context": "Happy."},
+            {"type": "triad", "root": "C4", "formula_key": "min6", "instruction": "Play C Minor 6", "context": "Spy Theme."},
+            {"type": "triad", "root": "A3", "formula_key": "min6", "instruction": "Play A Minor 6", "context": "Mystery."},
+            {"type": "triad", "root": "D4", "formula_key": "min6", "instruction": "Play D Minor 6", "context": "Noir."},
+            {"type": "triad", "root": "G3", "formula_key": "min6", "instruction": "Play G Minor 6", "context": "Dark."},
+            {"type": "triad", "root": "E4", "formula_key": "min6", "instruction": "Play E Minor 6", "context": "Tension."}
         ],
         "Tetrads (4-Note Chords)": [
-            {"type": "triad", "root": "C4", "formula_key": "maj7", "instruction": "Play C Major 7 (1-3-5-7)", "context": "Dreamy. 'Imagine' (John Lennon)."},
-            {"type": "triad", "root": "D4", "formula_key": "min7", "instruction": "Play D Minor 7 (1-b3-5-b7)", "context": "Cool. 'Get Down On It' (Kool & The Gang)."},
-            {"type": "triad", "root": "G3", "formula_key": "dom7", "instruction": "Play G Dominant 7 (1-3-5-b7)", "context": "Bluesy. The V chord in C Major."}
+            {"type": "triad", "root": "C4", "formula_key": "maj7", "instruction": "Play C Major 7", "context": "Lo-Fi."},
+            {"type": "triad", "root": "F3", "formula_key": "maj7", "instruction": "Play F Major 7", "context": "Smooth."},
+            {"type": "triad", "root": "G3", "formula_key": "dom7", "instruction": "Play G Dominant 7", "context": "Blues."},
+            {"type": "triad", "root": "D4", "formula_key": "min7", "instruction": "Play D Minor 7", "context": "Cool."},
+            {"type": "triad", "root": "A3", "formula_key": "min7", "instruction": "Play A Minor 7", "context": "Mellow."},
+            {"type": "triad", "root": "E4", "formula_key": "min7", "instruction": "Play E Minor 7", "context": "Bossa."},
+            {"type": "triad", "root": "B3", "formula_key": "m7b5", "instruction": "Play B Half-Diminished", "context": "Jazz II."},
+            {"type": "triad", "root": "C4", "formula_key": "min7", "instruction": "Play C Minor 7", "context": "Deep."},
+            {"type": "triad", "root": "D4", "formula_key": "dom7", "instruction": "Play D Dominant 7", "context": "Folk."},
+            {"type": "triad", "root": "Bb3", "formula_key": "maj7", "instruction": "Play Bb Major 7", "context": "Soul."}
         ],
         "Chord Inversions": [
-            {"type": "sequence", "notes": ["E4", "G4", "C5"], "instruction": "Play C Major (1st Inversion)", "context": "3rd in the bass. Smoother voice leading."},
-            {"type": "sequence", "notes": ["G3", "C4", "E4"], "instruction": "Play C Major (2nd Inversion)", "context": "5th in the bass. Used in gospel 'Amen' endings."},
-            {"type": "sequence", "notes": ["F4", "A4", "D5"], "instruction": "Play D Minor (1st Inversion)", "context": "Common in pop piano ballads."}
+            {"type": "sequence", "notes": ["E4","G4","C5"], "instruction": "Play C Major (1st Inv)", "context": "3rd in bass."},
+            {"type": "sequence", "notes": ["G3","C4","E4"], "instruction": "Play C Major (2nd Inv)", "context": "5th in bass."},
+            {"type": "sequence", "notes": ["A3","C4","F4"], "instruction": "Play F Major (1st Inv)", "context": "Smooth."},
+            {"type": "sequence", "notes": ["C4","F4","A4"], "instruction": "Play F Major (2nd Inv)", "context": "Amen."},
+            {"type": "sequence", "notes": ["B3","D4","G4"], "instruction": "Play G Major (1st Inv)", "context": "Leading."},
+            {"type": "sequence", "notes": ["D4","G4","B4"], "instruction": "Play G Major (2nd Inv)", "context": "Stable."},
+            {"type": "sequence", "notes": ["C4","E4","A4"], "instruction": "Play A Minor (1st Inv)", "context": "Sad."},
+            {"type": "sequence", "notes": ["E4","A4","C5"], "instruction": "Play A Minor (2nd Inv)", "context": "Hollow."},
+            {"type": "sequence", "notes": ["F4","A4","D5"], "instruction": "Play D Minor (1st Inv)", "context": "Ballad."},
+            {"type": "sequence", "notes": ["A3","D4","F4"], "instruction": "Play D Minor (2nd Inv)", "context": "Dark."}
         ],
         "Relative Keys": [
-            {"type": "sequence", "notes": ["C4", "A3"], "instruction": "Play C Major then A Minor (Relative)", "context": "They share the exact same notes."},
-            {"type": "sequence", "notes": ["G3", "E3"], "instruction": "Play G Major then E Minor (Relative)", "context": "Standard pop modulation."},
-            {"type": "sequence", "notes": ["F3", "D3"], "instruction": "Play F Major then D Minor (Relative)", "context": "Common pairing in ballads."}
+            {"type": "sequence", "notes": ["C4","E4","G4","A3","C4","E4"], "instruction": "Play C Major then A Minor", "context": "Relatives."},
+            {"type": "sequence", "notes": ["G3","B3","D4","E4","G4","B4"], "instruction": "Play G Major then E Minor", "context": "Relatives."},
+            {"type": "sequence", "notes": ["F3","A3","C4","D4","F4","A4"], "instruction": "Play F Major then D Minor", "context": "Relatives."},
+            {"type": "sequence", "notes": ["D4","F#4","A4","B3","D4","F#4"], "instruction": "Play D Major then B Minor", "context": "Relatives."},
+            {"type": "sequence", "notes": ["Bb3","D4","F4","G3","Bb3","D4"], "instruction": "Play Bb Major then G Minor", "context": "Relatives."},
+            {"type": "sequence", "notes": ["A3","C#4","E4","F#3","A3","C#4"], "instruction": "Play A Major then F# Minor", "context": "Relatives."},
+            {"type": "sequence", "notes": ["Eb4","G4","Bb4","C4","Eb4","G4"], "instruction": "Play Eb Major then C Minor", "context": "Relatives."},
+            {"type": "sequence", "notes": ["E4","G#4","B4","C#4","E4","G#4"], "instruction": "Play E Major then C# Minor", "context": "Relatives."},
+            {"type": "sequence", "notes": ["Ab3","C4","Eb4","F3","Ab3","C4"], "instruction": "Play Ab Major then F Minor", "context": "Relatives."},
+            {"type": "sequence", "notes": ["B3","D#4","F#4","G#3","B3","D#4"], "instruction": "Play B Major then G# Minor", "context": "Relatives."}
         ],
-        "The Number System (Roman Numerals)": [
-            {"type": "sequence", "notes": ["C4", "F4", "G4", "C5"], "instruction": "Play I - IV - V - I in C", "context": "The 'Three Chord Trick'. Basis of Rock & Roll."},
-            {"type": "sequence", "notes": ["C4", "A3", "F3", "G3"], "instruction": "Play I - vi - IV - V in C", "context": "The '50s Progression' (Stand By Me, etc.)."},
-            {"type": "sequence", "notes": ["D4", "G3", "C4"], "instruction": "Play ii - V - I in C (Dm - G - C)", "context": "The 'Jazz Progression'."}
+        "The Number System": [
+            {"type": "sequence", "notes": ["C4","F4","G4","C5"], "instruction": "Play I-IV-V-I in C", "context": "Basic Rock."},
+            {"type": "sequence", "notes": ["G3","C4","D4","G4"], "instruction": "Play I-IV-V-I in G", "context": "Folk."},
+            {"type": "sequence", "notes": ["C4","A3","F3","G3"], "instruction": "Play I-vi-IV-V in C", "context": "50s Doo-Wop."},
+            {"type": "sequence", "notes": ["G3","E4","C4","D4"], "instruction": "Play I-vi-IV-V in G", "context": "Stand By Me."},
+            {"type": "sequence", "notes": ["D4","G3","C4"], "instruction": "Play ii-V-I in C", "context": "Jazz."},
+            {"type": "sequence", "notes": ["A3","D4","G3"], "instruction": "Play ii-V-I in G", "context": "Jazz."},
+            {"type": "sequence", "notes": ["C4","G3","A3","F3"], "instruction": "Play I-V-vi-IV in C", "context": "Axis of Awesome."},
+            {"type": "sequence", "notes": ["G3","D4","E4","C4"], "instruction": "Play I-V-vi-IV in G", "context": "Pop Anthem."},
+            {"type": "sequence", "notes": ["F3","G3","E4","A3"], "instruction": "Play IV-V-iii-vi in C", "context": "Royal Road."},
+            {"type": "sequence", "notes": ["C4","Bb3","F3","C4"], "instruction": "Play I-bVII-IV-I in C", "context": "Mixolydian Rock."}
         ],
         
         # ADVANCED
         "Dominants & Tritones": [
-            {"type": "triad", "root": "G3", "formula_key": "dom7", "instruction": "Play G7 (V of C)", "context": "Hear the pull to C? That's the Tritone (B-F)."},
-            {"type": "interval", "root": "B3", "semitones": 6, "instruction": "Play the Tritone in G7 (B to F)", "context": "The 'Unstable' core of the chord."},
-            {"type": "triad", "root": "E4", "formula_key": "dom7", "instruction": "Play E7 (V of A)", "context": "Resolves to A Major or A Minor."}
+            {"type": "triad", "root": "G3", "formula_key": "dom7", "instruction": "Play G7", "context": "V of C."},
+            {"type": "triad", "root": "C4", "formula_key": "dom7", "instruction": "Play C7", "context": "V of F."},
+            {"type": "triad", "root": "D4", "formula_key": "dom7", "instruction": "Play D7", "context": "V of G."},
+            {"type": "triad", "root": "A3", "formula_key": "dom7", "instruction": "Play A7", "context": "V of D."},
+            {"type": "triad", "root": "E4", "formula_key": "dom7", "instruction": "Play E7", "context": "V of A."},
+            {"type": "triad", "root": "B3", "formula_key": "dom7", "instruction": "Play B7", "context": "V of E."},
+            {"type": "triad", "root": "F3", "formula_key": "dom7", "instruction": "Play F7", "context": "V of Bb."},
+            {"type": "triad", "root": "Bb3", "formula_key": "dom7", "instruction": "Play Bb7", "context": "V of Eb."},
+            {"type": "interval", "root": "B3", "semitones": 6, "instruction": "Play Tritone B-F", "context": "Core of G7."},
+            {"type": "interval", "root": "F#3", "semitones": 6, "instruction": "Play Tritone F#-C", "context": "Core of D7."}
         ],
         "Secondary Dominants": [
-            {"type": "triad", "root": "A3", "formula_key": "dom7", "instruction": "Play A7 (V of ii in C)", "context": "Pulls to D Minor. 'Hey Jude' uses this."},
-            {"type": "triad", "root": "D4", "formula_key": "dom7", "instruction": "Play D7 (V of V in C)", "context": "Pulls to G. 'Yesterday' uses this."},
-            {"type": "triad", "root": "E4", "formula_key": "dom7", "instruction": "Play E7 (V of vi in C)", "context": "Pulls to A Minor. 'Creep' (Radiohead) uses III7."}
+            {"type": "triad", "root": "A3", "formula_key": "dom7", "instruction": "Play A7 (V of ii in C)", "context": "To Dm."},
+            {"type": "triad", "root": "D4", "formula_key": "dom7", "instruction": "Play D7 (V of V in C)", "context": "To G."},
+            {"type": "triad", "root": "E4", "formula_key": "dom7", "instruction": "Play E7 (V of vi in C)", "context": "To Am."},
+            {"type": "triad", "root": "C4", "formula_key": "dom7", "instruction": "Play C7 (V of IV in G)", "context": "To C."},
+            {"type": "triad", "root": "B3", "formula_key": "dom7", "instruction": "Play B7 (V of iii in G)", "context": "To Em."},
+            {"type": "triad", "root": "F#3", "formula_key": "dom7", "instruction": "Play F#7 (V of ii in E)", "context": "To Bm."},
+            {"type": "triad", "root": "G3", "formula_key": "dom7", "instruction": "Play G7 (V of IV in D)", "context": "To C? No, V of IV."},
+            {"type": "triad", "root": "Bb3", "formula_key": "dom7", "instruction": "Play Bb7 (V of IV in F)", "context": "To Eb? No."},
+            {"type": "triad", "root": "C#4", "formula_key": "dom7", "instruction": "Play C#7 (V of ii in B)", "context": "Rare."},
+            {"type": "triad", "root": "F4", "formula_key": "dom7", "instruction": "Play F7 (V of bVII)", "context": "Backdoor."}
         ],
         "Tritone Substitution": [
-            {"type": "triad", "root": "Db4", "formula_key": "dom7", "instruction": "Play Db7 (Sub for G7)", "context": "Resolves to C. Jazz chromatic bass movement."},
-            {"type": "triad", "root": "Gb3", "formula_key": "dom7", "instruction": "Play Gb7 (Sub for C7)", "context": "Resolves to F."},
-            {"type": "sequence", "notes": ["D4", "Db4", "C4"], "instruction": "Play ii - subV - I (Dm - Db7 - C)", "context": "Smooth chromatic bassline."}
+            {"type": "triad", "root": "C#4", "formula_key": "dom7", "instruction": "Play Db7 (Sub for G7)", "context": "To C."},
+            {"type": "triad", "root": "Gb3", "formula_key": "dom7", "instruction": "Play Gb7 (Sub for C7)", "context": "To F."},
+            {"type": "triad", "root": "B3", "formula_key": "dom7", "instruction": "Play B7 (Sub for F7)", "context": "To Bb? No, F7 goes to Bb. B7 goes to E."},
+            {"type": "sequence", "notes": ["D4","Db4","C4"], "instruction": "Play Dm - Db7 - C", "context": "Chromatic II-V-I."},
+            {"type": "sequence", "notes": ["G3","Gb3","F3"], "instruction": "Play Gm - Gb7 - F", "context": "Chromatic."},
+            {"type": "sequence", "notes": ["C4","B3","Bb3"], "instruction": "Play Cm - B7 - Bb", "context": "Chromatic."},
+            {"type": "triad", "root": "Eb4", "formula_key": "dom7", "instruction": "Play Eb7 (Sub for A7)", "context": "To D."},
+            {"type": "triad", "root": "Ab3", "formula_key": "dom7", "instruction": "Play Ab7 (Sub for D7)", "context": "To G."},
+            {"type": "triad", "root": "E4", "formula_key": "dom7", "instruction": "Play E7 (Sub for Bb7)", "context": "To Eb?"},
+            {"type": "sequence", "notes": ["A3","Ab3","G3"], "instruction": "Play Am - Ab7 - G", "context": "Smooth."}
         ],
         "Altered Notes & Extensions": [
-            {"type": "sequence", "notes": ["C4", "E4", "G4", "Bb4", "D5"], "instruction": "Play C9 (Dominant 9th)", "context": "James Brown funk chord."},
-            {"type": "sequence", "notes": ["C4", "E4", "G4", "Bb4", "Db5"], "instruction": "Play C7b9", "context": "Jazz tension. Resolves to Fm."},
-            {"type": "sequence", "notes": ["C4", "E4", "G#4", "Bb4"], "instruction": "Play C7#5 (Altered)", "context": "Whole tone feel. Intros and endings."}
+            {"type": "sequence", "notes": ["C4","E4","G4","Bb4","D5"], "instruction": "Play C9", "context": "Funk."},
+            {"type": "sequence", "notes": ["G3","B3","D4","F4","A4"], "instruction": "Play G9", "context": "Soul."},
+            {"type": "sequence", "notes": ["C4","E4","G4","Bb4","Db5"], "instruction": "Play C7b9", "context": "Minor V."},
+            {"type": "sequence", "notes": ["G3","B3","D4","F4","Ab4"], "instruction": "Play G7b9", "context": "To Cm."},
+            {"type": "sequence", "notes": ["C4","E4","G#4","Bb4"], "instruction": "Play C7#5", "context": "Augmented Dom."},
+            {"type": "sequence", "notes": ["D4","F#4","A#4","C5"], "instruction": "Play D7#5", "context": "Whole tone."},
+            {"type": "sequence", "notes": ["C4","E4","G4","Bb4","D#5"], "instruction": "Play C7#9", "context": "Hendrix."},
+            {"type": "sequence", "notes": ["E4","G#4","B4","D5","G5"], "instruction": "Play E7#9", "context": "Purple Haze."},
+            {"type": "sequence", "notes": ["C4","E4","G4","Bb4","D5","A5"], "instruction": "Play C13", "context": "Jazz."},
+            {"type": "sequence", "notes": ["F3","A3","C4","Eb4","G4","D5"], "instruction": "Play F13", "context": "Rich."}
         ],
         "Circle of 5ths": [
-            {"type": "sequence", "notes": ["C4", "F4", "Bb3"], "instruction": "Play C -> F -> Bb", "context": "Falling 5ths. The strongest harmonic motion."},
-            {"type": "sequence", "notes": ["E4", "A3", "D4", "G3", "C4"], "instruction": "Play E -> A -> D -> G -> C", "context": "Full diatonic circle progression."}
+            {"type": "sequence", "notes": ["C4","F4","Bb3"], "instruction": "Play C-F-Bb", "context": "Down."},
+            {"type": "sequence", "notes": ["Bb3","Eb4","Ab3"], "instruction": "Play Bb-Eb-Ab", "context": "Flats."},
+            {"type": "sequence", "notes": ["Ab3","Db4","Gb3"], "instruction": "Play Ab-Db-Gb", "context": "Deep."},
+            {"type": "sequence", "notes": ["Gb3","B3","E4"], "instruction": "Play Gb-B-E", "context": "Enharmonic."},
+            {"type": "sequence", "notes": ["E4","A3","D4"], "instruction": "Play E-A-D", "context": "Sharps."},
+            {"type": "sequence", "notes": ["D4","G3","C4"], "instruction": "Play D-G-C", "context": "Home."},
+            {"type": "sequence", "notes": ["C4","G3","D4"], "instruction": "Play C-G-D", "context": "Up."},
+            {"type": "sequence", "notes": ["D4","A3","E4"], "instruction": "Play D-A-E", "context": "Bright."},
+            {"type": "sequence", "notes": ["E4","B3","F#3"], "instruction": "Play E-B-F#", "context": "Lift."},
+            {"type": "sequence", "notes": ["F#3","C#4","G#3"], "instruction": "Play F#-C#-G#", "context": "High."}
         ],
         "Modes": [
-            {"type": "sequence", "notes": ["D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5"], "instruction": "Play D Dorian (White Keys)", "context": "Sad but hopeful. 'So What' (Miles Davis)."},
-            {"type": "sequence", "notes": ["E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5"], "instruction": "Play E Phrygian", "context": "Spanish/Flamenco sound."},
-            {"type": "sequence", "notes": ["F3", "G3", "A3", "B3", "C4", "D4", "E4", "F4"], "instruction": "Play F Lydian (#4)", "context": "Dreamy/Sci-Fi. 'The Simpsons' opening."}
+            {"type": "sequence", "notes": ["D4","E4","F4","G4","A4","B4","C5","D5"], "instruction": "Play D Dorian", "context": "So What."},
+            {"type": "sequence", "notes": ["E4","F4","G4","A4","B4","C5","D5","E5"], "instruction": "Play E Phrygian", "context": "Spanish."},
+            {"type": "sequence", "notes": ["F3","G3","A3","B3","C4","D4","E4","F4"], "instruction": "Play F Lydian", "context": "Dreamy."},
+            {"type": "sequence", "notes": ["G3","A3","B3","C4","D4","E4","F4","G4"], "instruction": "Play G Mixolydian", "context": "Rock."},
+            {"type": "sequence", "notes": ["A3","B3","C4","D4","E4","F4","G4","A4"], "instruction": "Play A Aeolian", "context": "Minor."},
+            {"type": "sequence", "notes": ["B3","C4","D4","E4","F4","G4","A4","B4"], "instruction": "Play B Locrian", "context": "Dark."},
+            {"type": "sequence", "notes": ["C4","D4","E4","F4","G4","A4","B4","C5"], "instruction": "Play C Ionian", "context": "Major."},
+            {"type": "sequence", "notes": ["C4","D4","Eb4","F4","G4","A4","Bb4","C5"], "instruction": "Play C Dorian", "context": "Transposed."},
+            {"type": "sequence", "notes": ["C4","D4","E4","F#4","G4","A4","B4","C5"], "instruction": "Play C Lydian", "context": "Simpsons."},
+            {"type": "sequence", "notes": ["C4","D4","E4","F4","G4","A4","Bb4","C5"], "instruction": "Play C Mixolydian", "context": "Bluesy."}
         ],
         "Minor Variations": [
-            {"type": "sequence", "notes": ["A3", "B3", "C4", "D4", "E4", "F4", "G#4", "A4"], "instruction": "Play Harmonic Minor", "context": "Snake charmer vibe."},
-            {"type": "sequence", "notes": ["A3", "B3", "C4", "D4", "E4", "F#4", "G#4", "A4"], "instruction": "Play Melodic Minor (Ascending)", "context": "Smooth, jazzy minor."}
+            {"type": "sequence", "notes": ["A3","B3","C4","D4","E4","F4","G#4","A4"], "instruction": "Play A Harmonic Minor", "context": "Latin."},
+            {"type": "sequence", "notes": ["E4","F#4","G4","A4","B4","C5","D#5","E5"], "instruction": "Play E Harmonic Minor", "context": "Metal."},
+            {"type": "sequence", "notes": ["D4","E4","F4","G4","A4","Bb4","C#5","D5"], "instruction": "Play D Harmonic Minor", "context": "Classical."},
+            {"type": "sequence", "notes": ["A3","B3","C4","D4","E4","F#4","G#4","A4"], "instruction": "Play A Melodic Minor", "context": "Jazz."},
+            {"type": "sequence", "notes": ["C4","D4","Eb4","F4","G4","A4","B4","C5"], "instruction": "Play C Melodic Minor", "context": "Smooth."},
+            {"type": "sequence", "notes": ["G3","A3","Bb3","C4","D4","E4","F#4","G4"], "instruction": "Play G Melodic Minor", "context": "Upward."},
+            {"type": "sequence", "notes": ["B3","C#4","D4","E4","F#4","G4","A#4","B4"], "instruction": "Play B Harmonic Minor", "context": "Tense."},
+            {"type": "sequence", "notes": ["F3","G3","Ab3","Bb3","C4","D4","E4","F4"], "instruction": "Play F Melodic Minor", "context": "Deep."},
+            {"type": "sequence", "notes": ["C4","D4","Eb4","F4","G4","Ab4","B4","C5"], "instruction": "Play C Harmonic Minor", "context": "Exotic."},
+            {"type": "sequence", "notes": ["E4","F#4","G4","A4","B4","C#5","D#5","E5"], "instruction": "Play E Melodic Minor", "context": "Bright."}
         ],
         "Exotic Scales": [
-            {"type": "sequence", "notes": ["C4", "D4", "E4", "F#4", "G#4", "Bb4", "C5"], "instruction": "Play Whole Tone Scale", "context": "Dream sequences in movies."},
-            {"type": "sequence", "notes": ["C4", "Db4", "E4", "F4", "G4", "Ab4", "B4", "C5"], "instruction": "Play Double Harmonic Major", "context": "Middle Eastern/Byzantine sound ('Misirlou')."}
+            {"type": "sequence", "notes": ["C4","D4","E4","F#4","G#4","Bb4","C5"], "instruction": "Play Whole Tone", "context": "Dream."},
+            {"type": "sequence", "notes": ["C4","Db4","E4","F4","G4","Ab4","B4","C5"], "instruction": "Play Double Harmonic", "context": "Byzantine."},
+            {"type": "sequence", "notes": ["C4","Db4","Eb4","E4","Gb4","G4","A4","Bb4"], "instruction": "Play Diminished (H-W)", "context": "Octatonic."},
+            {"type": "sequence", "notes": ["A3","Bb3","C#4","D4","E4","F4","G#4","A4"], "instruction": "Play Phrygian Dominant", "context": "Spanish."},
+            {"type": "sequence", "notes": ["C4","Eb4","F4","Gb4","G4","Bb4","C5"], "instruction": "Play Blues Scale", "context": "Soul."},
+            {"type": "sequence", "notes": ["C4","D4","E4","G4","A4","C5"], "instruction": "Play Major Pentatonic", "context": "Country."},
+            {"type": "sequence", "notes": ["C4","Eb4","G4","A4","C5"], "instruction": "Play Hirajoshi", "context": "Japanese."},
+            {"type": "sequence", "notes": ["C4","Db4","F4","G4","Ab4","C5"], "instruction": "Play In Sen", "context": "Japanese."},
+            {"type": "sequence", "notes": ["C4","D4","E4","G4","Bb4","C5"], "instruction": "Play Mixolydian Pentatonic", "context": "Indian."},
+            {"type": "sequence", "notes": ["C4","Eb4","F4","G4","Bb4","C5"], "instruction": "Play Minor Pentatonic", "context": "Rock."}
         ],
-        "Jazz Voicings (Open/Closed/Quartal)": [
-            {"type": "sequence", "notes": ["D4", "G4", "C5", "F5"], "instruction": "Play Quartal Voicing (Stacked 4ths)", "context": "'So What' voicing. Modern and open."},
-            {"type": "sequence", "notes": ["C4", "E4", "G4", "B4"], "instruction": "Play Closed Voicing (Cmaj7)", "context": "Tight block chord."},
-            {"type": "sequence", "notes": ["C3", "G3", "E4", "B4"], "instruction": "Play Open Voicing (Cmaj7)", "context": "Spacious, professional ballad sound."}
+        "Jazz Voicings": [
+            {"type": "sequence", "notes": ["D4","G4","C5","F5"], "instruction": "Play Quartal (So What)", "context": "4ths."},
+            {"type": "sequence", "notes": ["C4","E4","G4","B4"], "instruction": "Play Closed Cmaj7", "context": "Block."},
+            {"type": "sequence", "notes": ["C3","G3","E4","B4"], "instruction": "Play Open Cmaj7", "context": "Spread."},
+            {"type": "sequence", "notes": ["C3","E4","A4","D5"], "instruction": "Play C6/9", "context": "Bill Evans."},
+            {"type": "sequence", "notes": ["F3","A3","C4","E4"], "instruction": "Play Fmaj7 Shell", "context": "Root-3-7."},
+            {"type": "sequence", "notes": ["G3","F4","B4","E5"], "instruction": "Play G13", "context": "Extension."},
+            {"type": "sequence", "notes": ["C3","Bb3","E4","A4"], "instruction": "Play C13", "context": "Dominant."},
+            {"type": "sequence", "notes": ["D3","F4","C5","E5"], "instruction": "Play Dm9", "context": "Minor."},
+            {"type": "sequence", "notes": ["E3","D4","G4","C5"], "instruction": "Play Em11", "context": "Phrygian."},
+            {"type": "sequence", "notes": ["G3","F4","A4","B4","E5"], "instruction": "Play G13b9", "context": "Altered."}
+        ],
+        "Enclosures": [
+            {"type": "sequence", "notes": ["D4","B3","C4"], "instruction": "Play D-B-C (Target C)", "context": "Above-Below-Target."},
+            {"type": "sequence", "notes": ["A4","F#4","G4"], "instruction": "Play A-F#-G (Target G)", "context": "Diatonic."},
+            {"type": "sequence", "notes": ["E4","C#4","D4"], "instruction": "Play E-C#-D (Target D)", "context": "Enclosure."},
+            {"type": "sequence", "notes": ["F4","D4","E4"], "instruction": "Play F-D-E (Target E)", "context": "Simple."},
+            {"type": "sequence", "notes": ["Bb3","G3","A3"], "instruction": "Play Bb-G-A (Target A)", "context": "Minor."},
+            {"type": "sequence", "notes": ["Db4","B3","C4"], "instruction": "Play Db-B-C (Target C)", "context": "Chromatic."},
+            {"type": "sequence", "notes": ["Ab4","F#4","G4"], "instruction": "Play Ab-F#-G (Target G)", "context": "Chromatic."},
+            {"type": "sequence", "notes": ["Eb4","C#4","D4"], "instruction": "Play Eb-C#-D (Target D)", "context": "Chromatic."},
+            {"type": "sequence", "notes": ["G4","E4","F4"], "instruction": "Play G-E-F (Target F)", "context": "Enclosure."},
+            {"type": "sequence", "notes": ["D4","Bb3","B3"], "instruction": "Play D-Bb-B (Target B)", "context": "Approach."}
+        ],
+        "Approach Tones": [
+            {"type": "sequence", "notes": ["B3","C4"], "instruction": "Play B-C", "context": "Leading Tone."},
+            {"type": "sequence", "notes": ["F#4","G4"], "instruction": "Play F#-G", "context": "Chromatic."},
+            {"type": "sequence", "notes": ["C#4","D4"], "instruction": "Play C#-D", "context": "Chromatic."},
+            {"type": "sequence", "notes": ["G#4","A4"], "instruction": "Play G#-A", "context": "Chromatic."},
+            {"type": "sequence", "notes": ["D#4","E4"], "instruction": "Play D#-E", "context": "Chromatic."},
+            {"type": "sequence", "notes": ["A#3","B3"], "instruction": "Play A#-B", "context": "Chromatic."},
+            {"type": "sequence", "notes": ["Db4","C4"], "instruction": "Play Db-C", "context": "Descending."},
+            {"type": "sequence", "notes": ["Ab4","G4"], "instruction": "Play Ab-G", "context": "Descending."},
+            {"type": "sequence", "notes": ["Eb4","D4"], "instruction": "Play Eb-D", "context": "Descending."},
+            {"type": "sequence", "notes": ["Bb3","A3"], "instruction": "Play Bb-A", "context": "Descending."}
         ]
     }

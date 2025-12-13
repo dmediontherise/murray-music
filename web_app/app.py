@@ -73,8 +73,16 @@ def get_challenge():
     topic = data.get('topic')
     challenge_index = data.get('challenge_index', 0)
     
-    if topic not in Curriculum.CHALLENGES:
-        return jsonify({"error": "Topic not found or no challenges defined."}), 404
+    # Check if topic exists in challenges
+    if topic not in Curriculum.CHALLENGES or not Curriculum.CHALLENGES[topic]:
+        # Fallback for empty/missing topics to prevent crash
+        return jsonify({
+            "instruction": f"Topic: {topic}",
+            "context": "Content coming soon.",
+            "target_notes": ["C4"], # Dummy note
+            "svg": SheetMusicGenerator.generate_svg(["C4"]),
+            "no_more_challenges": False
+        })
 
     challenges_for_topic = Curriculum.CHALLENGES[topic]
     
