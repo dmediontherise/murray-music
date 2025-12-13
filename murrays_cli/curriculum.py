@@ -1,276 +1,162 @@
 class Curriculum:
     BEGINNER_PATH = [
-        "Intervals",
-        "Major Triads",
-        "Minor Triads",
-        "Diminished Triads",
+        "Intervals (Half/Whole Steps)",
+        "Diatonic Scales",
+        "Chromatic Scale",
+        "Major & Minor Scales",
+        "Major & Minor Triads",
+        "Augmented & Diminished Triads",
         "Suspended Chords",
-        "Major 7th Chords",
-        "Minor 7th Chords",
-        "Dominant 7th Chords"
+        "6th Chords",
+        "Tetrads (4-Note Chords)",
+        "Chord Inversions",
+        "Relative Keys",
+        "The Number System (Roman Numerals)"
     ]
 
     ADVANCED_PATH = [
+        "Dominants & Tritones",
+        "Secondary Dominants",
+        "Tritone Substitution",
+        "Altered Notes & Extensions",
         "Circle of 5ths",
-        "Half-Diminished 7th",
-        "Fully Diminished 7th"
+        "Modes",
+        "Minor Variations",
+        "Exotic Scales",
+        "Jazz Voicings (Open/Closed/Quartal)"
     ]
 
     DESCRIPTIONS = {
-        'Intervals': "The building blocks of melody. Recognizing distance between notes is the first step to ear training.",
-        "Major Triads": "The most common chord in Western music. Sounds happy, stable, and resolved.",
-        "Minor Triads": "The emotional counterpart to Major. Sounds sad, serious, or introspective.",
-        "Diminished Triads": "Tense and unstable. Used to pass between other chords or create suspense.",
-        "Suspended Chords": "Replaces the 3rd with a 2nd or 4th. Sounds open, airy, and 'suspended' in mid-air.",
-        "Major 7th Chords": "A major triad with a major 7th. The sound of Jazz, Lo-Fi, and Dream Pop.",
-        "Minor 7th Chords": "A minor triad with a minor 7th. Mellow, cool, and sophisticated. The foundation of R&B.",
-        "Dominant 7th Chords": "The engine of harmony. Contains a Tritone that wants to pull you home to the Tonic.",
-        "Half-Diminished 7th": "Also called 'Minor 7 flat 5'. Dark, romantic, and tragic. Essential for minor key Jazz.",
-        "Fully Diminished 7th": "A stack of minor 3rds. Symmetrical, ambiguous, and extremely tense. The 'Villain' chord.",
-        "Circle of 5ths": "The map of music theory. Shows how keys relate to each other. Essential for songwriting."
+        # BOOK 1: BASIC
+        "Intervals (Half/Whole Steps)": "The distance between notes. Half Step = 1 Key (C to C#). Whole Step = 2 Keys (C to D).",
+        "Diatonic Scales": "The 'White Keys' scale. All notes from C to C with no sharps or flats. The foundation of Western music.",
+        "Chromatic Scale": "Every single note in order (12 tones). All the sharps and flats included.",
+        "Major & Minor Scales": "The two main moods of music. Major = Happy (W-W-H-W-W-W-H). Minor = Sad (W-H-W-W-H-W-W).",
+        "Major & Minor Triads": "3-note chords. Major (1-3-5) is happy. Minor (1-b3-5) is sad.",
+        "Augmented & Diminished Triads": "Augmented: Sharp the 5th (1-3-#5). Diminished: Flat the 3rd and 5th (1-b3-b5).",
+        "Suspended Chords": "Replace the 3rd with a 2nd (Sus2) or 4th (Sus4). Sounds open and floating.",
+        "6th Chords": "Add the 6th note to a triad. C6 = C-E-G-A. Sounds pastoral and sweet.",
+        "Tetrads (4-Note Chords)": "Sticking to the 7th note. Major 7 (1-3-5-7), Minor 7 (1-b3-5-b7), Dominant 7 (1-3-5-b7).",
+        "Chord Inversions": "Rearranging the order of notes (e.g., C-E-G becomes E-G-C). Makes chord changes smoother.",
+        "Relative Keys": "Every Major key has a Minor twin that shares the same notes. C Major's relative is A Minor.",
+        "The Number System (Roman Numerals)": "Labeling chords 1-7 (I-VII) to understand their function in any key.",
+
+        # BOOK 2: ADVANCED
+        "Dominants & Tritones": "The tension chord (V7). Contains a Tritone (Devil in Music) that pulls to the root.",
+        "Secondary Dominants": "A dominant chord that resolves to a chord *other* than the tonic (e.g., V of V).",
+        "Tritone Substitution": "Replacing a Dominant 7th with another Dominant 7th exactly 6 semitones away.",
+        "Altered Notes & Extensions": "Adding spice: 9ths, 11ths, 13ths, b9, #9, #11, b13.",
+        "Circle of 5ths": "A visual map of how all 12 keys relate to each other.",
+        "Modes": "Variations of the Major scale starting on different steps (Dorian, Phrygian, Lydian, etc.).",
+        "Minor Variations": "Harmonic Minor (Sharp 7), Melodic Minor (Sharp 6 & 7).",
+        "Exotic Scales": "Whole Tone, Diminished (Half-Whole), and other non-traditional scales.",
+        "Jazz Voicings (Open/Closed/Quartal)": "Advanced ways to arrange notes. Herbie Hancock, Bill Evans, and Kenny Barron styles."
     }
     
     CHALLENGES = {
-        "Intervals": [
-            {"type": "interval", "root": "C4", "semitones": 4, "instruction": "Play a C Major 3rd", 
-             "context": "The 'Happy' interval. Opening notes of 'When the Saints Go Marching In' (Oh-When)."},
-            {"type": "interval", "root": "C4", "semitones": 7, "instruction": "Play a C Perfect 5th", 
-             "context": "The 'Power' interval. Opening notes of 'Star Wars' (Main Theme) and 'Twinkle Twinkle'."},
-            {"type": "interval", "root": "A3", "semitones": 3, "instruction": "Play an A Minor 3rd", 
-             "context": "The 'Sad' interval. Opening notes of 'Greensleeves' and Brahms' Lullaby."},
-            {"type": "interval", "root": "G3", "semitones": 5, "instruction": "Play a G Perfect 4th", 
-             "context": "The 'Call' interval. Opening notes of 'Here Comes the Bride' (Wagner) and 'Amazing Grace'."},
-            {"type": "interval", "root": "D4", "semitones": 2, "instruction": "Play a D Major 2nd", 
-             "context": "A whole step. The start of 'Happy Birthday' (Hap-py)."},
-            {"type": "interval", "root": "E4", "semitones": 1, "instruction": "Play an E Minor 2nd", 
-             "context": "The 'Jaws' theme. Extremely dissonant and tense half-step movement."},
-            {"type": "interval", "root": "F3", "semitones": 12, "instruction": "Play an F Octave", 
-             "context": "Same note, higher pitch. Opening jump of 'Somewhere Over the Rainbow'."},
-            {"type": "interval", "root": "B3", "semitones": 6, "instruction": "Play a B Tritone", 
-             "context": "The 'Devil in Music'. Opening interval of 'The Simpsons' theme (The-Simp)."},
-            {"type": "interval", "root": "C4", "semitones": 11, "instruction": "Play a C Major 7th Interval", 
-             "context": "Very dissonant but dreamy. The chorus leap in 'Take On Me' (Take-On) is a Major 7th."},
-            {"type": "interval", "root": "D4", "semitones": 10, "instruction": "Play a D Minor 7th Interval", 
-             "context": "Opening interval of the original 'Star Trek' theme (There's a place...)."}
+        "Intervals (Half/Whole Steps)": [
+            {"type": "interval", "root": "C4", "semitones": 1, "instruction": "Play a Half Step Up from C", "context": "The smallest interval. 'Jaws' Theme."},
+            {"type": "interval", "root": "C4", "semitones": 2, "instruction": "Play a Whole Step Up from C", "context": "Standard major scale step. 'Happy Birthday'."},
+            {"type": "interval", "root": "E4", "semitones": 1, "instruction": "Play a Half Step (E to F)", "context": "Natural half step (no black key between E and F)."},
+            {"type": "interval", "root": "G3", "semitones": 2, "instruction": "Play a Whole Step Up from G", "context": "The start of many folk melodies."}
         ],
-        "Major Triads": [
-            {"type": "triad", "root": "C4", "formula_key": "maj", "instruction": "Play a C Major Triad", 
-             "context": "Classic Pop: 'Let It Be' (Beatles) starts firmly on C Major."},
-            {"type": "triad", "root": "G3", "formula_key": "maj", "instruction": "Play a G Major Triad", 
-             "context": "Rock Anthem: 'Sweet Home Alabama' riff revolves around D-C-G."},
-            {"type": "triad", "root": "D4", "formula_key": "maj", "instruction": "Play a D Major Triad", 
-             "context": "Pop/Rock: 'Bad Moon Rising' (CCR) centers on the D Major chord."},
-            {"type": "triad", "root": "A3", "formula_key": "maj", "instruction": "Play an A Major Triad", 
-             "context": "Reggae: 'Three Little Birds' (Bob Marley) is in A Major."},
-            {"type": "triad", "root": "E4", "formula_key": "maj", "instruction": "Play an E Major Triad", 
-             "context": "Blues/Rock: The 'Hendrix Chord' foundation. Key of 'Purple Haze'."},
-            {"type": "triad", "root": "F3", "formula_key": "maj", "instruction": "Play an F Major Triad", 
-             "context": "Ballad: 'Imagine' (John Lennon) oscillates between C and F."},
-            {"type": "triad", "root": "Bb3", "formula_key": "maj", "instruction": "Play a Bb Major Triad", 
-             "context": "Soul: Common horn key. 'I Got You (I Feel Good)' (James Brown) jam."},
-            {"type": "triad", "root": "Eb4", "formula_key": "maj", "instruction": "Play an Eb Major Triad", 
-             "context": "Gospel: Often used in church music for a warm, rich tone."},
-            {"type": "triad", "root": "Ab3", "formula_key": "maj", "instruction": "Play an Ab Major Triad", 
-             "context": "Pop Anthem: 'Somebody to Love' (Queen) starts on Ab."},
-            {"type": "triad", "root": "B3", "formula_key": "maj", "instruction": "Play a B Major Triad", 
-             "context": "Funk: 'September' (Earth, Wind & Fire) chorus hits Bmaj7/B."}
+        "Diatonic Scales": [
+            {"type": "sequence", "notes": ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"], "instruction": "Play the C Major Diatonic Scale", "context": "The 'White Keys' scale. Do-Re-Mi..."},
+            {"type": "sequence", "notes": ["G3", "A3", "B3", "C4", "D4", "E4", "F#4", "G4"], "instruction": "Play the G Major Scale (1 Sharp)", "context": "Classic classical key. Note the F#."},
+            {"type": "sequence", "notes": ["F3", "G3", "A3", "Bb3", "C4", "D4", "E4", "F4"], "instruction": "Play the F Major Scale (1 Flat)", "context": "Common key for brass instruments."}
         ],
-        "Minor Triads": [
-            {"type": "triad", "root": "A3", "formula_key": "min", "instruction": "Play an A Minor Triad", 
-             "context": "Rock Ballad: 'Stairway to Heaven' (Led Zeppelin) intro arpeggio."},
-            {"type": "triad", "root": "E4", "formula_key": "min", "instruction": "Play an E Minor Triad", 
-             "context": "Metal: 'Enter Sandman' (Metallica) relies on the open E string power."},
-            {"type": "triad", "root": "D4", "formula_key": "min", "instruction": "Play a D Minor Triad", 
-             "context": "Dramatic: Hans Zimmer's 'The Dark Knight' score often sits in Dm."},
-            {"type": "triad", "root": "G3", "formula_key": "min", "instruction": "Play a G Minor Triad", 
-             "context": "Classical: Mozart's Symphony No. 40 is famous for its Gm urgency."},
-            {"type": "triad", "root": "C4", "formula_key": "min", "instruction": "Play a C Minor Triad", 
-             "context": "Epic: Beethoven's 5th Symphony ('Fate knocking')."},
-            {"type": "triad", "root": "F3", "formula_key": "min", "instruction": "Play an F Minor Triad", 
-             "context": "Pop Ballad: 'Hello' (Adele) verses are in F Minor."},
-            {"type": "triad", "root": "B3", "formula_key": "min", "instruction": "Play a B Minor Triad", 
-             "context": "Prog Rock: 'Comfortably Numb' (Pink Floyd) solos are in Bm."},
-            {"type": "triad", "root": "F#3", "formula_key": "min", "instruction": "Play an F# Minor Triad", 
-             "context": "Disco: 'Get Lucky' (Daft Punk) loops Bm-D-F#m-E."},
-            {"type": "triad", "root": "C#4", "formula_key": "min", "instruction": "Play a C# Minor Triad", 
-             "context": "Modern Pop: 'Shape of You' (Ed Sheeran) loop uses C#m."},
-            {"type": "triad", "root": "Eb4", "formula_key": "min", "instruction": "Play an Eb Minor Triad", 
-             "context": "Jazz: 'Take Five' (Dave Brubeck) vamp is in Ebm."}
+        "Chromatic Scale": [
+            {"type": "sequence", "notes": ["C4", "C#4", "D4", "D#4", "E4", "F4"], "instruction": "Play C Chromatic (Ascending)", "context": "Every half step. 'Flight of the Bumblebee'."},
+            {"type": "sequence", "notes": ["G4", "F#4", "F4", "E4", "Eb4", "D4"], "instruction": "Play G Chromatic (Descending)", "context": "Used in glissandos and runs."}
         ],
-        "Diminished Triads": [
-            {"type": "triad", "root": "B3", "formula_key": "dim", "instruction": "Play a B Diminished Triad", 
-             "context": "Classical: The 'Leading Tone' chord in C Major. Wants to resolve to C."},
-            {"type": "triad", "root": "F#3", "formula_key": "dim", "instruction": "Play an F# Diminished Triad", 
-             "context": "Function: The ii° chord in E Minor."},
-            {"type": "triad", "root": "C#4", "formula_key": "dim", "instruction": "Play a C# Diminished Triad", 
-             "context": "Function: The vii° chord in D Major."},
-            {"type": "triad", "root": "G#3", "formula_key": "dim", "instruction": "Play a G# Diminished Triad", 
-             "context": "Suspense: Often used in horror to create instant unease."},
-            {"type": "triad", "root": "D#4", "formula_key": "dim", "instruction": "Play a D# Diminished Triad", 
-             "context": "Jazz: Often found in the bridge of standards like 'All The Things You Are'."},
-            {"type": "triad", "root": "A3", "formula_key": "dim", "instruction": "Play an A Diminished Triad", 
-             "context": "Transition: Smoothly connects Bb Major to G Minor."},
-            {"type": "triad", "root": "E4", "formula_key": "dim", "instruction": "Play an E Diminished Triad", 
-             "context": "Function: The vii° chord in F Major."},
-            {"type": "triad", "root": "C4", "formula_key": "dim", "instruction": "Play a C Diminished Triad", 
-             "context": "Dissonance: Used for 'train wreck' moments in silent film scores."},
-            {"type": "triad", "root": "F4", "formula_key": "dim", "instruction": "Play an F Diminished Triad", 
-             "context": "Context: Often appears as part of a G7b9 chord."},
-            {"type": "triad", "root": "G4", "formula_key": "dim", "instruction": "Play a G Diminished Triad", 
-             "context": "Context: Often appears as part of an A7b9 chord."}
+        "Major & Minor Scales": [
+            {"type": "sequence", "notes": ["A3", "B3", "C4", "D4", "E4", "F4", "G4", "A4"], "instruction": "Play A Natural Minor Scale", "context": "Sad, serious. Same notes as C Major."},
+            {"type": "sequence", "notes": ["A3", "B3", "C4", "D4", "E4", "F4", "G#4", "A4"], "instruction": "Play A Harmonic Minor (Sharp 7)", "context": "Classical/Latin flavor. Note the G#."},
+            {"type": "sequence", "notes": ["C4", "D4", "Eb4", "F4", "G4", "Bb4", "C5"], "instruction": "Play C Minor Pentatonic", "context": "The 'Rock/Blues' scale. Essential for solos."}
+        ],
+        "Major & Minor Triads": [
+            {"type": "triad", "root": "C4", "formula_key": "maj", "instruction": "Play C Major Triad (1-3-5)", "context": "Happy. 'Let It Be' (Beatles)."},
+            {"type": "triad", "root": "C4", "formula_key": "min", "instruction": "Play C Minor Triad (1-b3-5)", "context": "Sad. 'Eye of the Tiger' (Survivor)."},
+            {"type": "triad", "root": "F3", "formula_key": "maj", "instruction": "Play F Major Triad", "context": "Bright and open. 'Free Fallin' uses this."},
+            {"type": "triad", "root": "A3", "formula_key": "min", "instruction": "Play A Minor Triad", "context": "Serious. 'Stairway to Heaven'."}
+        ],
+        "Augmented & Diminished Triads": [
+            {"type": "triad", "root": "C4", "formula_key": "aug", "instruction": "Play C Augmented (1-3-#5)", "context": "Dreamy/Unsettled. 'Life on Mars' (Bowie) pre-chorus."},
+            {"type": "triad", "root": "B3", "formula_key": "dim", "instruction": "Play B Diminished (1-b3-b5)", "context": "Tense. Pulls strongly to C Major."},
+            {"type": "triad", "root": "F4", "formula_key": "aug", "instruction": "Play F Augmented", "context": "Floating feeling. Used in intros."}
         ],
         "Suspended Chords": [
-            {"type": "triad", "root": "C4", "formula_key": "sus4", "instruction": "Play a C Sus4 Chord", 
-             "context": "Rock: 'Crazy Little Thing Called Love' (Queen) intro riff."},
-            {"type": "triad", "root": "C4", "formula_key": "sus2", "instruction": "Play a C Sus2 Chord", 
-             "context": "Anthem: 'Summer of 69' (Bryan Adams) arpeggiated riff."},
-            {"type": "triad", "root": "G3", "formula_key": "sus4", "instruction": "Play a G Sus4 Chord", 
-             "context": "Folk: 'A Hard Day's Night' (Beatles) opening chord."},
-            {"type": "triad", "root": "G3", "formula_key": "sus2", "instruction": "Play a G Sus2 Chord", 
-             "context": "90s Alt-Rock: 'What's Up' (4 Non Blondes)."},
-            {"type": "triad", "root": "D4", "formula_key": "sus4", "instruction": "Play a D Sus4 Chord", 
-             "context": "Classic Rock: 'Pinball Wizard' (The Who) strumming pattern."},
-            {"type": "triad", "root": "D4", "formula_key": "sus2", "instruction": "Play a D Sus2 Chord", 
-             "context": "Ballad: 'Free Fallin' (Tom Petty) uses Dsus2 to D movement."},
-            {"type": "triad", "root": "A3", "formula_key": "sus4", "instruction": "Play an A Sus4 Chord", 
-             "context": "Americana: 'Jack & Diane' (Mellencamp) intro."},
-            {"type": "triad", "root": "A3", "formula_key": "sus2", "instruction": "Play an A Sus2 Chord", 
-             "context": "Police: 'Message in a Bottle' uses stacked sus2 shapes."},
-            {"type": "triad", "root": "F4", "formula_key": "sus4", "instruction": "Play an F Sus4 Chord", 
-             "context": "Gospel: The 'Amen' cadence often involves a 4-3 suspension."},
-            {"type": "triad", "root": "F4", "formula_key": "sus2", "instruction": "Play an F Sus2 Chord", 
-             "context": "Pop: 'Someone Like You' (Adele) uses these flowing shapes."}
+            {"type": "triad", "root": "D4", "formula_key": "sus4", "instruction": "Play D Sus4 (1-4-5)", "context": "Rock: 'Pinball Wizard' (The Who)."},
+            {"type": "triad", "root": "D4", "formula_key": "sus2", "instruction": "Play D Sus2 (1-2-5)", "context": "Ballad: 'Summer of 69' (Bryan Adams)."},
+            {"type": "triad", "root": "A3", "formula_key": "sus4", "instruction": "Play A Sus4", "context": "Pop: 'Jack & Diane' intro."}
         ],
-        "Major 7th Chords": [
-            {"type": "triad", "root": "C4", "formula_key": "maj7", "instruction": "Play a C Major 7th", 
-             "context": "Impressionism: 'Gymnopedie No.1' (Satie) evokes this dreamy quality."},
-            {"type": "triad", "root": "F3", "formula_key": "maj7", "instruction": "Play an F Major 7th", 
-             "context": "Smooth Jazz: 'Don't Know Why' (Norah Jones) relies on Bbmaj7/Fmaj7."},
-            {"type": "triad", "root": "G3", "formula_key": "maj7", "instruction": "Play a G Major 7th", 
-             "context": "Standard: 'Misty' (Erroll Garner) lands on this lush chord."},
-            {"type": "triad", "root": "Bb3", "formula_key": "maj7", "instruction": "Play a Bb Major 7th", 
-             "context": "Soul: 'What's Going On' (Marvin Gaye) uses Emaj7/Maj9 sounds."},
-            {"type": "triad", "root": "Eb4", "formula_key": "maj7", "instruction": "Play an Eb Major 7th", 
-             "context": "R&B: 'Best Part' (Daniel Caesar) progression."},
-            {"type": "triad", "root": "Ab3", "formula_key": "maj7", "instruction": "Play an Ab Major 7th", 
-             "context": "Disco: 'I Will Survive' - the 'free' chord in the progression."},
-            {"type": "triad", "root": "D4", "formula_key": "maj7", "instruction": "Play a D Major 7th", 
-             "context": "City Pop: 'Plastic Love' (Mariya Takeuchi) - Essential genre chord."},
-            {"type": "triad", "root": "A3", "formula_key": "maj7", "instruction": "Play an A Major 7th", 
-             "context": "Alt Rock: 'Under the Bridge' (RHCP) outro section."},
-            {"type": "triad", "root": "E4", "formula_key": "maj7", "instruction": "Play an E Major 7th", 
-             "context": "Lo-Fi Hip Hop: The quintessential 'study beat' chord."},
-            {"type": "triad", "root": "Gb3", "formula_key": "maj7", "instruction": "Play a Gb Major 7th", 
-             "context": "Neo-Soul: Often used by Moonchild or Hiatus Kaiyote."}
+        "6th Chords": [
+            {"type": "triad", "root": "C4", "formula_key": "maj6", "instruction": "Play C Major 6 (1-3-5-6)", "context": "Swing/Jazz. The ending chord of 'She Loves You' (Beatles)."},
+            {"type": "triad", "root": "C4", "formula_key": "min6", "instruction": "Play C Minor 6 (1-b3-5-6)", "context": "Spy Theme: 'James Bond' Theme ending chord."},
+            {"type": "triad", "root": "G3", "formula_key": "maj6", "instruction": "Play G Major 6", "context": "Rockabilly/Boogie Woogie bass lines."}
         ],
-        "Minor 7th Chords": [
-            {"type": "triad", "root": "D4", "formula_key": "min7", "instruction": "Play a D Minor 7th", 
-             "context": "Funk: 'Get Down On It' (Kool & The Gang)."},
-            {"type": "triad", "root": "G3", "formula_key": "min7", "instruction": "Play a G Minor 7th", 
-             "context": "Jazz: The 'II' chord in an F Major 2-5-1 (Gm7 - C7 - Fmaj7)."},
-            {"type": "triad", "root": "C4", "formula_key": "min7", "instruction": "Play a C Minor 7th", 
-             "context": "Hip Hop: Nujabes style piano samples often drift through Cm7."},
-            {"type": "triad", "root": "F3", "formula_key": "min7", "instruction": "Play an F Minor 7th", 
-             "context": "House: Deep House chords often parallel movement of m7 chords."},
-            {"type": "triad", "root": "A3", "formula_key": "min7", "instruction": "Play an A Minor 7th", 
-             "context": "Classic: 'Let It Be' (Beatles) descends C -> G -> Am7."},
-            {"type": "triad", "root": "E4", "formula_key": "min7", "instruction": "Play an E Minor 7th", 
-             "context": "Bossa Nova: 'The Girl From Ipanema' vamp."},
-            {"type": "triad", "root": "B3", "formula_key": "min7", "instruction": "Play a B Minor 7th", 
-             "context": "Pop: 'Just the Way You Are' (Bruno Mars) progression."},
-            {"type": "triad", "root": "F#3", "formula_key": "min7", "instruction": "Play an F# Minor 7th", 
-             "context": "R&B: 'No Scrubs' (TLC) loops this chord."},
-            {"type": "triad", "root": "C#4", "formula_key": "min7", "instruction": "Play a C# Minor 7th", 
-             "context": "Pop: 'Sunday Morning' (Maroon 5) uses Dm7-G7-Cmaj7 (transposed)."},
-            {"type": "triad", "root": "Bb3", "formula_key": "min7", "instruction": "Play a Bb Minor 7th", 
-             "context": "Jazz Standard: 'Blue Bossa' opening chord."}
+        "Tetrads (4-Note Chords)": [
+            {"type": "triad", "root": "C4", "formula_key": "maj7", "instruction": "Play C Major 7 (1-3-5-7)", "context": "Dreamy. 'Imagine' (John Lennon)."},
+            {"type": "triad", "root": "D4", "formula_key": "min7", "instruction": "Play D Minor 7 (1-b3-5-b7)", "context": "Cool. 'Get Down On It' (Kool & The Gang)."},
+            {"type": "triad", "root": "G3", "formula_key": "dom7", "instruction": "Play G Dominant 7 (1-3-5-b7)", "context": "Bluesy. The V chord in C Major."}
         ],
-        "Dominant 7th Chords": [
-            {"type": "triad", "root": "G3", "formula_key": "dom7", "instruction": "Play a G Dominant 7th (G7)", 
-             "context": "Theory: The 'V' chord in C Major. Resolves to C."},
-            {"type": "triad", "root": "C4", "formula_key": "dom7", "instruction": "Play a C Dominant 7th (C7)", 
-             "context": "Funk: 'Brick House' (Commodores) main groove."},
-            {"type": "triad", "root": "F3", "formula_key": "dom7", "instruction": "Play an F Dominant 7th (F7)", 
-             "context": "Beatles: 'Twist and Shout' builds tension on this V chord."},
-            {"type": "triad", "root": "Bb3", "formula_key": "dom7", "instruction": "Play a Bb Dominant 7th (Bb7)", 
-             "context": "Jazz Blues: 'Tenor Madness' (Sonny Rollins)."},
-            {"type": "triad", "root": "Eb4", "formula_key": "dom7", "instruction": "Play an Eb Dominant 7th (Eb7)", 
-             "context": "Stevie Wonder: 'Superstition' clavinet vamp."},
-            {"type": "triad", "root": "Ab3", "formula_key": "dom7", "instruction": "Play an Ab Dominant 7th (Ab7)", 
-             "context": "R&B: Used as a secondary dominant in Eb Major."},
-            {"type": "triad", "root": "D4", "formula_key": "dom7", "instruction": "Play a D Dominant 7th (D7)", 
-             "context": "Folk: 'Blowin' in the Wind' (Bob Dylan)."},
-            {"type": "triad", "root": "A3", "formula_key": "dom7", "instruction": "Play an A Dominant 7th (A7)", 
-             "context": "Rockabilly: 'Blue Suede Shoes' stop breaks."},
-            {"type": "triad", "root": "E4", "formula_key": "dom7", "instruction": "Play an E Dominant 7th (E7)", 
-             "context": "Blues: The turnaround chord in A Blues (V7)."},
-            {"type": "triad", "root": "B3", "formula_key": "dom7", "instruction": "Play a B Dominant 7th (B7)", 
-             "context": "Beatles: 'I Saw Her Standing There' (V chord)."}
+        "Chord Inversions": [
+            {"type": "sequence", "notes": ["E4", "G4", "C5"], "instruction": "Play C Major (1st Inversion)", "context": "3rd in the bass. Smoother voice leading."},
+            {"type": "sequence", "notes": ["G3", "C4", "E4"], "instruction": "Play C Major (2nd Inversion)", "context": "5th in the bass. Used in gospel 'Amen' endings."},
+            {"type": "sequence", "notes": ["F4", "A4", "D5"], "instruction": "Play D Minor (1st Inversion)", "context": "Common in pop piano ballads."}
         ],
-        "Half-Diminished 7th": [
-            {"type": "triad", "root": "B3", "formula_key": "m7b5", "instruction": "Play a B Half-Diminished (Bø7)", 
-             "context": "Jazz: 'Autumn Leaves' (in A Minor). The II chord (Bø7 - E7 - Am)."},
-            {"type": "triad", "root": "E4", "formula_key": "m7b5", "instruction": "Play an E Half-Diminished (Eø7)", 
-             "context": "Function: The II chord in D Minor key (Eø7 - A7 - Dm)."},
-            {"type": "triad", "root": "A3", "formula_key": "m7b5", "instruction": "Play an A Half-Diminished (Aø7)", 
-             "context": "Jazz: 'Autumn Leaves' (in G Minor). The II chord (Aø7 - D7 - Gm)."},
-            {"type": "triad", "root": "D4", "formula_key": "m7b5", "instruction": "Play a D Half-Diminished (Dø7)", 
-             "context": "Function: The II chord in C Minor key (Dø7 - G7 - Cm)."},
-            {"type": "triad", "root": "G3", "formula_key": "m7b5", "instruction": "Play a G Half-Diminished (Gø7)", 
-             "context": "Function: The II chord in F Minor key."},
-            {"type": "triad", "root": "C4", "formula_key": "m7b5", "instruction": "Play a C Half-Diminished (Cø7)", 
-             "context": "Jazz: 'Blue Bossa' transition chord (to Db Major)."},
-            {"type": "triad", "root": "F#3", "formula_key": "m7b5", "instruction": "Play an F# Half-Diminished (F#ø7)", 
-             "context": "Function: The II chord in E Minor key."},
-            {"type": "triad", "root": "C#4", "formula_key": "m7b5", "instruction": "Play a C# Half-Diminished (C#ø7)", 
-             "context": "Jazz: 'Night and Day' (Cole Porter) uses this tension."},
-            {"type": "triad", "root": "F4", "formula_key": "m7b5", "instruction": "Play an F Half-Diminished (Fø7)", 
-             "context": "Function: Complex passing chord in Eb Minor."},
-            {"type": "triad", "root": "Bb3", "formula_key": "m7b5", "instruction": "Play a Bb Half-Diminished (Bbø7)", 
-             "context": "Function: The II chord in Ab Minor key."}
+        "Relative Keys": [
+            {"type": "sequence", "notes": ["C4", "A3"], "instruction": "Play C Major then A Minor (Relative)", "context": "They share the exact same notes."},
+            {"type": "sequence", "notes": ["G3", "E3"], "instruction": "Play G Major then E Minor (Relative)", "context": "Standard pop modulation."},
+            {"type": "sequence", "notes": ["F3", "D3"], "instruction": "Play F Major then D Minor (Relative)", "context": "Common pairing in ballads."}
         ],
-        "Fully Diminished 7th": [
-            {"type": "triad", "root": "B3", "formula_key": "dim7", "instruction": "Play a B Fully Diminished (B°7)", 
-             "context": "Classical: Resolves strongly to C Major (vii°7)."},
-            {"type": "triad", "root": "C#4", "formula_key": "dim7", "instruction": "Play a C# Fully Diminished (C#°7)", 
-             "context": "Horror: 'Phantom of the Opera' uses descending chromatic dim7s."},
-            {"type": "triad", "root": "D#4", "formula_key": "dim7", "instruction": "Play a D# Fully Diminished (D#°7)", 
-             "context": "Silent Film: The classic 'Villain on the train tracks' chord."},
-            {"type": "triad", "root": "E4", "formula_key": "dim7", "instruction": "Play an E Fully Diminished (E°7)", 
-             "context": "Jazz: Passing chord between Em7 and Dm7."},
-            {"type": "triad", "root": "F#3", "formula_key": "dim7", "instruction": "Play an F# Fully Diminished (F#°7)", 
-             "context": "Gospel: Common passing chord resolving to G/B."},
-            {"type": "triad", "root": "G#3", "formula_key": "dim7", "instruction": "Play a G# Fully Diminished (G#°7)", 
-             "context": "Function: Commonly resolves to A Minor."},
-            {"type": "triad", "root": "A#3", "formula_key": "dim7", "instruction": "Play an A# Fully Diminished (A#°7)", 
-             "context": "Function: Passing chord in B Minor."},
-            {"type": "triad", "root": "C4", "formula_key": "dim7", "instruction": "Play a C Fully Diminished (C°7)", 
-             "context": "Bossa Nova: 'Corcovado' (Jobim) uses dim7s for unstable beauty."},
-            {"type": "triad", "root": "D4", "formula_key": "dim7", "instruction": "Play a D Fully Diminished (D°7)", 
-             "context": "Blues: 'Stormy Monday' (Allman Bros) turnaround chord."},
-            {"type": "triad", "root": "F4", "formula_key": "dim7", "instruction": "Play an F Fully Diminished (F°7)", 
-             "context": "Function: Chromatic passing chord."}
+        "The Number System (Roman Numerals)": [
+            {"type": "sequence", "notes": ["C4", "F4", "G4", "C5"], "instruction": "Play I - IV - V - I in C", "context": "The 'Three Chord Trick'. Basis of Rock & Roll."},
+            {"type": "sequence", "notes": ["C4", "A3", "F3", "G3"], "instruction": "Play I - vi - IV - V in C", "context": "The '50s Progression' (Stand By Me, etc.)."},
+            {"type": "sequence", "notes": ["D4", "G3", "C4"], "instruction": "Play ii - V - I in C (Dm - G - C)", "context": "The 'Jazz Progression'."}
+        ],
+        
+        # ADVANCED
+        "Dominants & Tritones": [
+            {"type": "triad", "root": "G3", "formula_key": "dom7", "instruction": "Play G7 (V of C)", "context": "Hear the pull to C? That's the Tritone (B-F)."},
+            {"type": "interval", "root": "B3", "semitones": 6, "instruction": "Play the Tritone in G7 (B to F)", "context": "The 'Unstable' core of the chord."},
+            {"type": "triad", "root": "E4", "formula_key": "dom7", "instruction": "Play E7 (V of A)", "context": "Resolves to A Major or A Minor."}
+        ],
+        "Secondary Dominants": [
+            {"type": "triad", "root": "A3", "formula_key": "dom7", "instruction": "Play A7 (V of ii in C)", "context": "Pulls to D Minor. 'Hey Jude' uses this."},
+            {"type": "triad", "root": "D4", "formula_key": "dom7", "instruction": "Play D7 (V of V in C)", "context": "Pulls to G. 'Yesterday' uses this."},
+            {"type": "triad", "root": "E4", "formula_key": "dom7", "instruction": "Play E7 (V of vi in C)", "context": "Pulls to A Minor. 'Creep' (Radiohead) uses III7."}
+        ],
+        "Tritone Substitution": [
+            {"type": "triad", "root": "Db4", "formula_key": "dom7", "instruction": "Play Db7 (Sub for G7)", "context": "Resolves to C. Jazz chromatic bass movement."},
+            {"type": "triad", "root": "Gb3", "formula_key": "dom7", "instruction": "Play Gb7 (Sub for C7)", "context": "Resolves to F."},
+            {"type": "sequence", "notes": ["D4", "Db4", "C4"], "instruction": "Play ii - subV - I (Dm - Db7 - C)", "context": "Smooth chromatic bassline."}
+        ],
+        "Altered Notes & Extensions": [
+            {"type": "sequence", "notes": ["C4", "E4", "G4", "Bb4", "D5"], "instruction": "Play C9 (Dominant 9th)", "context": "James Brown funk chord."},
+            {"type": "sequence", "notes": ["C4", "E4", "G4", "Bb4", "Db5"], "instruction": "Play C7b9", "context": "Jazz tension. Resolves to Fm."},
+            {"type": "sequence", "notes": ["C4", "E4", "G#4", "Bb4"], "instruction": "Play C7#5 (Altered)", "context": "Whole tone feel. Intros and endings."}
         ],
         "Circle of 5ths": [
-            {"type": "sequence", "notes": ["C4", "F4", "Bb3"], "instruction": "Circle: Play C -> F -> Bb (Descending 5ths)", 
-             "context": "Jazz: The standard motion (II-V-I) moves this way."},
-            {"type": "sequence", "notes": ["Bb3", "Eb4", "Ab3"], "instruction": "Circle: Play Bb -> Eb -> Ab", 
-             "context": "Gospel: Common key change direction (adding flats)."},
-            {"type": "sequence", "notes": ["Ab3", "Db4", "Gb3"], "instruction": "Circle: Play Ab -> Db -> Gb", 
-             "context": "R&B: Bridge progressions often cycle this way."},
-            {"type": "sequence", "notes": ["Gb3", "B3", "E4"], "instruction": "Circle: Play Gb -> B -> E", 
-             "context": "Modulation: Moving from 'Dark' keys to 'Bright' keys."},
-            {"type": "sequence", "notes": ["E4", "A3", "D4"], "instruction": "Circle: Play E -> A -> D", 
-             "context": "Rock: 'Hey Joe' (Hendrix) follows C-G-D-A-E (Ascending 5ths/Reverse). Wait, this drill is E->A->D (Descending)."},
-            {"type": "sequence", "notes": ["D4", "G3", "C4"], "instruction": "Circle: Play D -> G -> C", 
-             "context": "Resolution: The 'Amen Cadence' (IV-I) or V-I uses this strong pull."},
-            {"type": "sequence", "notes": ["C4", "G3", "D4"], "instruction": "Reverse Circle: C -> G -> D (Ascending 5ths)", 
-             "context": "Rock: 'Hey Joe' (Hendrix) moves this way (C-G-D-A-E)."},
-            {"type": "sequence", "notes": ["D4", "A3", "E4"], "instruction": "Reverse Circle: D -> A -> E", 
-             "context": "Country: 'Take Me Home, Country Roads' uses these bright keys."},
-            {"type": "sequence", "notes": ["E4", "B3", "F#3"], "instruction": "Reverse Circle: E -> B -> F#", 
-             "context": "Brightening: Adding sharps makes the music feel 'lifted'."},
-            {"type": "sequence", "notes": ["F#3", "C#4", "G#3"], "instruction": "Reverse Circle: F# -> C# -> G#", 
-             "context": "Modulation: Moving further into sharp keys."}
+            {"type": "sequence", "notes": ["C4", "F4", "Bb3"], "instruction": "Play C -> F -> Bb", "context": "Falling 5ths. The strongest harmonic motion."},
+            {"type": "sequence", "notes": ["E4", "A3", "D4", "G3", "C4"], "instruction": "Play E -> A -> D -> G -> C", "context": "Full diatonic circle progression."}
+        ],
+        "Modes": [
+            {"type": "sequence", "notes": ["D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5"], "instruction": "Play D Dorian (White Keys)", "context": "Sad but hopeful. 'So What' (Miles Davis)."},
+            {"type": "sequence", "notes": ["E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5"], "instruction": "Play E Phrygian", "context": "Spanish/Flamenco sound."},
+            {"type": "sequence", "notes": ["F3", "G3", "A3", "B3", "C4", "D4", "E4", "F4"], "instruction": "Play F Lydian (#4)", "context": "Dreamy/Sci-Fi. 'The Simpsons' opening."}
+        ],
+        "Minor Variations": [
+            {"type": "sequence", "notes": ["A3", "B3", "C4", "D4", "E4", "F4", "G#4", "A4"], "instruction": "Play Harmonic Minor", "context": "Snake charmer vibe."},
+            {"type": "sequence", "notes": ["A3", "B3", "C4", "D4", "E4", "F#4", "G#4", "A4"], "instruction": "Play Melodic Minor (Ascending)", "context": "Smooth, jazzy minor."}
+        ],
+        "Exotic Scales": [
+            {"type": "sequence", "notes": ["C4", "D4", "E4", "F#4", "G#4", "Bb4", "C5"], "instruction": "Play Whole Tone Scale", "context": "Dream sequences in movies."},
+            {"type": "sequence", "notes": ["C4", "Db4", "E4", "F4", "G4", "Ab4", "B4", "C5"], "instruction": "Play Double Harmonic Major", "context": "Middle Eastern/Byzantine sound ('Misirlou')."}
+        ],
+        "Jazz Voicings (Open/Closed/Quartal)": [
+            {"type": "sequence", "notes": ["D4", "G4", "C5", "F5"], "instruction": "Play Quartal Voicing (Stacked 4ths)", "context": "'So What' voicing. Modern and open."},
+            {"type": "sequence", "notes": ["C4", "E4", "G4", "B4"], "instruction": "Play Closed Voicing (Cmaj7)", "context": "Tight block chord."},
+            {"type": "sequence", "notes": ["C3", "G3", "E4", "B4"], "instruction": "Play Open Voicing (Cmaj7)", "context": "Spacious, professional ballad sound."}
         ]
     }
