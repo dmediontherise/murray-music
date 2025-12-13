@@ -70,61 +70,45 @@ def generate_sheet():
 @app.route('/api/challenge', methods=['POST'])
 def get_challenge():
     data = request.json
-    topic = data.get('topic', 'Major Triads')
+    topic = data.get('topic')
+    challenge_index = data.get('challenge_index', 0)
     
-    # CONSTRAINT: Generate roots only in Octave 3 or 4 so chords fit in C3-C6 range
-    # Our piano is C3(48) to C6(84)
-    # Roots can be C3 up to maybe G4? If we go too high, the 5th/7th will be off screen.
-    # Safe range for roots: C3 (48) to F4 (65).
+    if topic not in Curriculum.CHALLENGES:
+        return jsonify({"error": "Topic not found or no challenges defined."}), 404
+
+    challenges_for_topic = Curriculum.CHALLENGES[topic]
     
-    roots_safe = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]
-    chosen_root_note = random.choice(roots_safe)
-    chosen_octave = random.choice([3, 4])
-    
-    # If octave is 4, limit root note to F to prevent overflow
-    if chosen_octave == 4 and roots_safe.index(chosen_root_note) > roots_safe.index("F"):
-        chosen_octave = 3
-        
-    root = f"{chosen_root_note}{chosen_octave}"
+    if challenge_index >= len(challenges_for_topic):
+        return jsonify({"no_more_challenges": True, "message": "You've completed all challenges for this section! Time to move on."})
+
+    challenge_data = challenges_for_topic[challenge_index]
     
     target_notes = []
-    instruction = ""
+    instruction = challenge_data["instruction"]
+    context_info = challenge_data.get("context", "")
     
-    # Simple mapping for drill logic
-    if "Major Triad" in topic:
-        target_notes = TheoryEngine.generate_scale(root, TheoryEngine.TRIAD_FORMULAS['maj'])
-        instruction = f"Play a {chosen_root_note} Major Triad"
-    elif "Minor Triad" in topic:
-        target_notes = TheoryEngine.generate_scale(root, TheoryEngine.TRIAD_FORMULAS['min'])
-        instruction = f"Play a {chosen_root_note} Minor Triad"
-    elif "Diminished" in topic and "Triad" in topic:
-        target_notes = TheoryEngine.generate_scale(root, TheoryEngine.TRIAD_FORMULAS['dim'])
-        instruction = f"Play a {chosen_root_note} Diminished Triad"
-    elif "Major 7th" in topic:
-        target_notes = TheoryEngine.generate_scale(root, TheoryEngine.TRIAD_FORMULAS['maj7'])
-        instruction = f"Play a {chosen_root_note} Major 7th Chord"
-    elif "Minor 7th" in topic:
-        target_notes = TheoryEngine.generate_scale(root, TheoryEngine.TRIAD_FORMULAS['min7'])
-        instruction = f"Play a {chosen_root_note} Minor 7th Chord"
-    elif "Dominant 7th" in topic:
-        target_notes = TheoryEngine.generate_scale(root, TheoryEngine.TRIAD_FORMULAS['dom7'])
-        instruction = f"Play a {chosen_root_note} Dominant 7th Chord"
-    elif "Intervals" in topic:
-        # Random interval
-        int_name, semitones = random.choice(list(TheoryEngine.INTERVALS.items()))
+    if challenge_data["type"] == "triad":
+        root = challenge_data["root"]
+        formula_key = challenge_data["formula_key"]
+        formula = TheoryEngine.TRIAD_FORMULAS.get(formula_key)
+        if formula:
+            target_notes = TheoryEngine.generate_scale(root, formula)
+        else:
+            target_notes = [root] # Fallback
+    elif challenge_data["type"] == "interval":
+        root = challenge_data["root"]
+        semitones = challenge_data["semitones"]
         n2 = TheoryEngine.get_note_from_interval(root, semitones)
         target_notes = [root, n2]
-        instruction = f"Play the interval: {root[:-1]} to {int_name}"
-    else:
-        # Fallback
-        target_notes = [root]
-        instruction = f"Play the note {root}"
-
+    elif challenge_data["type"] == "sequence":
+        target_notes = challenge_data["notes"] # Directly provide notes for sequences
+    
     # Generate SVG for the target
     svg_data = SheetMusicGenerator.generate_svg(target_notes)
     
     return jsonify({
         "instruction": instruction,
+        "context": context_info,
         "target_notes": target_notes,
         "svg": svg_data
     })
