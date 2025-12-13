@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Murray's Theory v9.0</title>
+    <title>Murray's Theory v9.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* Embedding Core CSS here for simplicity, or I can create css/style.css next. 
-           I'll put the critical layout here and move the rest to css/style.css in next step. */
-    </style>
+    
+    <!-- Scripts (Defer ensures HTML is parsed first) -->
+    <script src="js/theory.js" defer></script>
+    <script src="js/curriculum.js" defer></script>
+    <script src="js/renderer.js" defer></script>
+    <script src="js/app.js" defer></script>
 </head>
 <body>
 
@@ -44,9 +46,7 @@
                     <div id="context-text">...</div>
                 </div>
 
-                <div id="staff-display">
-                    <span style="color:#aaa;">Play keys to begin...</span>
-                </div>
+                <div id="staff-display"></div>
 
                 <div style="margin-top:20px; min-height:50px;">
                     <button class="btn btn-sec" id="hint-btn" onclick="showHint()" style="display:none;">💡 Hint</button>
@@ -62,12 +62,6 @@
         </div>
     </div>
 </div>
-
-<!-- SCRIPTS -->
-<script src="js/theory.js"></script>
-<script src="js/curriculum.js"></script>
-<script src="js/renderer.js"></script>
-<script src="js/app.js"></script>
 
 </body>
 </html>
