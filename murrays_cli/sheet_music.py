@@ -104,6 +104,4 @@ class SheetMusicGenerator:
 
         svg_content += '</svg>'
         
-        with open(filename, "w") as f:
-            f.write(svg_content)
-        return os.path.abspath(filename)
+        return svg_content

@@ -3,251 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Murray's Theory</title>
+    <title>Murray's Theory v4.0</title>
     <style>
-        /* APPLE-INSPIRED MODERN AESTHETIC */
+        /* MODERN CLEAN AESTHETIC */
         :root {
-            --bg-color: #f5f5f7; /* Apple Light Gray */
-            --sidebar-bg: rgba(255, 255, 255, 0.8);
+            --bg: #f5f5f7;
             --card-bg: #ffffff;
-            --text-primary: #1d1d1f;
-            --text-secondary: #86868b;
-            --accent: #0071e3; /* Apple Blue */
+            --text-main: #1d1d1f;
+            --text-sub: #86868b;
+            --accent: #0071e3;
+            --success: #34c759;
+            --error: #ff3b30;
             --border: #d2d2d7;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --radius: 12px;
-            --glass: blur(20px);
+            --shadow: 0 8px 20px rgba(0,0,0,0.04);
+            --radius: 16px;
         }
 
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg-color); 
-            color: var(--text-primary); 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            height: 100vh; 
-            overflow: hidden; 
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
+            background: var(--bg); color: var(--text-main); margin: 0; 
+            display: flex; flex-direction: column; height: 100vh; overflow: hidden; 
         }
 
         /* HEADER */
         header { 
-            background: rgba(255, 255, 255, 0.7); 
-            backdrop-filter: var(--glass);
-            -webkit-backdrop-filter: var(--glass);
-            padding: 0 24px; 
-            height: 60px;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            position: sticky; top: 0; z-index: 100;
+            background: rgba(255,255,255,0.8); backdrop-filter: blur(20px);
+            padding: 0 24px; height: 60px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border); z-index: 100;
         }
+        h1 { font-size: 1.1rem; font-weight: 600; margin: 0; }
         
-        h1 { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin: 0; }
-        
-        #midi-status { 
-            font-size: 0.8rem; 
-            font-weight: 500;
-            color: var(--text-secondary);
-            background: rgba(0,0,0,0.05);
-            padding: 6px 12px;
-            border-radius: 20px;
-        }
-        #midi-status.active { color: #34c759; background: rgba(52, 199, 89, 0.1); }
-
         /* LAYOUT */
-        #main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
+        #main { flex: 1; display: flex; overflow: hidden; }
         
-        /* SIDEBAR */
         #sidebar { 
-            width: 260px; 
-            background: var(--sidebar-bg);
-            backdrop-filter: var(--glass);
-            border-right: 1px solid var(--border);
-            display: flex; 
-            flex-direction: column; 
-            padding: 20px 0;
-            overflow-y: auto;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .menu-header { 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            color: var(--text-secondary); 
-            padding: 24px 24px 8px; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px;
+            width: 280px; background: #fff; border-right: 1px solid var(--border); 
+            display: flex; flex-direction: column; overflow-y: auto; padding-bottom: 20px;
+            transition: transform 0.3s ease;
         }
         
+        .menu-head { 
+            font-size: 0.75rem; font-weight: 700; color: var(--text-sub); 
+            text-transform: uppercase; padding: 24px 24px 8px; 
+        }
         .menu-item { 
-            padding: 10px 24px; 
-            font-size: 0.95rem;
-            color: var(--text-primary);
-            cursor: pointer; 
-            transition: background 0.15s;
+            padding: 12px 24px; font-size: 0.95rem; cursor: pointer; transition: 0.2s; 
+            border-left: 3px solid transparent;
         }
-        .menu-item:hover { background: rgba(0,0,0,0.03); }
+        .menu-item:hover { background: #f5f5f7; }
         .menu-item.active { 
-            color: var(--accent); 
-            background: rgba(0, 113, 227, 0.08); 
-            font-weight: 500;
-            border-right: 3px solid var(--accent);
+            background: rgba(0, 113, 227, 0.08); color: var(--accent); 
+            border-left-color: var(--accent); font-weight: 500;
         }
 
-        /* CONTENT */
         #content { 
-            flex: 1; 
-            padding: 32px 40px; 
-            overflow-y: auto; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 24px; 
-            max-width: 900px;
-            margin: 0 auto;
-            width: 100%;
+            flex: 1; padding: 32px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; 
+            align-items: center;
         }
-        
+
+        /* CARDS */
         .card { 
-            background: var(--card-bg); 
-            border-radius: var(--radius); 
-            box-shadow: var(--shadow);
-            padding: 32px; 
-            transition: transform 0.2s;
+            background: var(--card-bg); width: 100%; max-width: 800px; 
+            border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px;
+            text-align: center; transition: 0.3s;
         }
         
-        h2 { 
-            margin-top: 0; 
-            font-size: 1.8rem; 
-            font-weight: 700; 
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
-        }
-        
-        p { 
-            color: var(--text-secondary); 
-            line-height: 1.6; 
-            font-size: 1.05rem; 
-            margin-bottom: 24px;
-        }
+        /* CHALLENGE AREA */
+        #challenge-card { border: 2px solid transparent; }
+        #challenge-card.success { border-color: var(--success); box-shadow: 0 0 20px rgba(52, 199, 89, 0.2); }
+        #challenge-card.fail { border-color: var(--error); }
 
-        /* ANALYSIS BOX */
-        #analysis-box {
-            background: #fbfbfd;
-            border: 1px solid rgba(0,0,0,0.05);
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
+        #staff-container { 
+            height: 160px; display: flex; justify-content: center; align-items: center; 
+            margin: 20px 0; background: #fff; border-radius: 8px; border: 1px dashed var(--border);
         }
-        #analysis-label { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
-        #analysis-display { font-family: "SF Mono", "Menlo", monospace; font-size: 1rem; color: var(--text-primary); white-space: pre-wrap; }
+        #staff-svg { height: 100%; width: auto; max-width: 100%; }
 
-        /* BUTTONS */
-        .btn { 
-            background: var(--accent); 
-            color: #fff; 
-            border: none; 
-            padding: 12px 24px; 
-            border-radius: 20px; 
-            font-size: 0.9rem; 
-            font-weight: 500; 
-            cursor: pointer; 
-            transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
-        }
-        .btn:hover { background: #0077ed; transform: translateY(-1px); }
-        .btn:active { transform: translateY(0); }
+        #instruction { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+        #sub-instruction { color: var(--text-sub); font-size: 1rem; }
 
-        /* SHEET MUSIC */
-        #sheet-music-container { 
-            margin-top: 24px; 
-            min-height: 120px; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 8px;
+        /* ANALYSIS */
+        #analysis-text { 
+            font-family: "SF Mono", monospace; font-size: 0.9rem; color: var(--text-sub); 
+            margin-top: 16px; min-height: 1.2em; 
         }
-        #sheet-music-img { max-width: 100%; opacity: 0.9; }
 
         /* PIANO */
-        #piano-container { 
-            height: 160px; 
-            background: #fff; 
-            border-top: 1px solid var(--border); 
-            display: flex; 
-            justify-content: center; 
-            overflow-x: auto; 
-            position: relative;
-            padding-top: 0;
-            flex-shrink: 0;
+        #piano-wrapper { 
+            background: #fff; border-top: 1px solid var(--border); 
+            height: 180px; display: flex; justify-content: center; padding-top: 0;
+            overflow-x: auto; flex-shrink: 0;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
         }
-
-        .piano { position: relative; height: 140px; display: flex; padding: 0 40px; }
-        
-        .key { 
-            position: relative; 
-            float: left; 
-            cursor: pointer; 
-            transition: all 0.1s ease;
-            user-select: none;
-        }
+        .piano { position: relative; height: 160px; display: flex; padding: 0 20px; user-select: none; }
         
         .white-key { 
-            width: 44px; height: 140px; 
-            background: #fff; 
-            border: 1px solid rgba(0,0,0,0.1); 
-            border-top: none;
-            border-radius: 0 0 6px 6px; 
-            z-index: 1; 
+            width: 44px; height: 160px; background: #fff; border: 1px solid #ccc; border-top: none; 
+            border-radius: 0 0 6px 6px; z-index: 1; cursor: pointer; position: relative;
         }
         .white-key:hover { background: #fafafa; }
-        .white-key.active { 
-            background: var(--accent); 
-            border-color: var(--accent);
-            box-shadow: 0 0 0 1px var(--accent);
-        }
+        .white-key.active { background: var(--accent); box-shadow: 0 0 0 1px var(--accent); border-color: var(--accent); }
 
         .black-key { 
-            width: 28px; height: 85px; 
-            background: #1d1d1f; 
-            position: absolute; 
-            z-index: 2; 
-            margin-left: -14px; 
-            border-radius: 0 0 4px 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            width: 26px; height: 100px; background: #1d1d1f; position: absolute; z-index: 2; 
+            margin-left: -13px; border-radius: 0 0 4px 4px; cursor: pointer;
         }
-        .black-key:hover { background: #333; }
-        .black-key.active { 
-            background: var(--accent); 
-            background-image: linear-gradient(to bottom, #0071e3, #005bb5);
+        .black-key.active { background: var(--accent); background-image: linear-gradient(#0071e3, #005bb5); }
+
+        /* KEY LABELS */
+        .key-label { 
+            position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; 
+            font-size: 0.6rem; color: #aaa; pointer-events: none; 
         }
 
         /* MOBILE */
-        #mobile-menu-btn { display: none; background: transparent; border: none; font-size: 1.2rem; color: var(--text-primary); cursor: pointer; } 
-        
         @media (max-width: 768px) {
-            header { padding: 0 16px; }
-            #content { padding: 20px; }
-            
-            #sidebar { 
-                position: absolute; top: 60px; left: 0; bottom: 0; 
-                transform: translateX(-100%); 
-                width: 100%;
-                background: rgba(255,255,255,0.98);
-                z-index: 99;
-            }
+            #sidebar { position: fixed; top: 60px; left: 0; bottom: 0; transform: translateX(-100%); z-index: 99; width: 100%; }
             #sidebar.open { transform: translateX(0); }
-            
-            #mobile-menu-btn { display: block; }
-            
-            #piano-container { justify-content: flex-start; }
-            .white-key { width: 36px; }
-            .black-key { width: 22px; margin-left: -11px; }
+            #content { padding: 16px; }
+            .white-key { width: 36px; } 
+            .black-key { width: 20px; margin-left: -10px; }
+            #staff-container { height: 120px; }
+            #instruction { font-size: 1.1rem; }
         }
+        
+        .btn { background: var(--accent); color: #fff; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+        .btn:hover { background: #005bb5; }
 
     </style>
 </head>
@@ -255,307 +136,313 @@
 
 <header>
     <div style="display:flex; align-items:center; gap:12px;">
-        <button id="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        <button onclick="document.getElementById('sidebar').classList.toggle('open')" style="background:none; border:none; font-size:1.4rem; cursor:pointer; display:none;" id="menu-btn">☰</button>
         <h1>Murray's Theory</h1>
     </div>
-    <div id="midi-status">MIDI Off</div>
+    <div style="font-size:0.8rem; color:var(--text-sub);">
+        v4.0 • <span id="midi-status">MIDI Off</span>
+    </div>
 </header>
 
-<div id="main-container">
+<div id="main">
     <nav id="sidebar">
-        <div class="menu-header">Explore</div>
+        <div class="menu-head">Explore</div>
         <div class="menu-item active" onclick="setMode('FREE')">Free Play</div>
         
-        <div class="menu-header">Beginner Course</div>
-        <div id="beginner-list"></div>
+        <div class="menu-head">Beginner Course</div>
+        <div id="bg-list"></div>
         
-        <div class="menu-header">Advanced Course</div>
-        <div id="advanced-list"></div>
+        <div class="menu-head">Advanced Course</div>
+        <div id="adv-list"></div>
     </nav>
 
     <main id="content">
-        <!-- INFO PANEL -->
-        <div class="card">
-            <h2 id="topic-title">Free Play</h2>
-            <p id="topic-desc">Connect a MIDI keyboard or tap the keys below. The engine will analyze your harmony in real-time.</p>
+        <!-- LESSON CARD -->
+        <div class="card" id="challenge-card">
+            <div id="instruction">Free Play</div>
+            <div id="sub-instruction">Play notes to see them on the staff.</div>
             
-            <div id="analysis-box">
-                <div id="analysis-label">Live Analysis</div>
-                <div id="analysis-display">Play a chord to begin...</div>
+            <div id="staff-container">
+                <div style="color:#ccc; font-size:0.9rem;">(Sheet Music Display)</div>
+            </div>
+            
+            <div id="feedback-area" style="min-height: 40px; display:flex; justify-content:center; align-items:center; gap:10px;">
+                <button class="btn" id="next-btn" onclick="nextDrill()" style="display:none;">Next Challenge →</button>
             </div>
         </div>
 
-        <!-- TOOLS PANEL -->
-        <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                <h2 style="font-size:1.4rem; margin:0;">Sheet Music</h2>
-                <button class="btn" onclick="generateSheet()">Generate</button>
-            </div>
-            <p style="margin-bottom:0; font-size:0.9rem;">Create a visual score of your currently active notes.</p>
-            
-            <div id="sheet-music-container">
-                <span style="color:#d2d2d7; font-size:0.9rem; font-weight:500;">Preview Area</span>
-            </div>
+        <!-- ANALYSIS FEEDBACK -->
+        <div style="text-align:center;">
+            <div style="font-size:0.75rem; font-weight:700; letter-spacing:1px; color:var(--text-sub); text-transform:uppercase;">Live Analysis</div>
+            <div id="analysis-text">Waiting for input...</div>
         </div>
         
-        <div style="text-align:center; margin-top:40px; color:var(--text-secondary); font-size:0.8rem;">
-            v3.1 • Web Edition
+        <div style="margin-top:auto; font-size:0.8rem; color:var(--text-sub); opacity:0.7;">
+            Keyboard: [Z-M] = Low Octave • [Q-P] = High Octave
         </div>
     </main>
 </div>
 
-<!-- PIANO -->
-<div id="piano-container">
+<div id="piano-wrapper">
     <div id="piano" class="piano"></div>
 </div>
 
 <script>
     // ==========================================
-    // STATE & AUDIO
+    // 1. STATE & CORE
     // ==========================================
     const state = {
         activeNotes: new Set(),
+        targetNotes: [], // Names e.g. ["C4", "E4", "G4"]
+        mode: "FREE",
         audioCtx: null,
         oscillators: new Map(),
-        curriculum: {}
+        currentTopic: null
     };
 
     function initAudio() {
         if(!state.audioCtx) {
             state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            state.audioCtx.resume();
         }
-        if(state.audioCtx.state === 'suspended') state.audioCtx.resume();
-    }
-
-    function midiToFreq(m) { return 440 * Math.pow(2, (m - 69) / 12); }
-
-    function playNote(midi) {
-        initAudio();
-        if(state.oscillators.has(midi)) return;
-
-        const osc = state.audioCtx.createOscillator();
-        const gain = state.audioCtx.createGain();
-        
-        // Smoother Sound
-        osc.type = 'sine'; 
-        osc.frequency.value = midiToFreq(midi);
-        
-        gain.gain.setValueAtTime(0, state.audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.5, state.audioCtx.currentTime + 0.05);
-        gain.gain.exponentialRampToValueAtTime(0.3, state.audioCtx.currentTime + 0.5); // Decay
-        
-        osc.connect(gain);
-        gain.connect(state.audioCtx.destination);
-        osc.start();
-        
-        state.oscillators.set(midi, {osc, gain});
-    }
-
-    function stopNote(midi) {
-        if(!state.oscillators.has(midi)) return;
-        const {osc, gain} = state.oscillators.get(midi);
-        
-        gain.gain.cancelScheduledValues(state.audioCtx.currentTime);
-        gain.gain.setValueAtTime(gain.gain.value, state.audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, state.audioCtx.currentTime + 0.3);
-        osc.stop(state.audioCtx.currentTime + 0.3);
-        
-        setTimeout(() => { osc.disconnect(); gain.disconnect(); }, 350);
-        state.oscillators.delete(midi);
     }
 
     // ==========================================
-    // PIANO UI
+    // 2. PIANO UI & MAPPING
     // ==========================================
     const pianoEl = document.getElementById('piano');
-    const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    
+    // Keyboard Map: 2 Rows (Z and Q)
+    const keyMap = {
+        // Lower Octave (C3 start)
+        'z': 48, 's': 49, 'x': 50, 'd': 51, 'c': 52, 'v': 53, 'g': 54, 'b': 55, 'h': 56, 'n': 57, 'j': 58, 'm': 59,
+        ',': 60, 'l': 61, '.': 62, ';': 63, '/': 64, 
+        
+        // Upper Octave (C4 start) - Matches standard Logic/Ableton
+        'q': 60, '2': 61, 'w': 62, '3': 63, 'e': 64, 'r': 65, '5': 66, 't': 67, '6': 68, 'y': 69, '7': 70, 'u': 71,
+        'i': 72, '9': 73, 'o': 74, '0': 75, 'p': 76
+    };
 
     function buildPiano() {
         pianoEl.innerHTML = '';
-        let whiteKeyOffset = 0;
-        // Range 48 (C3) to 83 (B5) - 3 Octaves (Clean fit)
-        // Let's do 48 to 96 (4 Octaves)
-        
-        for(let m=48; m<=96; m++) {
-            const noteIdx = m % 12;
-            const isBlack = [1, 3, 6, 8, 10].includes(noteIdx);
-            
+        let wOffset = 0;
+        // Range: C3 (48) to C6 (84) - 3 Octaves
+        for(let m=48; m<=84; m++) {
+            const isBlack = [1,3,6,8,10].includes(m%12);
             const key = document.createElement('div');
             key.dataset.midi = m;
             
             if(isBlack) {
                 key.className = 'key black-key';
-                // Center black key on the line after the *previous* white key
-                // whiteKeyOffset is the index of the white key we just finished?
-                // No, whiteKeyOffset counts current white keys.
-                // If we are at C#(49), we have placed C(48) at index 0.
-                // C# should be between index 0 and 1.
-                // Left = (1 * 44px) - (28px / 2) = 44 - 14 = 30px.
-                
-                // Let's stick to the previous robust logic:
-                // Count how many white keys came before this black key.
-                const leftPos = (whiteKeyOffset * 44) - 14;
-                key.style.left = leftPos + 'px';
+                key.style.left = ((wOffset * 44) - 13) + 'px';
                 pianoEl.appendChild(key);
             } else {
                 key.className = 'key white-key';
+                // Add label for mapped keys
+                const char = Object.keys(keyMap).find(k => keyMap[k] === m);
+                if(char) {
+                    const label = document.createElement('div');
+                    label.className = 'key-label';
+                    label.innerText = char.toUpperCase();
+                    key.appendChild(label);
+                }
                 pianoEl.appendChild(key);
-                whiteKeyOffset++;
+                wOffset++;
             }
             
-            const start = (e) => { e.preventDefault(); noteOn(m); };
-            const end = (e) => { e.preventDefault(); noteOff(m); };
-            
-            key.addEventListener('mousedown', start);
-            key.addEventListener('mouseup', end);
-            key.addEventListener('mouseleave', end);
-            key.addEventListener('touchstart', start, {passive:false});
-            key.addEventListener('touchend', end, {passive:false});
+            // Events
+            const on = (e) => { e.preventDefault(); noteOn(m); };
+            const off = (e) => { e.preventDefault(); noteOff(m); };
+            key.addEventListener('mousedown', on);
+            key.addEventListener('mouseup', off);
+            key.addEventListener('mouseleave', off);
+            key.addEventListener('touchstart', on);
+            key.addEventListener('touchend', off);
         }
-        // Set container width
-        pianoEl.style.width = (whiteKeyOffset * 44) + 'px';
+        pianoEl.style.width = (wOffset * 44) + 'px';
     }
 
     // ==========================================
-    // LOGIC
+    // 3. LOGIC & AUDIO
     // ==========================================
     function noteOn(m) {
         if(state.activeNotes.has(m)) return;
+        initAudio();
         state.activeNotes.add(m);
-        playNote(m);
-        updateUI();
-        analyze();
+        
+        // Sound
+        const osc = state.audioCtx.createOscillator();
+        const gain = state.audioCtx.createGain();
+        osc.frequency.value = 440 * Math.pow(2, (m-69)/12);
+        osc.type = 'triangle';
+        gain.gain.setValueAtTime(0, state.audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.3, state.audioCtx.currentTime + 0.05);
+        osc.connect(gain); gain.connect(state.audioCtx.destination);
+        osc.start();
+        state.oscillators.set(m, {osc, gain});
+        
+        update();
     }
 
     function noteOff(m) {
         state.activeNotes.delete(m);
-        stopNote(m);
-        updateUI();
-        analyze();
+        if(state.oscillators.has(m)) {
+            const {osc, gain} = state.oscillators.get(m);
+            gain.gain.linearRampToValueAtTime(0, state.audioCtx.currentTime + 0.1);
+            osc.stop(state.audioCtx.currentTime + 0.1);
+            state.oscillators.delete(m);
+        }
+        update();
     }
 
-    function updateUI() {
-        // Remove active
-        document.querySelectorAll('.key.active').forEach(e => e.classList.remove('active'));
-        
-        const names = [];
+    function update() {
+        // UI Highlights
+        document.querySelectorAll('.key.active').forEach(k => k.classList.remove('active'));
+        const noteList = [];
         state.activeNotes.forEach(m => {
             const el = document.querySelector(`.key[data-midi="${m}"]`);
             if(el) el.classList.add('active');
             
-            const n = notes[m%12];
+            const n = noteNames[m%12];
             const oct = Math.floor(m/12)-1;
-            names.push(`${n}${oct}`);
+            noteList.push(n + oct);
         });
+        noteList.sort();
+
+        // Check Logic (if in lesson)
+        checkChallenge(noteList);
         
-        return names.sort();
-    }
-
-    let debounce = null;
-    function analyze() {
-        clearTimeout(debounce);
-        if(state.activeNotes.size === 0) {
-            document.getElementById('analysis-display').innerHTML = '<span style="color:#86868b">Play a chord to begin...</span>';
-            return;
-        }
+        // Analysis API (Debounced)
+        analyze(noteList);
         
-        debounce = setTimeout(() => {
-            const currentNotes = updateUI();
-            fetch('/api/analyze', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({notes: currentNotes})
-            })
-            .then(r=>r.json())
-            .then(d => {
-                const txt = `ROOT: ${d.root}\nNOTES: ${d.sorted_notes.join(' - ')}\nINTERVALS: ${d.intervals.join(', ')}`;
-                document.getElementById('analysis-display').innerText = txt;
-            });
-        }, 100);
-    }
-
-    function generateSheet() {
-        const currentNotes = updateUI();
-        if(currentNotes.length === 0) return;
-        
-        fetch('/api/generate-sheet', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({notes: currentNotes})
-        })
-        .then(r => r.blob())
-        .then(blob => {
-            const url = URL.createObjectURL(blob);
-            document.getElementById('sheet-music-container').innerHTML =
-                `<img src="${url}" id="sheet-music-img" alt="Sheet Music">`;
-        });
-    }
-
-    // ==========================================
-    // INIT
-    // ==========================================
-    buildPiano();
-
-    // Menu Logic
-    window.toggleMenu = () => {
-        document.getElementById('sidebar').classList.toggle('open');
-    }
-    window.setMode = (m) => {
-        document.getElementById('sidebar').classList.remove('open');
-        document.querySelectorAll('.menu-item').forEach(e => e.classList.remove('active'));
-        document.querySelector('.menu-item[onclick="setMode(\'FREE\')"]').classList.add('active');
-        
-        document.getElementById('topic-title').innerText = "Free Play";
-        document.getElementById('topic-desc').innerText = "Connect a MIDI keyboard or tap the keys below. The engine will analyze your harmony in real-time.";
-    }
-    window.setTopic = (t) => {
-        document.getElementById('sidebar').classList.remove('open');
-        document.querySelectorAll('.menu-item').forEach(e => e.classList.remove('active'));
-        // Highlight logic (simple text match)
-        // ...
-        
-        document.getElementById('topic-title').innerText = t;
-        const desc = state.curriculum.descriptions[t] || "Explore this concept.";
-        document.getElementById('topic-desc').innerText = desc;
-    }
-
-    // Load Data
-    fetch('/api/curriculum').then(r=>r.json()).then(d => {
-        state.curriculum = d;
-        const bg = document.getElementById('beginner-list');
-        const ad = document.getElementById('advanced-list');
-        d.beginner.forEach(t => {
-            bg.innerHTML += `<div class="menu-item" onclick="setTopic('${t}')">${t}</div>`;
-        });
-        d.advanced.forEach(t => {
-            ad.innerHTML += `<div class="menu-item" onclick="setTopic('${t}')">${t}</div>`;
-        });
-    });
-
-    // Web MIDI
-    if(navigator.requestMIDIAccess) {
-        navigator.requestMIDIAccess().then(midi => {
-            const status = document.getElementById('midi-status');
-            status.innerText = "MIDI Ready";
-            status.classList.add('active');
-            
-            for(let input of midi.inputs.values()) {
-                input.onmidimessage = (msg) => {
-                    const [c,n,v] = msg.data;
-                    if(c===144 && v>0) noteOn(n);
-                    if(c===128 || (c===144 && v===0)) noteOff(n);
-                };
-            }
-        }, () => {
-             document.getElementById('midi-status').innerText = "MIDI Not Supported";
-        });
+        // If Free Play, update sheet music live
+        if(state.mode === "FREE") updateSheet(noteList);
     }
     
-    // Typing Support
-    const keyMap = {
-        'a':48, 'w':49, 's':50, 'e':51, 'd':52, 'f':53, 't':54, 'g':55, 'y':56, 'h':57, 'u':58, 'j':59, 
-        'k':60, 'o':61, 'l':62, 'p':63
+    function checkChallenge(inputNotes) {
+        if(state.mode === "FREE" || state.targetNotes.length === 0) return;
+        
+        const card = document.getElementById('challenge-card');
+        const btn = document.getElementById('next-btn');
+        
+        // Compare Sets (ignoring octave? No, prompt says C4 so strict)
+        // Let's do strict name match first.
+        const targetSet = new Set(state.targetNotes);
+        const inputSet = new Set(inputNotes);
+        
+        // Simple Set Equality
+        const isMatch = targetSet.size === inputSet.size && [...targetSet].every(x => inputSet.has(x));
+        
+        if(isMatch) {
+            card.classList.add('success');
+            card.classList.remove('fail');
+            btn.style.display = 'block';
+            document.getElementById('sub-instruction').innerText = "Perfect! Great job.";
+            document.getElementById('sub-instruction').style.color = "var(--success)";
+        } else {
+            // Only show fail if they are playing WRONG notes (not just incomplete)
+            const isWrong = [...inputSet].some(x => !targetSet.has(x));
+            if(isWrong && inputSet.size > 0) {
+                 card.classList.add('fail');
+                 document.getElementById('sub-instruction').innerText = "Try again...";
+                 document.getElementById('sub-instruction').style.color = "var(--error)";
+            } else {
+                 card.classList.remove('fail');
+                 card.classList.remove('success');
+                 if(!btn.style.display || btn.style.display === 'none') {
+                     document.getElementById('sub-instruction').innerText = "Match the notes on the staff.";
+                     document.getElementById('sub-instruction').style.color = "var(--text-sub)";
+                 }
+            }
+        }
+    }
+
+    let analyzeTimer;
+    function analyze(notes) {
+        clearTimeout(analyzeTimer);
+        if(notes.length === 0) {
+            document.getElementById('analysis-text').innerText = "Waiting for input...";
+            return;
+        }
+        analyzeTimer = setTimeout(() => {
+            fetch('/api/analyze', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({notes})
+            }).then(r=>r.json()).then(d => {
+                document.getElementById('analysis-text').innerText = 
+                    `${d.root} Root • ${d.intervals.join(', ')}`;
+            });
+        }, 150);
+    }
+    
+    let sheetTimer;
+    function updateSheet(notes) {
+        clearTimeout(sheetTimer);
+        if(notes.length === 0) return;
+        sheetTimer = setTimeout(() => {
+            fetch('/api/generate-sheet', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({notes})
+            }).then(r=>r.text()).then(svg => {
+                 document.getElementById('staff-container').innerHTML = svg;
+            });
+        }, 300);
+    }
+
+    // ==========================================
+    // 4. LESSON CONTROLS
+    // ==========================================
+    window.setMode = (m) => {
+        state.mode = m;
+        document.getElementById('sidebar').classList.remove('open');
+        document.querySelectorAll('.menu-item').forEach(e => e.classList.remove('active'));
+        // Update UI
+        document.getElementById('instruction').innerText = "Free Play";
+        document.getElementById('sub-instruction').innerText = "Play anything you like.";
+        document.getElementById('challenge-card').classList.remove('success', 'fail');
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('staff-container').innerHTML = '<div style="color:#ccc">Play notes to see music</div>';
+        state.targetNotes = [];
     };
+
+    window.setTopic = (topic) => {
+        state.mode = "DRILL";
+        state.currentTopic = topic;
+        document.getElementById('sidebar').classList.remove('open');
+        document.querySelectorAll('.menu-item').forEach(e => {
+            e.classList.toggle('active', e.innerText === topic);
+        });
+        
+        nextDrill();
+    };
+    
+    window.nextDrill = () => {
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('challenge-card').classList.remove('success', 'fail');
+        document.getElementById('sub-instruction').innerText = "Loading...";
+        document.getElementById('sub-instruction').style.color = "var(--text-sub)";
+        
+        fetch('/api/challenge', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({topic: state.currentTopic})
+        }).then(r=>r.json()).then(d => {
+            document.getElementById('instruction').innerText = d.instruction;
+            document.getElementById('sub-instruction').innerText = "Match the notes on the staff.";
+            document.getElementById('staff-container').innerHTML = d.svg;
+            state.targetNotes = d.target_notes;
+        });
+    };
+
+    // ==========================================
+    // 5. INIT
+    // ==========================================
+    buildPiano();
+    
+    // Keyboard Listeners
     document.addEventListener('keydown', e => {
         if(!e.repeat && keyMap[e.key]) noteOn(keyMap[e.key]);
     });
@@ -563,11 +450,33 @@
         if(keyMap[e.key]) noteOff(keyMap[e.key]);
     });
 
-    // Interaction Unlock
-    document.body.addEventListener('click', initAudio, {once:true});
-    document.body.addEventListener('touchstart', initAudio, {once:true});
+    // MIDI
+    if(navigator.requestMIDIAccess) {
+        navigator.requestMIDIAccess().then(m => {
+            document.getElementById('midi-status').innerText = "MIDI Ready";
+            for(let i of m.inputs.values()) {
+                i.onmidimessage = msg => {
+                    const [c,n,v] = msg.data;
+                    if(c===144 && v>0) noteOn(n);
+                    if(c===128 || (c===144 && v===0)) noteOff(n);
+                };
+            }
+        });
+    }
+
+    // Load Curriculum
+    fetch('/api/curriculum').then(r=>r.json()).then(d => {
+        const bg = document.getElementById('bg-list');
+        const adv = document.getElementById('adv-list');
+        d.beginner.forEach(t => bg.innerHTML += `<div class="menu-item" onclick="setTopic('${t}')">${t}</div>`);
+        d.advanced.forEach(t => adv.innerHTML += `<div class="menu-item" onclick="setTopic('${t}')">${t}</div>`);
+    });
+
+    // Mobile Menu
+    if(window.innerWidth <= 768) {
+        document.getElementById('menu-btn').style.display = 'block';
+    }
 
 </script>
-
 </body>
 </html>
