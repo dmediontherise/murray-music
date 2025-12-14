@@ -1,4 +1,4 @@
-// MURRAY'S THEORY v9.3 (Full Curriculum + Flow)
+// MURRAY'S THEORY v9.5 (Polyphony Fix)
 
 const State = {
     active: new Set(),
@@ -11,7 +11,9 @@ const State = {
     oscs: new Map(),
     isChord: true,
     targetSeq: [],
-    seqProgress: 0
+    seqProgress: 0,
+    // Track physical keys separately to prevent ghosting logic errors
+    heldKeys: new Set() 
 };
 
 // --- AUDIO ENGINE ---
@@ -48,6 +50,7 @@ function stopNote(m) {
     if (!State.oscs.has(m)) return;
     const {osc, gain} = State.oscs.get(m);
     const t = State.audioCtx.currentTime;
+    
     gain.gain.cancelScheduledValues(t);
     gain.gain.linearRampToValueAtTime(0, t + 0.05);
     osc.stop(t + 0.05);
@@ -57,7 +60,9 @@ function stopNote(m) {
 
 // --- LOGIC ---
 function noteOn(m) {
+    // Only trigger if note isn't already active (Logic gate)
     if (State.active.has(m)) return;
+    
     State.active.add(m);
     playNote(m);
     updateUI();
@@ -65,6 +70,9 @@ function noteOn(m) {
 }
 
 function noteOff(m) {
+    // Only trigger if note IS active
+    if (!State.active.has(m)) return;
+    
     State.active.delete(m);
     stopNote(m);
     updateUI();
@@ -72,12 +80,14 @@ function noteOff(m) {
 
 function updateUI() {
     requestAnimationFrame(() => {
+        // Keys
         document.querySelectorAll('.key').forEach(k => {
             const m = parseInt(k.dataset.midi);
             if (State.active.has(m)) k.classList.add('active');
             else k.classList.remove('active');
         });
 
+        // Analysis
         const activeMidis = Array.from(State.active).sort((a,b)=>a-b);
         const names = activeMidis.map(m => window.Theory.getNoteName(m));
         
@@ -100,10 +110,12 @@ function checkDrill(lastMidi) {
     if (State.mode === "FREE") return;
     
     if (State.isChord) {
+        // Strict Set Equality
         const match = State.targetMidis.size === State.active.size && 
                       [...State.targetMidis].every(x => State.active.has(x));
         if (match) completeDrill();
     } else {
+        // Sequence Logic
         if (lastMidi === State.targetSeq[State.seqProgress]) {
             State.seqProgress++;
             const dots = document.querySelectorAll('.seq-dot');
@@ -190,7 +202,6 @@ function loadChallenge() {
     resetUI();
     const challenges = window.Curriculum.CHALLENGES[State.topic];
     
-    // SECTION COMPLETE LOGIC
     if (!challenges || State.idx >= challenges.length) {
         document.getElementById('drill-title').innerText = "Section Complete!";
         document.getElementById('drill-desc').innerText = "Great job! Ready for the next topic?";
@@ -198,7 +209,6 @@ function loadChallenge() {
         document.getElementById('context-box').style.display = 'none';
         document.getElementById('sequence-tracker').innerHTML = '';
         
-        // Find Next Topic
         const allTopics = [...window.Curriculum.BEGINNER, ...window.Curriculum.ADVANCED];
         const currentIdx = allTopics.indexOf(State.topic);
         const nextTopic = allTopics[currentIdx + 1];
@@ -206,7 +216,7 @@ function loadChallenge() {
         const nextBtn = document.getElementById('next-btn');
         if (nextTopic) {
             nextBtn.innerText = "Start " + nextTopic;
-            nextBtn.onclick = () => setTopic(nextTopic); // Re-bind
+            nextBtn.onclick = () => setTopic(nextTopic);
             nextBtn.style.display = 'inline-block';
         } else {
             nextBtn.style.display = 'none';
@@ -215,10 +225,9 @@ function loadChallenge() {
         return;
     }
 
-    // Normal Drill Loading
     const nextBtn = document.getElementById('next-btn');
     nextBtn.innerText = "Next Challenge →";
-    nextBtn.onclick = window.nextDrill; // Restore original bind
+    nextBtn.onclick = window.nextDrill;
 
     const data = challenges[State.idx];
     document.getElementById('drill-title').innerText = data.instruction;
@@ -259,6 +268,7 @@ function resetUI() {
     document.querySelectorAll('.hint').forEach(k => k.classList.remove('hint'));
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('overlay').classList.remove('visible');
+    // Clear Active notes if stuck? No, user might be holding them.
 }
 
 window.showHint = () => {
@@ -319,7 +329,7 @@ function buildPiano() {
             k.dataset.midi = m;
             const bWidth = window.innerWidth <= 768 ? 26 : 30;
             const pct = (wIdx * (100/21));
-            k.style.left = `calc(${pct}% - 1.5%)`; // Fixed absolute alignment
+            k.style.left = `calc(${pct}% - 1.5%)`; 
             bindKeyEvents(k, m);
             container.appendChild(k);
         } else {
@@ -331,15 +341,40 @@ function buildPiano() {
 function bindKeyEvents(el, m) {
     const on = (e) => { e.preventDefault(); noteOn(m); };
     const off = (e) => { e.preventDefault(); noteOff(m); };
-    el.addEventListener('mousedown', on); el.addEventListener('mouseup', off); el.addEventListener('mouseleave', off);
-    el.addEventListener('touchstart', on, {passive:false}); el.addEventListener('touchend', off, {passive:false});
+    
+    // Mouse
+    el.addEventListener('mousedown', on); 
+    el.addEventListener('mouseup', off); 
+    el.addEventListener('mouseleave', off);
+    
+    // Touch - Passive false critical for preventing scrolling
+    el.addEventListener('touchstart', on, {passive:false}); 
+    el.addEventListener('touchend', off, {passive:false});
+    el.addEventListener('touchcancel', off, {passive:false});
 }
 
 window.addEventListener('load', () => {
     initController();
     buildPiano();
-    document.addEventListener('keydown', e => { if(!e.repeat && keyMap[e.key.toLowerCase()]) noteOn(keyMap[e.key.toLowerCase()]); });
-    document.addEventListener('keyup', e => { if(keyMap[e.key.toLowerCase()]) noteOff(keyMap[e.key.toLowerCase()]); });
+    
+    // Keyboard with Ghosting Protection
+    document.addEventListener('keydown', e => {
+        if(e.repeat) return;
+        const k = e.key.toLowerCase();
+        if(keyMap[k] && !State.heldKeys.has(k)) {
+            State.heldKeys.add(k);
+            noteOn(keyMap[k]);
+        }
+    });
+    
+    document.addEventListener('keyup', e => {
+        const k = e.key.toLowerCase();
+        if(State.heldKeys.has(k)) {
+            State.heldKeys.delete(k);
+            noteOff(keyMap[k]);
+        }
+    });
+
     if (navigator.requestMIDIAccess) {
         navigator.requestMIDIAccess().then(m => {
             document.getElementById('midi-badge').innerText = "MIDI Ready";
