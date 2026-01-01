@@ -408,7 +408,7 @@ function buildPiano() {
     
     let wWidth = 50;
     if (isLandscape) wWidth = 40;
-    else if (isMobile) wWidth = 46;
+    else if (isMobile) wWidth = 35;
     
     let wCount = 0;
     
