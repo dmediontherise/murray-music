@@ -82,27 +82,27 @@ const Curriculum = {
         // --- BASIC ---
         "1.1 The Semitone": [{type:"interval", notes:["C4","C#4"], instruction:"Play C to C#", context:"Jaws"}],
         "1.2 The Whole Tone": [{type:"interval", notes:["C4","D4"], instruction:"Play C to D", context:"Happy Birthday"}],
-        "1.3 The Major 2nd": [{type:"interval", notes:["F3","G3"], instruction:"Play F to G", context:"Whole Step"}],
-        "1.4 The Minor 3rd": [{type:"interval", notes:["A3","C4"], instruction:"Play A to C", context:"Sadness"}],
+        "1.3 The Major 2nd": [{type:"interval", notes:["F4","G4"], instruction:"Play F to G", context:"Whole Step"}],
+        "1.4 The Minor 3rd": [{type:"interval", notes:["A4","C5"], instruction:"Play A to C", context:"Sadness"}],
         "1.5 The Major 3rd": [{type:"interval", notes:["C4","E4"], instruction:"Play C to E", context:"Brightness"}],
-        "1.6 The Perfect 4th": [{type:"interval", notes:["G3","C4"], instruction:"Play G to C", context:"Here Comes the Bride"}],
-        "1.7 The Tritone": [{type:"interval", notes:["B3","F4"], instruction:"Play B to F", context:"The Simpsons"}],
+        "1.6 The Perfect 4th": [{type:"interval", notes:["G4","C5"], instruction:"Play G to C", context:"Here Comes the Bride"}],
+        "1.7 The Tritone": [{type:"interval", notes:["B4","F5"], instruction:"Play B to F", context:"The Simpsons"}],
         "1.8 The Perfect 5th": [{type:"interval", notes:["C4","G4"], instruction:"Play C to G", context:"Star Wars"}],
         "1.9 The Minor 6th": [{type:"interval", notes:["E4","C5"], instruction:"Play E to C", context:"Love Story"}],
         "1.10 The Major 6th": [{type:"interval", notes:["C4","A4"], instruction:"Play C to A", context:"My Bonnie"}],
-        "1.11 The Minor 7th": [{type:"interval", notes:["G3","F4"], instruction:"Play G to F", context:"Dominant Interval"}],
+        "1.11 The Minor 7th": [{type:"interval", notes:["G4","F5"], instruction:"Play G to F", context:"Dominant Interval"}],
         "1.12 The Major 7th": [{type:"interval", notes:["C4","B4"], instruction:"Play C to B", context:"Take On Me"}],
         "1.13 The Octave": [{type:"interval", notes:["C4","C5"], instruction:"Play C4 to C5", context:"Somewhere Over the Rainbow"}],
         
         "2.1 The Chromatic Scale": [{type:"sequence", notes:["C4","C#4","D4","D#4","E4"], instruction:"Play Chromatic Run", context:"Half Steps"}],
         "2.2 The Major Scale": [{type:"sequence", notes:["C4","D4","E4","F4","G4","A4","B4","C5"], instruction:"Play C Major", context:"Ionian"}],
-        "2.3 Natural Minor": [{type:"sequence", notes:["A3","B3","C4","D4","E4","F4","G4","A4"], instruction:"Play A Minor", context:"Aeolian"}],
-        "2.4 Harmonic Minor": [{type:"sequence", notes:["A3","B3","C4","D4","E4","F4","G#4","A4"], instruction:"Play A Harmonic Minor", context:"Raised 7th"}],
+        "2.3 Natural Minor": [{type:"sequence", notes:["A4","B4","C5","D5","E5","F5","G5","A5"], instruction:"Play A Minor", context:"Aeolian"}],
+        "2.4 Harmonic Minor": [{type:"sequence", notes:["A4","B4","C5","D5","E5","F5","G#5","A5"], instruction:"Play A Harmonic Minor", context:"Raised 7th"}],
         "2.5 Melodic Minor": [{type:"sequence", notes:["C4","D4","Eb4","F4","G4","A4","B4","C5"], instruction:"Play C Melodic Minor", context:"Jazz Minor"}],
         
         "3.1 Major Triads": [{type:"triad", notes:["C4","E4","G4"], instruction:"Play C Major", context:"1-3-5"}],
-        "3.2 Minor Triads": [{type:"triad", notes:["A3","C4","E4"], instruction:"Play A Minor", context:"1-b3-5"}],
-        "3.3 Diminished Triads": [{type:"triad", notes:["B3","D4","F4"], instruction:"Play B Diminished", context:"1-b3-b5"}],
+        "3.2 Minor Triads": [{type:"triad", notes:["A4","C5","E5"], instruction:"Play A Minor", context:"1-b3-5"}],
+        "3.3 Diminished Triads": [{type:"triad", notes:["B4","D5","F5"], instruction:"Play B Diminished", context:"1-b3-b5"}],
         "3.4 Augmented Triads": [{type:"triad", notes:["C4","E4","G#4"], instruction:"Play C Augmented", context:"1-3-#5"}],
 
         // --- ADVANCED ---
@@ -111,16 +111,16 @@ const Curriculum = {
             {
                 type: "chord-sequence",
                 sequence: [
-                    ["G3","B3","D4","F4"], 
+                    ["G4","B4","D5","F5"], 
                     ["C4","E4","G4","B4"]
                 ],
                 instruction: "Play G7 then Cmaj7",
                 context: "V7 - I Resolution"
             },
-            {type:"triad", notes:["G3","B3","D4","F4"], instruction:"Play G7", context:"1-3-5-b7"}
+            {type:"triad", notes:["G4","B4","D5","F5"], instruction:"Play G7", context:"1-3-5-b7"}
         ],
         "2.5 Tritone Substitution": [
-            {type:"triad", notes:["G3","B3","D4","F4"], instruction:"Play G7", context:"Original"},
+            {type:"triad", notes:["G4","B4","D5","F5"], instruction:"Play G7", context:"Original"},
             {type:"triad", notes:["C#4","F4","G#4","B4"], instruction:"Play Db7", context:"Substitute"}
         ],
         "4.1 Shell Voicings": [{type:"interval", notes:["E4","B4"], instruction:"Play E-B (3rd & 7th of Cmaj7)", context:"Rootless Shell"}],

@@ -53,18 +53,18 @@ class SheetRenderer {
             svg += `<g class="${animClass}" style="animation-delay: ${delay}s">`;
 
             // Note Head
-            svg += `<ellipse cx="${cx}" cy="${cy}" rx="6" ry="4" fill="#eee" />`;
+            svg += `<ellipse cx="${cx}" cy="${cy}" rx="6" ry="4" fill="#000000" />`;
             
             // Stem
-            if (step < 6) svg += `<line x1="${cx+5}" y1="${cy}" x2="${cx+5}" y2="${cy-30}" stroke="#eee" stroke-width="1.5" />`;
-            else svg += `<line x1="${cx-5}" y1="${cy}" x2="${cx-5}" y2="${cy+30}" stroke="#eee" stroke-width="1.5" />`;
+            if (step < 6) svg += `<line x1="${cx+5}" y1="${cy}" x2="${cx+5}" y2="${cy-30}" stroke="#000000" stroke-width="1.5" />`;
+            else svg += `<line x1="${cx-5}" y1="${cy}" x2="${cx-5}" y2="${cy+30}" stroke="#000000" stroke-width="1.5" />`;
 
             // Ledger Lines
             let s = step;
             while (s <= 0) { // Below E4
                 if (s % 2 === 0) {
                     const ly = (this.topLineY + 40) - (s - 2) * (this.lineGap / 2);
-                    svg += `<line x1="${cx-10}" y1="${ly}" x2="${cx+10}" y2="${ly}" stroke="#666" stroke-width="1" />`;
+                    svg += `<line x1="${cx-10}" y1="${ly}" x2="${cx+10}" y2="${ly}" stroke="#000000" stroke-width="1" />`;
                 }
                 s++;
             }
@@ -72,18 +72,18 @@ class SheetRenderer {
             while (s >= 12) { // Above F5
                 if (s % 2 === 0) {
                     const ly = (this.topLineY + 40) - (s - 2) * (this.lineGap / 2);
-                    svg += `<line x1="${cx-10}" y1="${ly}" x2="${cx+10}" y2="${ly}" stroke="#666" stroke-width="1" />`;
+                    svg += `<line x1="${cx-10}" y1="${ly}" x2="${cx+10}" y2="${ly}" stroke="#000000" stroke-width="1" />`;
                 }
                 s--;
             }
             
             // Accidentals
-            if (note.includes('#')) svg += `<text x="${cx-16}" y="${cy+5}" font-size="14" fill="#eee">♯</text>`;
-            else if (note.includes('b')) svg += `<text x="${cx-14}" y="${cy+5}" font-size="14" fill="#eee">♭</text>`;
+            if (note.includes('#')) svg += `<text x="${cx-16}" y="${cy+5}" font-size="14" fill="#000000">♯</text>`;
+            else if (note.includes('b')) svg += `<text x="${cx-14}" y="${cy+5}" font-size="14" fill="#000000">♭</text>`;
             
             // Note Label (Optional, for clarity)
             const labelY = step < 6 ? cy + 20 : cy - 35;
-            svg += `<text x="${cx}" y="${labelY}" font-family="sans-serif" font-size="10" fill="#aaa" text-anchor="middle">${note}</text>`;
+            svg += `<text x="${cx}" y="${labelY}" font-family="sans-serif" font-size="10" fill="#000000" text-anchor="middle">${note}</text>`;
             
             svg += `</g>`;
         });
