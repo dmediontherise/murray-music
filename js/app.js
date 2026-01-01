@@ -22,6 +22,16 @@ const State = {
 function initAudio() {
     if (!State.audioCtx) {
         State.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Dynamics Compressor for Polyphony
+        State.compressor = State.audioCtx.createDynamicsCompressor();
+        State.compressor.threshold.value = -20;
+        State.compressor.knee.value = 30;
+        State.compressor.ratio.value = 12;
+        State.compressor.attack.value = 0.003;
+        State.compressor.release.value = 0.25;
+        State.compressor.connect(State.audioCtx.destination);
+
         State.audioCtx.resume();
     }
 }
@@ -42,7 +52,7 @@ function playNote(m) {
     gain.gain.exponentialRampToValueAtTime(0.1, t + 0.5);
     
     osc.connect(gain);
-    gain.connect(State.audioCtx.destination);
+    gain.connect(State.compressor); // Connect to compressor
     osc.start();
     
     State.oscs.set(m, {osc, gain});
