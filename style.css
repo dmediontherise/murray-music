@@ -424,12 +424,12 @@ body {
 
 
 /* Piano Dock */
-.piano-dock {
+#piano-wrap {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 220px; /* Increased slightly for touch targets */
+    height: 220px;
     background: #080808;
     border-top: 1px solid var(--border);
     display: flex;
@@ -438,14 +438,14 @@ body {
     z-index: 100;
 }
 
-.piano-surface {
+.piano-keys {
     display: flex;
     position: relative;
     height: 100%;
+    margin: 0 auto;
     width: 100%;
-    max-width: 1400px; /* Constrain slightly on ultra-wide */
+    max-width: 1400px;
 }
-
 .key {
     position: relative;
     cursor: pointer;
@@ -454,7 +454,7 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
-.key.white {
+.key.white-key {
     flex: 1;
     height: 100%;
     background: var(--text-main);
@@ -464,7 +464,7 @@ body {
     border-radius: 0 0 4px 4px;
 }
 
-.key.white:active, .key.white.active-key {
+.key.white-key:active, .key.white-key.active, .key.white-key.active-key {
     background: #DDD;
 }
 
@@ -473,14 +473,14 @@ body {
    Sits between white keys in the flex flow but takes 0 width.
    The visual key is rendered via ::after to overlap neighbors.
 */
-.key.black {
+.key.black-key {
     flex: 0 0 0;
     height: 100%; /* Full height container, key is shorter */
     z-index: 10;
     overflow: visible;
 }
 
-.key.black::after {
+.key.black-key::after {
     content: '';
     position: absolute;
     top: 0;
@@ -498,18 +498,18 @@ body {
 
 /* Adjust black key width for desktop vs mobile */
 @media (min-width: 768px) {
-    .key.black::after {
+    .key.black-key::after {
         left: -18px;
         width: 36px;
     }
 }
 
-.key.black:active::after, .key.black.active-key::after {
+.key.black-key:active::after, .key.black-key.active::after, .key.black-key.active-key::after {
     background: #333;
 }
 
 /* Prevent double firing on the container */
-.key.black:active, .key.black.active-key {
+.key.black-key:active, .key.black-key.active, .key.black-key.active-key {
     background: transparent; 
 }
 

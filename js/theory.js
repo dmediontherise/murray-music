@@ -1,32 +1,36 @@
 class TheoryEngine {
     constructor() {
         this.NOTES_SHARP = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-        // Map flats to sharp equivalents for index lookup
         this.FLAT_MAP = {
             "Cb": "B", "Db": "C#", "Eb": "D#", "Fb": "E", "Gb": "F#", "Ab": "G#", "Bb": "A#"
         };
-        this.INTERVALS = {
-            0: 'Perfect Unison', 1: 'Minor 2nd', 2: 'Major 2nd', 3: 'Minor 3rd', 4: 'Major 3rd',
-            5: 'Perfect 4th', 6: 'Tritone', 7: 'Perfect 5th', 8: 'Minor 6th', 9: 'Major 6th',
-            10: 'Minor 7th', 11: 'Major 7th', 12: 'Perfect Octave'
+        this.INTERVAL_NAMES = {
+            0: 'P1', 1: 'm2', 2: 'M2', 3: 'm3', 4: 'M3',
+            5: 'P4', 6: 'TT', 7: 'P5', 8: 'm6', 9: 'M6',
+            10: 'm7', 11: 'M7', 12: 'P8'
+        };
+        this.CHORD_PATTERNS = {
+            '4,7': 'Maj',
+            '3,7': 'min',
+            '3,6': 'dim',
+            '4,8': 'aug',
+            '2,7': 'sus2',
+            '5,7': 'sus4',
+            '4,7,11': 'Maj7',
+            '4,7,10': 'Dom7',
+            '3,7,10': 'min7',
+            '3,6,10': 'm7b5',
+            '3,6,9': 'dim7'
         };
     }
 
     getMidi(noteName) {
-        // Handle "C4", "C#4", "Db4"
         if (!noteName) return null;
-        
-        let letter = noteName.slice(0, -1); // "C", "C#", "Db"
+        let letter = noteName.slice(0, -1);
         const octave = parseInt(noteName.slice(-1));
-        
-        // Resolve Enharmonics (Db -> C#)
-        if (this.FLAT_MAP[letter]) {
-            letter = this.FLAT_MAP[letter];
-        }
-        
+        if (this.FLAT_MAP[letter]) letter = this.FLAT_MAP[letter];
         const idx = this.NOTES_SHARP.indexOf(letter);
         if (idx === -1) return null;
-        
         return (octave + 1) * 12 + idx;
     }
 
@@ -41,17 +45,31 @@ class TheoryEngine {
     }
 
     analyze(names) {
-        if (!names || names.length === 0) return { root: '-', intervals: [] };
-        // Sort by MIDI
+        if (!names || names.length === 0) return { root: '-', intervals: [], label: '' };
+        
         const midis = names.map(n => this.getMidi(n)).sort((a,b) => a-b);
         const rootMidi = midis[0];
-        const rootName = this.getNoteName(rootMidi);
-        const intervals = midis.map(m => {
-            const dist = (m - rootMidi) % 12; 
-            const name = this.INTERVALS[dist] || '?';
-            return `${this.getNoteName(m)} (${name})`;
+        const rootName = this.getNoteName(rootMidi).replace(/[0-9]/g, ''); // Strip octave
+        
+        // Calculate intervals relative to root
+        const intervals = midis.map(m => (m - rootMidi)).filter(i => i > 0);
+        // Remove duplicates (e.g. octaves) for pattern matching
+        const uniqueIntervals = [...new Set(intervals.map(i => i % 12))].sort((a,b)=>a-b);
+        const patternKey = uniqueIntervals.join(',');
+        
+        const chordType = this.CHORD_PATTERNS[patternKey];
+        const label = chordType ? `${rootName} ${chordType}` : '';
+
+        const verboseIntervals = midis.map(m => {
+            const dist = (m - rootMidi) % 12;
+            return this.INTERVAL_NAMES[dist] || '?';
         });
-        return { root: rootName, intervals: intervals };
+
+        return { 
+            root: rootName, 
+            intervals: verboseIntervals,
+            label: label
+        };
     }
 }
 window.Theory = new TheoryEngine();

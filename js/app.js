@@ -12,6 +12,8 @@ const State = {
     isChord: true,
     targetSeq: [],
     seqProgress: 0,
+    targetChain: null,
+    chainIdx: 0,
     // Track physical keys separately to prevent ghosting logic errors
     heldKeys: new Set() 
 };
@@ -95,7 +97,11 @@ function updateUI() {
         if (names.length > 0) {
             const analysis = window.Theory.analyze(names);
             bar.classList.add('visible');
-            bar.innerText = analysis.root === '-' ? names.join(' ') : `${analysis.root} Root • ${analysis.intervals.join(' ')}`;
+            if (analysis.label) {
+                bar.innerHTML = `<span style="color:#fff; font-weight:bold;">${analysis.label}</span> <span style="opacity:0.6; font-size:0.8em">(${analysis.intervals.join(' ')})</span>`;
+            } else {
+                bar.innerText = analysis.root === '-' ? names.join(' ') : `${analysis.root} Root • ${analysis.intervals.join(' ')}`;
+            }
         } else {
             bar.classList.remove('visible');
         }
@@ -113,7 +119,26 @@ function checkDrill(lastMidi) {
         // Strict Set Equality
         const match = State.targetMidis.size === State.active.size && 
                       [...State.targetMidis].every(x => State.active.has(x));
-        if (match) completeDrill();
+        
+        if (match) {
+            if (State.targetChain) {
+                State.chainIdx++;
+                // Update Dots
+                const dots = document.querySelectorAll('.seq-dot');
+                if(dots[State.chainIdx-1]) dots[State.chainIdx-1].classList.add('done');
+                
+                if (State.chainIdx >= State.targetChain.length) {
+                    completeDrill();
+                } else {
+                    // Load next chord
+                    const nextNotes = State.targetChain[State.chainIdx];
+                    State.targetMidis = new Set(nextNotes.map(n => window.Theory.getMidi(n)));
+                    document.getElementById('staff-display').innerHTML = window.Renderer.render(nextNotes);
+                }
+            } else {
+                completeDrill();
+            }
+        }
     } else {
         // Sequence Logic
         if (lastMidi === State.targetSeq[State.seqProgress]) {
@@ -187,10 +212,49 @@ function setTopic(topic) {
     State.topic = topic;
     State.idx = 0;
     resetUI();
-    document.querySelectorAll('.nav-item').forEach(el => {
+    document.querySelectorAll('.menu-item').forEach(el => {
         el.classList.toggle('active', el.innerText === topic);
     });
-    loadChallenge();
+    showTopicIntro(topic);
+}
+
+function showTopicIntro(topic) {
+    resetUI();
+    const desc = (window.Curriculum.DESCRIPTIONS && window.Curriculum.DESCRIPTIONS[topic]) 
+                 ? window.Curriculum.DESCRIPTIONS[topic] 
+                 : (window.Curriculum.DESCRIPTIONS ? window.Curriculum.DESCRIPTIONS['default'] : "Ready to start?");
+    
+    document.getElementById('drill-title').innerText = topic;
+    
+    const descEl = document.getElementById('drill-desc');
+    descEl.innerHTML = desc;
+    descEl.style.color = '#333'; // Make text darker for readability
+    descEl.style.fontSize = '1rem';
+    descEl.style.textAlign = 'left';
+    descEl.style.lineHeight = '1.6';
+    
+    document.getElementById('staff-display').innerHTML = '';
+    document.getElementById('context-box').style.display = 'none';
+    document.getElementById('sequence-tracker').innerHTML = '';
+
+    // Handle Start Button
+    let startBtn = document.getElementById('start-topic-btn');
+    const btnContainer = document.getElementById('next-btn').parentElement;
+    
+    if(!startBtn) {
+        startBtn = document.createElement('button');
+        startBtn.id = 'start-topic-btn';
+        startBtn.className = 'btn btn-pri';
+        startBtn.style.display = 'none';
+        btnContainer.appendChild(startBtn);
+    }
+    
+    startBtn.innerText = "Start Exercises";
+    startBtn.style.display = 'inline-block';
+    startBtn.onclick = () => {
+        startBtn.style.display = 'none';
+        loadChallenge();
+    };
 }
 
 window.nextDrill = () => {
@@ -200,6 +264,14 @@ window.nextDrill = () => {
 
 function loadChallenge() {
     resetUI();
+    
+    // Reset Description Styles
+    const descEl = document.getElementById('drill-desc');
+    descEl.style.color = ''; 
+    descEl.style.fontSize = '';
+    descEl.style.textAlign = '';
+    descEl.style.lineHeight = '';
+
     const challenges = window.Curriculum.CHALLENGES[State.topic];
     
     if (!challenges || State.idx >= challenges.length) {
@@ -239,18 +311,37 @@ function loadChallenge() {
     State.targetNotes = notes;
     State.targetMidis = new Set(midis);
     
-    State.isChord = !(data.type === 'sequence');
-    
-    if (!State.isChord) {
-        State.targetSeq = midis;
-        State.seqProgress = 0;
-        const track = document.getElementById('sequence-tracker');
-        track.innerHTML = midis.map(() => '<div class="seq-dot"></div>').join('');
-    } else {
-        document.getElementById('sequence-tracker').innerHTML = '';
-    }
+    State.targetChain = null;
+    State.chainIdx = 0;
 
-    document.getElementById('staff-display').innerHTML = window.Renderer.render(notes);
+    if (data.type === 'chord-sequence') {
+        State.targetChain = data.sequence;
+        State.isChord = true;
+        
+        // Setup First Chord
+        const firstNotes = data.sequence[0];
+        const chainMidis = firstNotes.map(n => window.Theory.getMidi(n));
+        State.targetMidis = new Set(chainMidis);
+        
+        // Setup Dots
+        const track = document.getElementById('sequence-tracker');
+        track.innerHTML = data.sequence.map(() => '<div class="seq-dot"></div>').join('');
+        
+        document.getElementById('staff-display').innerHTML = window.Renderer.render(firstNotes);
+    } else {
+        State.isChord = !(data.type === 'sequence');
+        
+        if (!State.isChord) {
+            State.targetSeq = midis;
+            State.seqProgress = 0;
+            const track = document.getElementById('sequence-tracker');
+            track.innerHTML = midis.map(() => '<div class="seq-dot"></div>').join('');
+            document.getElementById('staff-display').innerHTML = window.Renderer.render(notes);
+        } else {
+            document.getElementById('sequence-tracker').innerHTML = '';
+            document.getElementById('staff-display').innerHTML = window.Renderer.render(notes);
+        }
+    }
     
     if (data.context) {
         document.getElementById('context-box').style.display = 'flex';
@@ -301,7 +392,14 @@ const keyMap = {'z':48,'s':49,'x':50,'d':51,'c':52,'v':53,'g':54,'b':55,'h':56,'
 function buildPiano() {
     const container = document.getElementById('piano-keys');
     container.innerHTML = '';
-    const wWidth = window.innerWidth <= 768 ? 44 : 50; 
+    
+    const isMobile = window.innerWidth <= 768;
+    const isLandscape = window.matchMedia("(orientation: landscape)").matches && window.innerWidth <= 900;
+    
+    let wWidth = 50;
+    if (isLandscape) wWidth = 40;
+    else if (isMobile) wWidth = 46;
+    
     let wCount = 0;
     
     for(let m=48; m<=83; m++) {
@@ -327,9 +425,11 @@ function buildPiano() {
             const k = document.createElement('div');
             k.className = 'key black-key';
             k.dataset.midi = m;
-            const bWidth = window.innerWidth <= 768 ? 26 : 30;
+            
+            // Calculate % position based on white key index
             const pct = (wIdx * (100/21));
-            k.style.left = `calc(${pct}% - 1.5%)`; 
+            k.style.left = `calc(${pct}% - ${wWidth * 0.3}px)`; // Offset relative to key width
+            
             bindKeyEvents(k, m);
             container.appendChild(k);
         } else {

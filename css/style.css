@@ -181,7 +181,31 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
     .piano-keys { width: 1000px; padding: 0; margin: 0; } /* Force scroll width on mobile */
     .white-key { flex: none; width: 46px; } /* Fixed width on mobile for touch accuracy */
     .black-key { width: 28px; }
+
+    #analysis-bar {
+        bottom: 170px;
+        width: 90%;
+        white-space: normal;
+        text-align: center;
+        padding: 8px 16px;
+    }
 }
+
+@media (max-width: 900px) and (orientation: landscape) {
+    header { height: 40px; }
+    #piano-wrap { height: 120px; }
+    #scroll-view { padding-bottom: 130px; padding-top: 10px; }
+    #analysis-bar { bottom: 130px; font-size: 0.8rem; padding: 4px 12px; }
+    
+    .card { padding: 16px; margin: 0; max-width: 100%; }
+    h2 { font-size: 1.2rem; }
+    .subtitle { margin-bottom: 10px; font-size: 0.9rem; }
+    #staff-display { height: 100px; margin: 10px 0; }
+    
+    .white-key { width: 40px; }
+    .black-key { width: 24px; height: 55%; }
+}
+
 @media (min-width: 769px) {
     #menu-btn { display: none; }
 }
