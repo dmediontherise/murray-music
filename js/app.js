@@ -443,15 +443,30 @@ function buildPiano() {
     
     let wIdx = 0;
     for(let m=48; m<=83; m++) {
-        const isBlack = [1,3,6,8,10].includes(m%12);
+        const noteType = m % 12;
+        const isBlack = [1,3,6,8,10].includes(noteType);
         if(isBlack) {
             const k = document.createElement('div');
             k.className = 'key black-key';
             k.dataset.midi = m;
             
+            // Realistic Piano Spacing Nudges (fraction of white key width)
+            let nudge = 0;
+            if (noteType === 1) nudge = -0.12;  // C# Left
+            if (noteType === 3) nudge = 0.12;   // D# Right
+            if (noteType === 6) nudge = -0.15;  // F# Left
+            if (noteType === 8) nudge = 0.05;   // G# Slightly Right (Center-ish)
+            if (noteType === 10) nudge = 0.18;  // A# Far Right
+
             // Calculate % position based on white key index
-            const pct = (wIdx * (100/21));
-            k.style.left = `calc(${pct}% - ${wWidth * 0.3}px)`; // Offset relative to key width
+            const pct = (wIdx * (100/wCount));
+            // Base offset is 0.3 (roughly half black key width relative to white)
+            // We subtract the offset from the anchor. 
+            // To nudge left (negative), we need to subtract MORE (increase the offset value).
+            // To nudge right (positive), we need to subtract LESS.
+            const offsetFactor = 0.3 - nudge;
+            
+            k.style.left = `calc(${pct}% - ${wWidth * offsetFactor}px)`; 
             
             bindKeyEvents(k, m);
             container.appendChild(k);
