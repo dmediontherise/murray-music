@@ -33,14 +33,15 @@ class SheetRenderer {
             return oa === ob ? a.charCodeAt(0) - b.charCodeAt(0) : oa - ob;
         }) : notes;
 
-        const startX = 80;
-        const spacing = 60; // Increased spacing for clarity
+        const startX = 50; // Move start left to fit more
+        const spacing = 20; // 20px center-to-center
 
         // Calculate Dynamic Width
         let currentWidth = this.width;
         if (!useChordLayout) {
+            // Ensure at least 400px width to comfortably fit 10+ notes
             const requiredWidth = startX + (notesToRender.length * spacing) + 50;
-            currentWidth = Math.max(this.width, requiredWidth);
+            currentWidth = Math.max(400, requiredWidth);
         }
 
         let svg = `<svg width="100%" height="100%" viewBox="0 0 ${currentWidth} ${this.height}" xmlns="http://www.w3.org/2000/svg">${style}`;

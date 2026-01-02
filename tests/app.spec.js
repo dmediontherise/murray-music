@@ -33,3 +33,27 @@ test('test description and next button flow', async ({ page }) => {
   await expect(drillTitle).not.toBeEmpty();
   await expect(page.locator('#staff-display')).toBeVisible();
 });
+
+test('verify sequence notes are spaced apart', async ({ page }) => {
+  await page.goto('/');
+  await page.setViewportSize({ width: 1280, height: 720 });
+  
+  // Go to "1.1 The Semitone" (Interval/Sequence type)
+  await page.click('text=1.1 The Semitone');
+  await page.click('#start-topic-btn');
+  
+  // Wait for notes to render
+  const notes = page.locator('#staff-display ellipse');
+  await expect(notes).toHaveCount(2); // C4 and C#4
+  
+  const note1 = notes.nth(0);
+  const note2 = notes.nth(1);
+  
+  const cx1 = parseFloat(await note1.getAttribute('cx'));
+  const cx2 = parseFloat(await note2.getAttribute('cx'));
+  
+  console.log(`Note 1 cx: ${cx1}, Note 2 cx: ${cx2}`);
+  
+  // Expect spacing to be ~20px
+  expect(cx2 - cx1).toBeGreaterThan(15);
+});
