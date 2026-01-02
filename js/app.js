@@ -439,9 +439,11 @@ function buildPiano() {
             wCount++;
         }
     }
-    container.style.width = (wCount * wWidth) + 'px';
+    container.style.width = (wCount * wWidth + 120) + 'px'; // include padding
     
     let wIdx = 0;
+    const sidePadding = 60; // Matches CSS padding-left
+
     for(let m=48; m<=83; m++) {
         const noteType = m % 12;
         const isBlack = [1,3,6,8,10].includes(noteType);
@@ -458,15 +460,13 @@ function buildPiano() {
             if (noteType === 8) nudge = 0.05;   // G# Slightly Right (Center-ish)
             if (noteType === 10) nudge = 0.18;  // A# Far Right
 
-            // Calculate % position based on white key index
-            const pct = (wIdx * (100/wCount));
             // Base offset is 0.3 (roughly half black key width relative to white)
-            // We subtract the offset from the anchor. 
-            // To nudge left (negative), we need to subtract MORE (increase the offset value).
-            // To nudge right (positive), we need to subtract LESS.
+            // Anchored to the LEFT edge of the white key to its RIGHT.
             const offsetFactor = 0.3 - nudge;
             
-            k.style.left = `calc(${pct}% - ${wWidth * offsetFactor}px)`; 
+            // Pixel-perfect positioning relative to side padding
+            const leftPx = sidePadding + (wIdx * wWidth) - (wWidth * offsetFactor);
+            k.style.left = leftPx + 'px';
             
             bindKeyEvents(k, m);
             container.appendChild(k);
