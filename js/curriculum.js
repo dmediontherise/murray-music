@@ -104,6 +104,36 @@ const Curriculum = {
         "3.2 Minor Triads": [{type:"triad", notes:["A4","C5","E5"], instruction:"Play A Minor", context:"1-b3-5"}],
         "3.3 Diminished Triads": [{type:"triad", notes:["B4","D5","F5"], instruction:"Play B Diminished", context:"1-b3-b5"}],
         "3.4 Augmented Triads": [{type:"triad", notes:["C4","E4","G#4"], instruction:"Play C Augmented", context:"1-3-#5"}],
+        "3.5 Suspended 2nd": [{type:"triad", notes:["C4","D4","G4"], instruction:"Play Csus2", context:"1-2-5"}],
+        "3.6 Suspended 4th": [{type:"triad", notes:["C4","F4","G4"], instruction:"Play Csus4", context:"1-4-5"}],
+
+        // Section 4: Harmony Basics
+        "4.1 I-IV-V Progression": [
+            {
+                type: "chord-sequence",
+                sequence: [["C4","E4","G4"], ["F4","A4","C5"], ["G4","B4","D5"], ["C4","E4","G4"]],
+                instruction: "Play C - F - G - C",
+                context: "The Rock Foundation"
+            }
+        ],
+        "4.2 ii-V-I Progression": [
+            {
+                type: "chord-sequence",
+                sequence: [["D4","F4","A4"], ["G4","B4","D5","F5"], ["C4","E4","G4","B4"]],
+                instruction: "Play Dm - G7 - Cmaj7",
+                context: "Jazz Foundation"
+            }
+        ],
+        "4.3 1st Inversion": [{type:"triad", notes:["E4","G4","C5"], instruction:"Play C Major / E", context:"3rd in Bass"}],
+        "4.4 2nd Inversion": [{type:"triad", notes:["G4","C5","E5"], instruction:"Play C Major / G", context:"5th in Bass"}],
+        "4.5 Relative Keys": [
+            {
+                type: "chord-sequence",
+                sequence: [["C4","E4","G4"], ["A4","C5","E5"]],
+                instruction: "Play C Major then A Minor",
+                context: "Same notes, different root"
+            }
+        ],
 
         // --- ADVANCED ---
         "1.1 Major 7th Chords": [
