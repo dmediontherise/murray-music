@@ -46,7 +46,7 @@ class SheetRenderer {
         }) : notes;
 
         const startX = 80;
-        const spacing = 35;
+        const spacing = 50;
 
         notesToRender.forEach((note, i) => {
             const step = this.getDiatonicStep(note);

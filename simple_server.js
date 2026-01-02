@@ -20,7 +20,10 @@ const mimeTypes = {
 http.createServer(function (request, response) {
     console.log('request ', request.url);
 
-    let filePath = '.' + request.url;
+    // Remove query string for file path
+    const cleanUrl = request.url.split('?')[0];
+    let filePath = '.' + cleanUrl;
+    
     if (filePath == './') {
         filePath = './index.html';
     }
