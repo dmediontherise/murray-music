@@ -337,19 +337,23 @@ function loadChallenge() {
         const track = document.getElementById('sequence-tracker');
         track.innerHTML = data.sequence.map(() => '<div class="seq-dot"></div>').join('');
         
-        document.getElementById('staff-display').innerHTML = window.Renderer.render(firstNotes);
+        document.getElementById('staff-display').innerHTML = window.Renderer.render(firstNotes, true);
     } else {
-        State.isChord = !(data.type === 'sequence');
+        // Treat Intervals as Sequences for Layout & Input (Melodic)
+        const isSeq = (data.type === 'sequence' || data.type === 'interval');
+        State.isChord = !isSeq;
         
         if (!State.isChord) {
             State.targetSeq = midis;
             State.seqProgress = 0;
             const track = document.getElementById('sequence-tracker');
             track.innerHTML = midis.map(() => '<div class="seq-dot"></div>').join('');
-            document.getElementById('staff-display').innerHTML = window.Renderer.render(notes);
+            // Render as Sequence (false)
+            document.getElementById('staff-display').innerHTML = window.Renderer.render(notes, false);
         } else {
             document.getElementById('sequence-tracker').innerHTML = '';
-            document.getElementById('staff-display').innerHTML = window.Renderer.render(notes);
+            // Render as Chord (true)
+            document.getElementById('staff-display').innerHTML = window.Renderer.render(notes, true);
         }
     }
     

@@ -13,7 +13,7 @@ class SheetRenderer {
         return (octave - 4) * 7 + dIndices[letter];
     }
 
-    render(notes, animate = true) {
+    render(notes, isChord = null, animate = true) {
         // Animation Class
         const animClass = animate ? 'note-anim' : '';
         const style = `
@@ -33,20 +33,28 @@ class SheetRenderer {
         // Treble Clef (Simple Representation)
         svg += `<text x="20" y="${this.topLineY + 30}" font-family="serif" font-size="40" fill="#666">𝄞</text>`;
 
-        const isChord = notes.length > 1 && notes.length <= 5;
-        // Sort notes by pitch
-        const sorted = [...notes].sort((a,b) => {
+        // Determine Layout Mode
+        // Default: 2-5 notes = chord (stacked), otherwise sequence (spaced)
+        // If isChord is explicitly provided, use that.
+        const autoChord = notes.length > 1 && notes.length <= 5;
+        const useChordLayout = isChord !== null ? isChord : autoChord;
+
+        // Sort for chords (clean stacking), preserve order for sequences
+        const notesToRender = useChordLayout ? [...notes].sort((a,b) => {
             const oa = parseInt(a.slice(-1)), ob = parseInt(b.slice(-1));
             return oa === ob ? a.charCodeAt(0) - b.charCodeAt(0) : oa - ob;
-        });
+        }) : notes;
 
         const startX = 80;
         const spacing = 35;
 
-        sorted.forEach((note, i) => {
+        notesToRender.forEach((note, i) => {
             const step = this.getDiatonicStep(note);
             const cy = (this.topLineY + 40) - (step - 2) * (this.lineGap / 2);
-            const cx = isChord ? startX : startX + (i * spacing);
+            
+            // Layout Logic
+            const cx = useChordLayout ? startX : startX + (i * spacing);
+            
             const delay = i * 0.05; // Stagger animation
 
             // Group for animation
