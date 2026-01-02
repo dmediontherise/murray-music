@@ -26,7 +26,7 @@ class SheetRenderer {
         // Determine Layout Mode
         const autoChord = notes.length > 1 && notes.length <= 5;
         const useChordLayout = isChord !== null ? isChord : autoChord;
-
+        
         // Sort for chords (clean stacking), preserve order for sequences
         const notesToRender = useChordLayout ? [...notes].sort((a,b) => {
             const oa = parseInt(a.slice(-1)), ob = parseInt(b.slice(-1));
@@ -133,8 +133,8 @@ const sheet = new SheetRenderer();
 const circle = new CircleRenderer();
 
 window.Renderer = {
-    render: (notes, type="SHEET") => {
-        if (type === "CIRCLE") return circle.render();
-        return sheet.render(notes);
+    render: (notes, isChord = null, animate = true) => {
+        if (isChord === "CIRCLE") return circle.render();
+        return sheet.render(notes, isChord, animate);
     }
 };
