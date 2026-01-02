@@ -206,6 +206,15 @@ function initController() {
             ad.appendChild(div);
         });
     }
+
+    // Scroll Buttons
+    const pWrap = document.getElementById('piano-wrap');
+    document.getElementById('scroll-left').addEventListener('click', () => {
+        pWrap.scrollBy({ left: -200, behavior: 'smooth' });
+    });
+    document.getElementById('scroll-right').addEventListener('click', () => {
+        pWrap.scrollBy({ left: 200, behavior: 'smooth' });
+    });
 }
 
 function setMode(mode) {

@@ -95,6 +95,39 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
     box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
     flex-shrink: 0;
     overflow-x: auto; /* Ensure horizontal scroll on overflow */
+    display: flex;
+    align-items: center;
+}
+
+/* SCROLL BUTTONS */
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 60px;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+    user-select: none;
+    touch-action: manipulation;
+    opacity: 0.8;
+}
+.scroll-btn:active { background: rgba(0,0,0,0.6); }
+#scroll-left { left: 10px; }
+#scroll-right { right: 10px; }
+
+/* Hide scroll buttons on large screens where not needed, optional */
+@media (min-width: 1200px) {
+    .scroll-btn { display: none; }
 }
 
 /* PIANO KEYS - FLEXBOX GRID */
@@ -102,9 +135,9 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
     position: relative;
     height: 100%;
     display: flex; /* Flexbox handles White Keys spacing automatically */
-    padding: 0 20px;
-    max-width: 1200px; /* Prevent stretching too wide on massive screens */
+    padding: 0 60px; /* Add padding so keys aren't covered by buttons */
     margin: 0 auto;
+    width: fit-content; /* Allow container to grow for scrolling */
 }
 
 .white-key {
