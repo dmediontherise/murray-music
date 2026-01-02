@@ -23,19 +23,7 @@ class SheetRenderer {
             </style>
         `;
 
-        let svg = `<svg width="100%" height="100%" viewBox="0 0 ${this.width} ${this.height}" xmlns="http://www.w3.org/2000/svg">${style}`;
-        
-        // Staff Lines
-        for (let i = 0; i < 5; i++) {
-            let y = this.topLineY + (i * this.lineGap);
-            svg += `<line x1="10" y1="${y}" x2="${this.width-10}" y2="${y}" stroke="#444" stroke-width="1" />`;
-        }
-        // Treble Clef (Simple Representation)
-        svg += `<text x="20" y="${this.topLineY + 30}" font-family="serif" font-size="40" fill="#666">𝄞</text>`;
-
         // Determine Layout Mode
-        // Default: 2-5 notes = chord (stacked), otherwise sequence (spaced)
-        // If isChord is explicitly provided, use that.
         const autoChord = notes.length > 1 && notes.length <= 5;
         const useChordLayout = isChord !== null ? isChord : autoChord;
 
@@ -46,7 +34,24 @@ class SheetRenderer {
         }) : notes;
 
         const startX = 80;
-        const spacing = 50;
+        const spacing = 60; // Increased spacing for clarity
+
+        // Calculate Dynamic Width
+        let currentWidth = this.width;
+        if (!useChordLayout) {
+            const requiredWidth = startX + (notesToRender.length * spacing) + 50;
+            currentWidth = Math.max(this.width, requiredWidth);
+        }
+
+        let svg = `<svg width="100%" height="100%" viewBox="0 0 ${currentWidth} ${this.height}" xmlns="http://www.w3.org/2000/svg">${style}`;
+        
+        // Staff Lines
+        for (let i = 0; i < 5; i++) {
+            let y = this.topLineY + (i * this.lineGap);
+            svg += `<line x1="10" y1="${y}" x2="${currentWidth-10}" y2="${y}" stroke="#444" stroke-width="1" />`;
+        }
+        // Treble Clef (Simple Representation)
+        svg += `<text x="20" y="${this.topLineY + 30}" font-family="serif" font-size="40" fill="#666">𝄞</text>`;
 
         notesToRender.forEach((note, i) => {
             const step = this.getDiatonicStep(note);
