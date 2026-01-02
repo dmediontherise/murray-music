@@ -423,57 +423,60 @@ function buildPiano() {
     if (isLandscape) wWidth = 40;
     else if (isMobile) wWidth = 35;
     
-    let wCount = 0;
+    const sidePadding = 60;
+    let currentX = sidePadding;
+    
+    // First pass to count white keys for width? No, we just track currentX.
     
     for(let m=48; m<=83; m++) {
-        const isBlack = [1,3,6,8,10].includes(m%12);
+        const noteType = m % 12;
+        const isBlack = [1,3,6,8,10].includes(noteType);
+        
         if(!isBlack) {
+            // WHITE KEY
             const k = document.createElement('div');
             k.className = 'key white-key';
             k.dataset.midi = m;
             k.innerHTML = `<div class="label-n">${noteNames[m%12]}</div>`;
             const char = Object.keys(keyMap).find(x => keyMap[x] === m);
             if(char) k.innerHTML += `<div class="label-k">${char.toUpperCase()}</div>`;
+            
+            k.style.left = currentX + 'px';
+            k.style.width = wWidth + 'px';
+            
             bindKeyEvents(k, m);
             container.appendChild(k);
-            wCount++;
-        }
-    }
-    container.style.width = (wCount * wWidth + 120) + 'px'; // include padding
-    
-    let wIdx = 0;
-    const sidePadding = 60; // Matches CSS padding-left
-
-    for(let m=48; m<=83; m++) {
-        const noteType = m % 12;
-        const isBlack = [1,3,6,8,10].includes(noteType);
-        if(isBlack) {
+            
+            currentX += wWidth;
+        } else {
+            // BLACK KEY
+            // Position relative to the "Crack" which is at 'currentX' (end of prev white key)
             const k = document.createElement('div');
             k.className = 'key black-key';
             k.dataset.midi = m;
             
-            // Realistic Piano Spacing Nudges (fraction of white key width)
+            const bWidth = wWidth * 0.6;
+            
+            // Nudge Logic
             let nudge = 0;
             if (noteType === 1) nudge = -0.12;  // C# Left
             if (noteType === 3) nudge = 0.12;   // D# Right
             if (noteType === 6) nudge = -0.15;  // F# Left
-            if (noteType === 8) nudge = 0.05;   // G# Slightly Right (Center-ish)
+            if (noteType === 8) nudge = 0.05;   // G# Slightly Right
             if (noteType === 10) nudge = 0.18;  // A# Far Right
-
-            // Base offset is 0.3 (roughly half black key width relative to white)
-            // Anchored to the LEFT edge of the white key to its RIGHT.
-            const offsetFactor = 0.3 - nudge;
             
-            // Pixel-perfect positioning relative to side padding
-            const leftPx = sidePadding + (wIdx * wWidth) - (wWidth * offsetFactor);
+            const nudgePx = nudge * wWidth;
+            const leftPx = currentX - (bWidth / 2) + nudgePx;
+            
             k.style.left = leftPx + 'px';
+            k.style.width = bWidth + 'px';
             
             bindKeyEvents(k, m);
             container.appendChild(k);
-        } else {
-            wIdx++;
         }
     }
+    
+    container.style.width = (currentX + sidePadding) + 'px';
 }
 
 function bindKeyEvents(el, m) {

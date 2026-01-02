@@ -130,18 +130,20 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
     .scroll-btn { display: none; }
 }
 
-/* PIANO KEYS - FLEXBOX GRID */
+/* PIANO KEYS - ABSOLUTE LAYOUT */
 .piano-keys {
     position: relative;
     height: 100%;
-    display: flex; /* Flexbox handles White Keys spacing automatically */
+    /* display: flex; REMOVED for absolute positioning stability */
     padding: 0 60px; /* Add padding so keys aren't covered by buttons */
     margin: 0 auto;
-    width: fit-content; /* Allow container to grow for scrolling */
+    /* Width is set dynamically by JS */
 }
 
 .white-key {
-    flex: 1; /* Grow to fill space evenly */
+    position: absolute;
+    top: 0;
+    /* flex: 1; REMOVED */
     height: 100%;
     background: #fff;
     border: 1px solid #C7C7CC;
@@ -150,7 +152,6 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
     border-bottom-right-radius: 6px;
     z-index: 1;
     cursor: pointer;
-    position: relative;
     /* Visuals */
     background: linear-gradient(to bottom, #fff 0%, #f2f2f7 100%);
     touch-action: none;
@@ -161,7 +162,7 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
 .black-key {
     position: absolute;
     top: 0;
-    width: 3%; /* Relative to container width (approx 60% of white key) */
+    width: 30px; /* Default override by JS */
     height: 60%;
     background: #1c1c1e;
     z-index: 10;
