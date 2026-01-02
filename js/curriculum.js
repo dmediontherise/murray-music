@@ -106,25 +106,76 @@ const Curriculum = {
         "3.4 Augmented Triads": [{type:"triad", notes:["C4","E4","G#4"], instruction:"Play C Augmented", context:"1-3-#5"}],
 
         // --- ADVANCED ---
-        "1.1 Major 7th Chords": [{type:"triad", notes:["C4","E4","G4","B4"], instruction:"Play C Maj7", context:"1-3-5-7"}],
+        "1.1 Major 7th Chords": [
+            {type:"triad", notes:["C4","E4","G4","B4"], instruction:"Play C Maj7", context:"1-3-5-7"},
+            {type:"triad", notes:["F4","A4","C5","E5"], instruction:"Play F Maj7", context:"Subdominant"}
+        ],
         "1.2 Dominant 7th Chords": [
             {
                 type: "chord-sequence",
-                sequence: [
-                    ["G4","B4","D5","F5"], 
-                    ["C4","E4","G4","B4"]
-                ],
+                sequence: [["G4","B4","D5","F5"], ["C4","E4","G4","B4"]],
                 instruction: "Play G7 then Cmaj7",
                 context: "V7 - I Resolution"
             },
             {type:"triad", notes:["G4","B4","D5","F5"], instruction:"Play G7", context:"1-3-5-b7"}
         ],
+        "1.3 Minor 7th Chords": [
+            {type:"triad", notes:["C4","Eb4","G4","Bb4"], instruction:"Play C Minor 7", context:"1-b3-5-b7"},
+            {type:"triad", notes:["A4","C5","E5","G5"], instruction:"Play A Minor 7", context:"Aeolian Home"}
+        ],
+        "1.4 Half-Diminished 7th": [{type:"triad", notes:["B4","D5","F5","A5"], instruction:"Play Bm7b5", context:"ii of Minor"}],
+        "1.5 Fully Diminished 7th": [{type:"triad", notes:["B4","D5","F5","Ab5"], instruction:"Play Bdim7", context:"Symmetrical Tension"}],
+        "1.6 Adding the 9th": [{type:"triad", notes:["C4","E4","G4","B4","D5"], instruction:"Play Cmaj9", context:"Rich Color"}],
+        "1.7 11ths and 13ths": [{type:"triad", notes:["G4","F5","A5","B5","E6"], instruction:"Play G13", context:"Dominant Power"}],
+
+        "2.1 Tonic Function": [{type:"triad", notes:["C4","E4","G4","B4"], instruction:"Play Cmaj7", context:"Home"}],
+        "2.2 Dominant Function": [{type:"triad", notes:["G4","B4","D5","F5"], instruction:"Play G7", context:"Tension"}],
+        "2.3 Subdominant Function": [{type:"triad", notes:["F4","A4","C5","E5"], instruction:"Play Fmaj7", context:"Departure"}],
+        "2.4 Secondary Dominants": [
+            {
+                type: "chord-sequence",
+                sequence: [["A4","C#5","E5","G5"], ["D4","F4","A4","C5"]],
+                instruction: "Play A7 then Dm7",
+                context: "V7/ii -> ii"
+            }
+        ],
         "2.5 Tritone Substitution": [
             {type:"triad", notes:["G4","B4","D5","F5"], instruction:"Play G7", context:"Original"},
             {type:"triad", notes:["C#4","F4","G#4","B4"], instruction:"Play Db7", context:"Substitute"}
         ],
+        "2.6 Passing Diminished": [
+            {
+                type: "chord-sequence",
+                sequence: [["C4","E4","G4","B4"], ["C#4","E4","G4","Bb4"], ["D4","F4","A4","C5"]],
+                instruction: "Play Cmaj7 - C#dim7 - Dm7",
+                context: "Chromatic Connector"
+            }
+        ],
+
+        "3.1 Ionian (Major)": [{type:"sequence", notes:["C4","D4","E4","F4","G4","A4","B4","C5"], instruction:"Play C Ionian", context:"Major"}],
+        "3.2 Dorian (So What)": [{type:"sequence", notes:["D4","E4","F4","G4","A4","B4","C5","D5"], instruction:"Play D Dorian", context:"Minor with Major 6"}],
+        "3.3 Phrygian (Spanish)": [{type:"sequence", notes:["E4","F4","G4","A4","B4","C5","D5","E5"], instruction:"Play E Phrygian", context:"Flat 2nd"}],
+        "3.4 Lydian (Dreamy)": [{type:"sequence", notes:["F4","G4","A4","B4","C5","D5","E5","F5"], instruction:"Play F Lydian", context:"Sharp 4th"}],
+        "3.5 Mixolydian (Rock)": [{type:"sequence", notes:["G4","A4","B4","C5","D5","E5","F5","G5"], instruction:"Play G Mixolydian", context:"Flat 7th"}],
+        "3.6 Aeolian (Minor)": [{type:"sequence", notes:["A4","B4","C5","D5","E5","F5","G5","A5"], instruction:"Play A Aeolian", context:"Natural Minor"}],
+        "3.7 Locrian (Unstable)": [{type:"sequence", notes:["B4","C5","D5","E5","F5","G5","A5","B5"], instruction:"Play B Locrian", context:"b2 and b5"}],
+
         "4.1 Shell Voicings": [{type:"interval", notes:["E4","B4"], instruction:"Play E-B (3rd & 7th of Cmaj7)", context:"Rootless Shell"}],
-        "4.3 Quartal Harmony": [{type:"sequence", notes:["D4","G4","C5","F5"], instruction:"Play So What Voicing", context:"Stacked 4ths"}]
+        "4.2 Rootless Voicings": [{type:"triad", notes:["E4","A4","D5","G5"], instruction:"Play Rootless C6/9", context:"Quartal Stack"}],
+        "4.3 Quartal Harmony": [{type:"triad", notes:["D4","G4","C5","F5"], instruction:"Play So What Voicing", context:"Stacked 4ths"}],
+        "4.4 Upper Structures": [{type:"triad", notes:["C4","E4","G4","F#4","A4","C#5"], instruction:"Play Cmaj7 + Dmaj", context:"Polychord Lydian"}],
+        "4.5 Altered Dominants": [{type:"triad", notes:["G4","B4","D#5","F5"], instruction:"Play G7#5", context:"Augmented Dominant"}],
+        "4.6 Whole Tone Scale": [{type:"sequence", notes:["C4","D4","E4","F#4","G#4","Bb4","C5"], instruction:"Play Whole Tone Scale", context:"Dreamy"}],
+        "4.7 Diminished Scale": [{type:"sequence", notes:["C4","D4","Eb4","F4","F#4","G#4","A4","B4","C5"], instruction:"Play Half-Whole Diminished", context:"Octatonic"}],
+        "4.8 Bebop Enclosures": [{type:"sequence", notes:["D4","B3","C4"], instruction:"Play D-B-C (Target C)", context:"Enclosure"}],
+        "4.9 Coltrane Changes": [
+            {
+                type: "chord-sequence",
+                sequence: [["C4","E4","G4","B4"], ["Eb4","G4","Bb4","Db5"], ["Ab4","C5","Eb5","G5"]],
+                instruction: "Play Cmaj7 - Eb7 - Abmaj7",
+                context: "Major 3rd Cycles"
+            }
+        ]
     }
 };
 
