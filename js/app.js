@@ -616,9 +616,13 @@ window.addEventListener('load', () => {
 
     if (navigator.requestMIDIAccess) {
         navigator.requestMIDIAccess().then(m => {
-            document.getElementById('midi-badge').innerText = "MIDI Ready";
-            document.getElementById('midi-badge').classList.add('connected');
-            for (let i of m.inputs.values()) i.onmidimessage=msg=>{ const [c,n,v]=msg.data; if(c===144&&v>0)noteOn(n); if(c===128||(c===144&&v===0))noteOff(n); };
+            const b = document.getElementById('midi-badge');
+            if (b) { b.innerText = "MIDI Ready"; b.classList.add('connected'); }
+            for (let i of m.inputs.values()) i.onmidimessage = msg => { const [c,n,v]=msg.data; if(c===144&&v>0)noteOn(n); if(c===128||(c===144&&v===0))noteOff(n); };
+        }).catch(err => {
+            console.warn('Web MIDI access denied or unavailable:', err);
+            const b = document.getElementById('midi-badge');
+            if (b) { b.innerText = "MIDI Off"; b.classList.remove('connected'); }
         });
     }
 });
