@@ -241,19 +241,161 @@ test.describe('Responsive Layout & UI Requirements (Task 003)', () => {
     expect(activeSize).toBeGreaterThan(0);
   });
 
-  test('Task 004 Requirement 11: clicking #scroll-right at 390x844 scrolls piano-wrap horizontally', async ({ page }) => {
+  for (const vp of viewports) {
+    test(`Task 004b Requirement 2: #piano-wrap does not wrap to second row (scrollHeight <= clientHeight + 1) at ${vp.name}`, async ({ page }) => {
+      await page.goto('/');
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      await page.locator('#piano-keys').waitFor();
+
+      const scrollInfo = await page.evaluate(() => {
+        const wrap = document.getElementById('piano-wrap');
+        return {
+          scrollHeight: wrap.scrollHeight,
+          clientHeight: wrap.clientHeight
+        };
+      });
+
+      expect(scrollInfo.scrollHeight).toBeLessThanOrEqual(scrollInfo.clientHeight + 1);
+    });
+
+    test(`Task 004b Requirement 4: zero key/button rect overlap at ${vp.name}`, async ({ page }) => {
+      await page.goto('/');
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      await page.locator('#piano-keys').waitFor();
+
+      const overlaps = await page.evaluate(() => {
+        const wrap = document.getElementById('piano-wrap');
+        const wrapRect = wrap.getBoundingClientRect();
+        const buttons = Array.from(document.querySelectorAll('.scroll-btn')).filter(btn => {
+          const style = window.getComputedStyle(btn);
+          return style.display !== 'none' && style.visibility !== 'hidden';
+        });
+        const keys = Array.from(document.querySelectorAll('.key'));
+        const detectedOverlaps = [];
+
+        buttons.forEach(btn => {
+          const btnRect = btn.getBoundingClientRect();
+          keys.forEach(k => {
+            const r = k.getBoundingClientRect();
+            const keyLeft = Math.max(r.left, wrapRect.left);
+            const keyRight = Math.min(r.right, wrapRect.right);
+            const keyTop = Math.max(r.top, wrapRect.top);
+            const keyBottom = Math.min(r.bottom, wrapRect.bottom);
+
+            if (keyLeft < keyRight && keyTop < keyBottom) {
+              const intersects = !(
+                keyRight <= btnRect.left ||
+                keyLeft >= btnRect.right ||
+                keyBottom <= btnRect.top ||
+                keyTop >= btnRect.bottom
+              );
+
+              if (intersects) {
+                const overlapWidth = Math.min(keyRight, btnRect.right) - Math.max(keyLeft, btnRect.left);
+                const overlapHeight = Math.min(keyBottom, btnRect.bottom) - Math.max(keyTop, btnRect.top);
+                detectedOverlaps.push({
+                  buttonId: btn.id,
+                  midi: parseInt(k.dataset.midi),
+                  note: k.querySelector('.label-n')?.innerText || k.dataset.midi,
+                  overlapWidth,
+                  overlapHeight,
+                  overlapArea: overlapWidth * overlapHeight
+                });
+              }
+            }
+          });
+        });
+
+        return detectedOverlaps;
+      });
+
+      expect(overlaps).toEqual([]);
+    });
+  }
+
+  test('Task 004b Requirement 8: #scroll-right is reachable before click and scrolls horizontally without vertical scroll at 390x844', async ({ page }) => {
     await page.goto('/');
     await page.setViewportSize({ width: 390, height: 844 });
     await page.locator('#piano-keys').waitFor();
 
-    const initialScroll = await page.evaluate(() => document.getElementById('piano-wrap').scrollLeft);
+    const reachability = await page.evaluate(() => {
+      const btn = document.getElementById('scroll-right');
+      const wrap = document.getElementById('piano-wrap');
+      const btnRect = btn.getBoundingClientRect();
+      const wrapRect = wrap.getBoundingClientRect();
+      const cx = btnRect.x + btnRect.width / 2;
+      const cy = btnRect.y + btnRect.height / 2;
+
+      const hitEl = document.elementFromPoint(cx, cy);
+      const isHit = hitEl && (hitEl === btn || btn.contains(hitEl));
+
+      return {
+        insideViewport: btnRect.top >= 0 && btnRect.bottom <= window.innerHeight,
+        insideWrapVertical: btnRect.top >= wrapRect.top - 1 && btnRect.bottom <= wrapRect.bottom + 1,
+        isHit,
+        hitElTag: hitEl ? (hitEl.id || hitEl.tagName) : 'null',
+        initialScrollLeft: wrap.scrollLeft,
+        initialScrollTop: wrap.scrollTop
+      };
+    });
+
+    expect(reachability.insideViewport).toBe(true);
+    expect(reachability.insideWrapVertical).toBe(true);
+    expect(reachability.isHit).toBe(true);
 
     await page.click('#scroll-right');
 
     await expect.poll(async () => {
       return page.evaluate(() => document.getElementById('piano-wrap').scrollLeft);
-    }).toBeGreaterThan(initialScroll);
+    }).toBeGreaterThan(reachability.initialScrollLeft);
+
+    const finalScrollTop = await page.evaluate(() => document.getElementById('piano-wrap').scrollTop);
+    expect(finalScrollTop).toBe(reachability.initialScrollTop);
+  });
+
+  test('Task 004b Requirement 9: #scroll-left is reachable before click and scrolls back horizontally without vertical scroll at 390x844', async ({ page }) => {
+    await page.goto('/');
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.locator('#piano-keys').waitFor();
+
+    await page.evaluate(() => {
+      document.getElementById('piano-wrap').scrollLeft = 200;
+    });
+
+    const reachability = await page.evaluate(() => {
+      const btn = document.getElementById('scroll-left');
+      const wrap = document.getElementById('piano-wrap');
+      const btnRect = btn.getBoundingClientRect();
+      const wrapRect = wrap.getBoundingClientRect();
+      const cx = btnRect.x + btnRect.width / 2;
+      const cy = btnRect.y + btnRect.height / 2;
+
+      const hitEl = document.elementFromPoint(cx, cy);
+      const isHit = hitEl && (hitEl === btn || btn.contains(hitEl));
+
+      return {
+        insideViewport: btnRect.top >= 0 && btnRect.bottom <= window.innerHeight,
+        insideWrapVertical: btnRect.top >= wrapRect.top - 1 && btnRect.bottom <= wrapRect.bottom + 1,
+        isHit,
+        initialScrollLeft: wrap.scrollLeft,
+        initialScrollTop: wrap.scrollTop
+      };
+    });
+
+    expect(reachability.insideViewport).toBe(true);
+    expect(reachability.insideWrapVertical).toBe(true);
+    expect(reachability.isHit).toBe(true);
+
+    await page.click('#scroll-left');
+
+    await expect.poll(async () => {
+      return page.evaluate(() => document.getElementById('piano-wrap').scrollLeft);
+    }).toBeLessThan(reachability.initialScrollLeft);
+
+    const finalScrollTop = await page.evaluate(() => document.getElementById('piano-wrap').scrollTop);
+    expect(finalScrollTop).toBe(reachability.initialScrollTop);
   });
 
 });
+
 
