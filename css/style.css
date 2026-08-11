@@ -100,37 +100,47 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
     flex-shrink: 0;
     overflow-x: auto; /* Ensure horizontal scroll on overflow */
     overflow-y: hidden;
-    display: flex;
-    align-items: center;
     box-sizing: border-box;
     width: 100%;
 }
 
 /* SCROLL BUTTONS */
 .scroll-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 60px;
-    background: rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 6px;
+    width: 32px;
+    height: 32px;
+    background: rgba(28, 28, 30, 0.85);
     color: white;
     border: none;
-    font-size: 2rem;
+    font-size: 1.2rem;
+    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     z-index: 100;
-    border-radius: 8px;
+    border-radius: 6px;
     backdrop-filter: blur(4px);
     user-select: none;
     touch-action: manipulation;
-    opacity: 0.8;
+    opacity: 0.85;
+    transition: opacity 0.15s, background 0.15s;
+    box-sizing: border-box;
 }
-.scroll-btn:active { background: rgba(0,0,0,0.6); }
-#scroll-left { left: 10px; }
-#scroll-right { right: 10px; }
+.scroll-btn:hover { opacity: 1; background: rgba(28, 28, 30, 0.95); }
+.scroll-btn:active { opacity: 1; background: rgba(0, 0, 0, 0.95); }
+
+#scroll-left {
+    float: left;
+    left: 0;
+    margin-right: -32px;
+}
+#scroll-right {
+    float: right;
+    right: 0;
+    margin-left: -32px;
+}
 
 /* Hide scroll buttons on large screens where not needed, optional */
 @media (min-width: 1200px) {
@@ -256,6 +266,7 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
     #menu-btn { display: inline-flex; }
     
     #piano-wrap { height: 160px; justify-content: flex-start; overflow-x: auto; }
+    .scroll-btn { height: 160px; width: 32px; font-size: 1.3rem; }
     .piano-keys { padding: 0; margin: 0; }
     
     #analysis-bar {
@@ -273,6 +284,7 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
 @media (max-width: 900px) and (orientation: landscape) {
     header { height: 36px; padding: 0 10px; }
     #piano-wrap { height: 120px; overflow-x: auto; }
+    .scroll-btn { height: 120px; width: 30px; font-size: 1.1rem; }
     #scroll-view { padding-bottom: 130px; padding-top: 5px; }
     #analysis-bar { bottom: 128px; font-size: 0.8rem; padding: 4px 12px; }
     

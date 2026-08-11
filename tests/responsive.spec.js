@@ -190,4 +190,70 @@ test.describe('Responsive Layout & UI Requirements (Task 003)', () => {
     expect(parseFloat(opacity)).toBeGreaterThan(0);
   });
 
+  for (const vp of viewports) {
+    test(`Task 004 Requirement 1 & 2: all 36 keys are hit-testable at center at ${vp.name}`, async ({ page }) => {
+      await page.goto('/');
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      await page.locator('#piano-keys').waitFor();
+
+      const failedKeys = await page.evaluate(() => {
+        const keys = Array.from(document.querySelectorAll('.key'));
+        const failures = [];
+
+        keys.forEach(k => {
+          k.scrollIntoView({ inline: 'center', block: 'nearest' });
+          const midi = parseInt(k.dataset.midi);
+          const rect = k.getBoundingClientRect();
+          const cx = rect.x + rect.width / 2;
+          const cy = rect.y + rect.height / 2;
+
+          const hitEl = document.elementFromPoint(cx, cy);
+          const isHit = hitEl && (hitEl === k || k.contains(hitEl));
+
+          if (!isHit) {
+            failures.push({
+              midi,
+              note: k.querySelector('.label-n')?.innerText || midi,
+              hitElement: hitEl ? (hitEl.id || hitEl.className || hitEl.tagName) : 'null'
+            });
+          }
+        });
+
+        return failures;
+      });
+
+      expect(failedKeys).toEqual([]);
+    });
+  }
+
+  test('Task 004 Requirement 10: clicking C3 (MIDI 48) without force at 390x844 activates the note', async ({ page }) => {
+    await page.goto('/');
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.locator('#piano-keys').waitFor();
+
+    await page.click('#latch-btn');
+
+    const c3 = page.locator('.key[data-midi="48"]');
+    await c3.click();
+
+    await expect(c3).toHaveClass(/active/);
+    const activeSize = await page.evaluate(() => State.active.size);
+    expect(activeSize).toBeGreaterThan(0);
+  });
+
+  test('Task 004 Requirement 11: clicking #scroll-right at 390x844 scrolls piano-wrap horizontally', async ({ page }) => {
+    await page.goto('/');
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.locator('#piano-keys').waitFor();
+
+    const initialScroll = await page.evaluate(() => document.getElementById('piano-wrap').scrollLeft);
+
+    await page.click('#scroll-right');
+
+    await expect.poll(async () => {
+      return page.evaluate(() => document.getElementById('piano-wrap').scrollLeft);
+    }).toBeGreaterThan(initialScroll);
+  });
+
 });
+
