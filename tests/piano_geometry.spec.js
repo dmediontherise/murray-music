@@ -69,8 +69,80 @@ test('verify black key alignment relative to white keys', async ({ page }) => {
   // G# is usually centered or slightly right.
   expect(diffG).toBeLessThan(10);
   expect(diffG).toBeGreaterThan(-5);
-  
-  // Check ordering visually: F5.left < F#5.left < G5.left is NOT true because black key is on top.
-  // But F#5.left should be > F5.left and F#5.right < G5.right roughly? 
-  // No, F#5 overlaps both.
 });
+
+const viewports = [
+  { width: 390, height: 844, name: 'phone portrait (390x844)' },
+  { width: 820, height: 1180, name: 'tablet (820x1180)' },
+  { width: 1280, height: 800, name: 'desktop (1280x800)' }
+];
+
+for (const vp of viewports) {
+  test(`verify geometry of all 15 black keys and key width uniformity at ${vp.name}`, async ({ page }) => {
+    await page.goto('/');
+    await page.setViewportSize({ width: vp.width, height: vp.height });
+    await page.locator('#piano-keys').waitFor();
+
+    const keyGeometry = await page.evaluate(() => {
+      const keys = Array.from(document.querySelectorAll('.key'));
+      return keys.map(k => {
+        const rect = k.getBoundingClientRect();
+        return {
+          midi: parseInt(k.dataset.midi),
+          isBlack: k.classList.contains('black-key'),
+          x: rect.x,
+          y: rect.y,
+          width: rect.width,
+          height: rect.height,
+          right: rect.x + rect.width,
+          center: rect.x + rect.width / 2
+        };
+      });
+    });
+
+    const whiteKeys = keyGeometry.filter(k => !k.isBlack).sort((a, b) => a.midi - b.midi);
+    const blackKeys = keyGeometry.filter(k => k.isBlack).sort((a, b) => a.midi - b.midi);
+
+    // Requirement 4: Every white key has same width and black key has same width (within 1px)
+    const firstWhiteWidth = whiteKeys[0].width;
+    for (const w of whiteKeys) {
+      expect(Math.abs(w.width - firstWhiteWidth)).toBeLessThanOrEqual(1.01);
+    }
+    const firstBlackWidth = blackKeys[0].width;
+    for (const b of blackKeys) {
+      expect(Math.abs(b.width - firstBlackWidth)).toBeLessThanOrEqual(1.01);
+    }
+
+    // Requirement 2 & 3: Check all 15 black keys
+    expect(blackKeys.length).toBe(15);
+
+    for (let i = 0; i < blackKeys.length; i++) {
+      const bk = blackKeys[i];
+      const leftWhite = whiteKeys.find(w => w.midi === bk.midi - 1);
+      const rightWhite = whiteKeys.find(w => w.midi === bk.midi + 1);
+
+      expect(leftWhite).toBeDefined();
+      expect(rightWhite).toBeDefined();
+
+      const crack = (leftWhite.right + rightWhite.x) / 2;
+      const diff = bk.center - crack;
+      const whiteWidth = leftWhite.width;
+
+      // Requirement 2: center within 20% of white key width from crack
+      expect(Math.abs(diff)).toBeLessThanOrEqual(0.20 * whiteWidth);
+
+      // Requirement 3: black key inside outer edges of neighbouring white keys
+      expect(bk.x).toBeGreaterThanOrEqual(leftWhite.x - 1);
+      expect(bk.right).toBeLessThanOrEqual(rightWhite.right + 1);
+
+      // Requirement 3: no horizontal overlap between adjacent black keys
+      if (i < blackKeys.length - 1) {
+        const nextBk = blackKeys[i + 1];
+        if (nextBk.midi - bk.midi <= 3) {
+          expect(bk.right).toBeLessThanOrEqual(nextBk.x + 0.1);
+        }
+      }
+    }
+  });
+}
+

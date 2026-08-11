@@ -18,11 +18,15 @@
 <div id="overlay" onclick="toggleMenu()"></div>
 
 <header>
-    <div style="display:flex; align-items:center; gap:15px;">
-        <button id="menu-btn" onclick="toggleMenu()">☰</button>
+    <div class="header-left">
+        <button id="menu-btn" onclick="toggleMenu()" aria-label="Toggle Menu">☰</button>
         <div class="brand">Murray's Theory</div>
     </div>
-    <div id="midi-badge">MIDI Off</div>
+    <div class="header-right">
+        <button id="latch-btn" class="btn btn-sec" onclick="toggleLatch()">Latch</button>
+        <button id="clear-btn" class="btn btn-sec" onclick="clearAllNotes()">Clear</button>
+        <div id="midi-badge">MIDI Off</div>
+    </div>
 </header>
 
 <div id="app">

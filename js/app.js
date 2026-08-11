@@ -1,5 +1,7 @@
 // MURRAY'S THEORY v9.5 (Polyphony Fix)
 
+const MAX_POLYPHONY = 8;
+
 const State = {
     active: new Set(),
     targetNotes: [],
@@ -15,7 +17,10 @@ const State = {
     targetChain: null,
     chainIdx: 0,
     // Track physical keys separately to prevent ghosting logic errors
-    heldKeys: new Set() 
+    heldKeys: new Set(),
+    isLatched: false,
+    pointerNotes: new Set(),
+    keyboardNotes: new Set()
 };
 
 // --- AUDIO ENGINE ---
@@ -71,9 +76,23 @@ function stopNote(m) {
 }
 
 // --- LOGIC ---
+function triggerCapTell() {
+    const bar = document.getElementById('analysis-bar');
+    if (bar) {
+        bar.classList.add('capped');
+        setTimeout(() => {
+            bar.classList.remove('capped');
+        }, 500);
+    }
+}
+
 function noteOn(m) {
     // Only trigger if note isn't already active (Logic gate)
     if (State.active.has(m)) return;
+    if (State.active.size >= MAX_POLYPHONY) {
+        triggerCapTell();
+        return;
+    }
     
     State.active.add(m);
     playNote(m);
@@ -86,6 +105,8 @@ function noteOff(m) {
     if (!State.active.has(m)) return;
     
     State.active.delete(m);
+    State.pointerNotes.delete(m);
+    State.keyboardNotes.delete(m);
     stopNote(m);
     updateUI();
 }
@@ -353,6 +374,7 @@ function loadChallenge() {
         State.isChord = !isSeq;
         
         if (!State.isChord) {
+            toggleLatch(false);
             State.targetSeq = midis;
             State.seqProgress = 0;
             const track = document.getElementById('sequence-tracker');
@@ -412,61 +434,83 @@ window.toggleMenu = toggleMenu;
 const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 const keyMap = {'z':48,'s':49,'x':50,'d':51,'c':52,'v':53,'g':54,'b':55,'h':56,'n':57,'j':58,'m':59,',':60,'q':60,'2':61,'w':62,'3':63,'e':64,'r':65,'5':66,'t':67,'6':68,'y':69,'7':70,'u':71,'i':72,'9':73,'o':74,'p':76};
 
+// Pitch class offset table (fraction of white key width from the crack between white keys).
+// Standard acoustic piano geometry: C# & F# lean slightly left, D# & A# lean slightly right, G# is centered.
+const BLACK_KEY_OFFSETS = {
+    1: -0.07,  // C#
+    3:  0.07,  // D#
+    6: -0.08,  // F#
+    8:  0.00,  // G#
+    10: 0.08   // A#
+};
+
+// Number of white keys in an octave before the crack for each black key pitch class
+const WHITE_KEYS_BEFORE_CRACK = {
+    1: 1,  // C# sits after C (1st white key in octave)
+    3: 2,  // D# sits after D (2nd white key in octave)
+    6: 4,  // F# sits after F (4th white key in octave)
+    8: 5,  // G# sits after G (5th white key in octave)
+    10: 6  // A# sits after A (6th white key in octave)
+};
+
 function buildPiano() {
     const container = document.getElementById('piano-keys');
+    if (!container) return;
     container.innerHTML = '';
     
-    const isMobile = window.innerWidth <= 768;
-    const isLandscape = window.matchMedia("(orientation: landscape)").matches && window.innerWidth <= 900;
+    const viewportWidth = window.innerWidth;
+    const isMobile = viewportWidth <= 768;
+    const isLandscape = window.matchMedia("(orientation: landscape)").matches && viewportWidth <= 900;
     
-    let wWidth = 50;
-    if (isLandscape) wWidth = 40;
-    else if (isMobile) wWidth = 35;
+    let wWidth = 48; // Desktop default (at 1280px width, fits all octaves or > 2 octaves)
+    if (isMobile) {
+        wWidth = 32; // Mobile (390px): white key 32px (>= 28px target), black key 19px (>= 18px target)
+    } else if (isLandscape || viewportWidth <= 1024) {
+        wWidth = 38; // Tablet / small landscape
+    }
     
-    const sidePadding = 60;
-    let currentX = sidePadding;
+    const bWidth = Math.round(wWidth * 0.6);
+    const sidePadding = 20;
     
-    // First pass to count white keys for width? No, we just track currentX.
-    
-    for(let m=48; m<=83; m++) {
-        const noteType = m % 12;
-        const isBlack = [1,3,6,8,10].includes(noteType);
-        
-        if(!isBlack) {
-            // WHITE KEY
+    // First pass: Build white keys
+    let whiteIndex = 0;
+    for (let m = 48; m <= 83; m++) {
+        const pc = m % 12;
+        const isBlack = [1, 3, 6, 8, 10].includes(pc);
+        if (!isBlack) {
             const k = document.createElement('div');
             k.className = 'key white-key';
             k.dataset.midi = m;
-            k.innerHTML = `<div class="label-n">${noteNames[m%12]}</div>`;
+            k.innerHTML = `<div class="label-n">${noteNames[pc]}</div>`;
             const char = Object.keys(keyMap).find(x => keyMap[x] === m);
-            if(char) k.innerHTML += `<div class="label-k">${char.toUpperCase()}</div>`;
+            if (char) k.innerHTML += `<div class="label-k">${char.toUpperCase()}</div>`;
             
-            k.style.left = currentX + 'px';
+            const leftPx = sidePadding + whiteIndex * wWidth;
+            k.style.left = leftPx + 'px';
             k.style.width = wWidth + 'px';
             
             bindKeyEvents(k, m);
             container.appendChild(k);
-            
-            currentX += wWidth;
-        } else {
-            // BLACK KEY
-            // Position relative to the "Crack" which is at 'currentX' (end of prev white key)
+            whiteIndex++;
+        }
+    }
+    
+    // Second pass: Build black keys based on declared geometry
+    for (let m = 48; m <= 83; m++) {
+        const pc = m % 12;
+        const isBlack = [1, 3, 6, 8, 10].includes(pc);
+        if (isBlack) {
             const k = document.createElement('div');
             k.className = 'key black-key';
             k.dataset.midi = m;
             
-            const bWidth = wWidth * 0.6;
+            const octave = Math.floor((m - 48) / 12);
+            const whiteKeysBefore = octave * 7 + WHITE_KEYS_BEFORE_CRACK[pc];
+            const crackX = sidePadding + whiteKeysBefore * wWidth;
             
-            // Nudge Logic
-            let nudge = 0;
-            if (noteType === 1) nudge = -0.12;  // C# Left
-            if (noteType === 3) nudge = 0.12;   // D# Right
-            if (noteType === 6) nudge = -0.15;  // F# Left
-            if (noteType === 8) nudge = 0.05;   // G# Slightly Right
-            if (noteType === 10) nudge = 0.18;  // A# Far Right
-            
-            const nudgePx = nudge * wWidth;
-            const leftPx = currentX - (bWidth / 2) + nudgePx;
+            const offsetRatio = BLACK_KEY_OFFSETS[pc] || 0;
+            const blackCenter = crackX + offsetRatio * wWidth;
+            const leftPx = Math.round(blackCenter - bWidth / 2);
             
             k.style.left = leftPx + 'px';
             k.style.width = bWidth + 'px';
@@ -476,22 +520,68 @@ function buildPiano() {
         }
     }
     
-    container.style.width = (currentX + sidePadding) + 'px';
+    const totalWidth = sidePadding * 2 + whiteIndex * wWidth;
+    container.style.width = totalWidth + 'px';
 }
 
+function toggleLatch(forceState) {
+    const nextState = forceState !== undefined ? forceState : !State.isLatched;
+    if (State.isLatched && !nextState) {
+        clearAllNotes();
+    }
+    State.isLatched = nextState;
+    const btn = document.getElementById('latch-btn');
+    if (btn) {
+        btn.classList.toggle('active', State.isLatched);
+    }
+}
+window.toggleLatch = toggleLatch;
+
+function clearAllNotes() {
+    const activeMidis = Array.from(State.active);
+    activeMidis.forEach(m => {
+        stopNote(m);
+    });
+    State.active.clear();
+    State.heldKeys.clear();
+    State.pointerNotes.clear();
+    State.keyboardNotes.clear();
+    updateUI();
+}
+window.clearAllNotes = clearAllNotes;
+
 function bindKeyEvents(el, m) {
-    const on = (e) => { e.preventDefault(); noteOn(m); };
-    const off = (e) => { e.preventDefault(); noteOff(m); };
-    
+    const handlePress = (e) => {
+        e.preventDefault();
+        if (State.isLatched) {
+            if (State.active.has(m)) {
+                noteOff(m);
+            } else {
+                State.pointerNotes.add(m);
+                noteOn(m);
+            }
+        } else {
+            State.pointerNotes.add(m);
+            noteOn(m);
+        }
+    };
+
+    const handleRelease = (e) => {
+        e.preventDefault();
+        if (!State.isLatched) {
+            noteOff(m);
+        }
+    };
+
     // Mouse
-    el.addEventListener('mousedown', on); 
-    el.addEventListener('mouseup', off); 
-    el.addEventListener('mouseleave', off);
+    el.addEventListener('mousedown', handlePress); 
+    el.addEventListener('mouseup', handleRelease); 
+    el.addEventListener('mouseleave', handleRelease);
     
     // Touch - Passive false critical for preventing scrolling
-    el.addEventListener('touchstart', on, {passive:false}); 
-    el.addEventListener('touchend', off, {passive:false});
-    el.addEventListener('touchcancel', off, {passive:false});
+    el.addEventListener('touchstart', handlePress, {passive:false}); 
+    el.addEventListener('touchend', handleRelease, {passive:false});
+    el.addEventListener('touchcancel', handleRelease, {passive:false});
 }
 
 window.addEventListener('load', () => {
@@ -504,7 +594,11 @@ window.addEventListener('load', () => {
         const k = e.key.toLowerCase();
         if(keyMap[k] && !State.heldKeys.has(k)) {
             State.heldKeys.add(k);
-            noteOn(keyMap[k]);
+            const m = keyMap[k];
+            if (!State.active.has(m)) {
+                State.keyboardNotes.add(m);
+                noteOn(m);
+            }
         }
     });
     
@@ -512,7 +606,11 @@ window.addEventListener('load', () => {
         const k = e.key.toLowerCase();
         if(State.heldKeys.has(k)) {
             State.heldKeys.delete(k);
-            noteOff(keyMap[k]);
+            const m = keyMap[k];
+            if (State.keyboardNotes.has(m)) {
+                State.keyboardNotes.delete(m);
+                noteOff(m);
+            }
         }
     });
 

@@ -30,11 +30,15 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
+    padding: 0 16px;
     z-index: 100;
+    box-sizing: border-box;
+    max-width: 100%;
 }
-.brand { font-weight: 600; font-size: 1.1rem; letter-spacing: -0.01em; }
-#midi-badge { font-size: 0.7rem; font-weight: 600; background: #E5E5EA; padding: 4px 10px; border-radius: 12px; color: #8E8E93; }
+.header-left { display: flex; align-items: center; gap: 12px; }
+.header-right { display: flex; align-items: center; gap: 8px; }
+.brand { font-weight: 600; font-size: 1.05rem; letter-spacing: -0.01em; white-space: nowrap; }
+#midi-badge { font-size: 0.7rem; font-weight: 600; background: #E5E5EA; padding: 4px 10px; border-radius: 12px; color: #8E8E93; white-space: nowrap; min-height: 32px; display: flex; align-items: center; box-sizing: border-box; }
 #midi-badge.connected { background: #34C759; color: white; }
 
 /* LAYOUT */
@@ -95,8 +99,11 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
     box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
     flex-shrink: 0;
     overflow-x: auto; /* Ensure horizontal scroll on overflow */
+    overflow-y: hidden;
     display: flex;
     align-items: center;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 /* SCROLL BUTTONS */
@@ -134,8 +141,6 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
 .piano-keys {
     position: relative;
     height: 100%;
-    /* display: flex; REMOVED for absolute positioning stability */
-    padding: 0 60px; /* Add padding so keys aren't covered by buttons */
     margin: 0 auto;
     /* Width is set dynamically by JS */
 }
@@ -143,7 +148,6 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
 .white-key {
     position: absolute;
     top: 0;
-    /* flex: 1; REMOVED */
     height: 100%;
     background: #fff;
     border: 1px solid #C7C7CC;
@@ -152,7 +156,7 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
     border-bottom-right-radius: 6px;
     z-index: 1;
     cursor: pointer;
-    /* Visuals */
+    box-sizing: border-box;
     background: linear-gradient(to bottom, #fff 0%, #f2f2f7 100%);
     touch-action: none;
 }
@@ -162,7 +166,6 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
 .black-key {
     position: absolute;
     top: 0;
-    width: 30px; /* Default override by JS */
     height: 60%;
     background: #1c1c1e;
     z-index: 10;
@@ -170,6 +173,7 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
     border-bottom-right-radius: 4px;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
     cursor: pointer;
+    box-sizing: border-box;
     background: linear-gradient(to bottom, #3a3a3c 0%, #000 100%);
 }
 .black-key.active { background: linear-gradient(var(--accent), #004499); transform: translateY(2px); }
@@ -182,7 +186,7 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
 /* ANALYSIS BAR */
 #analysis-bar {
     position: absolute;
-    bottom: 200px;
+    bottom: 195px;
     left: 50%; transform: translateX(-50%);
     background: rgba(28, 28, 30, 0.9);
     color: white;
@@ -195,33 +199,71 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
     pointer-events: none;
     white-space: nowrap;
     z-index: 90;
+    box-sizing: border-box;
 }
-#analysis-bar.visible { opacity: 1; }
+#analysis-bar.visible, #analysis-bar.capped { opacity: 1; }
+#analysis-bar.capped { background: rgba(255, 59, 48, 0.95); color: white; }
 
 /* BUTTONS */
 .btn { border: none; padding: 12px 28px; border-radius: 20px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.1s; }
 .btn-pri { background: var(--accent); color: white; }
 .btn-pri:active { transform: scale(0.96); }
 .btn-sec { background: #E5E5EA; color: #1c1c1e; margin-right: 10px; }
+#latch-btn, #clear-btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 14px;
+    margin-right: 0;
+    min-height: 34px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+#latch-btn.active {
+    background: var(--accent);
+    color: white;
+}
+
+#menu-btn {
+    min-width: 36px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 0;
+}
 
 /* MOBILE */
 @media (max-width: 768px) {
+    header { padding: 0 10px; }
+    .header-left { gap: 8px; }
+    .header-right { gap: 6px; }
+    .brand { font-size: 0.95rem; }
+    #latch-btn, #clear-btn { padding: 4px 8px; font-size: 0.8rem; min-width: 38px; min-height: 32px; }
+    #midi-badge { padding: 4px 6px; font-size: 0.65rem; min-height: 32px; }
+
     #sidebar { position: fixed; top: 0; bottom: 0; left: 0; transform: translateX(-100%); width: 80%; box-shadow: 10px 0 40px rgba(0,0,0,0.2); }
     #sidebar.open { transform: translateX(0); }
     #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 40; backdrop-filter: blur(2px); }
     #overlay.visible { display: block; }
     
-    #menu-btn { display: block; background: none; border: none; font-size: 1.4rem; cursor: pointer; }
+    #menu-btn { display: inline-flex; }
     
     #piano-wrap { height: 160px; justify-content: flex-start; overflow-x: auto; }
-    .piano-keys { width: auto; padding: 0; margin: 0; } /* Auto width for smaller keys */
-    .white-key { flex: none; width: 35px; } /* Smaller width for portrait */
-    .black-key { width: 22px; }
-
+    .piano-keys { padding: 0; margin: 0; }
+    
     #analysis-bar {
-        bottom: 170px;
+        bottom: 172px;
         width: 90%;
-        left: 0; right: 0; margin: 0 auto; transform: none; /* Centering Fix */
+        max-width: 340px;
+        left: 50%;
+        transform: translateX(-50%);
         white-space: normal;
         text-align: center;
         padding: 8px 16px;
@@ -229,20 +271,18 @@ h2 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.02em; }
 }
 
 @media (max-width: 900px) and (orientation: landscape) {
-    header { height: 32px; padding: 0 10px; }
-    #piano-wrap { height: 110px; overflow-x: auto; }
-    #scroll-view { padding-bottom: 120px; padding-top: 5px; }
-    #analysis-bar { bottom: 120px; font-size: 0.8rem; padding: 4px 12px; }
+    header { height: 36px; padding: 0 10px; }
+    #piano-wrap { height: 120px; overflow-x: auto; }
+    #scroll-view { padding-bottom: 130px; padding-top: 5px; }
+    #analysis-bar { bottom: 128px; font-size: 0.8rem; padding: 4px 12px; }
     
     .card { padding: 10px; margin: 0; max-width: 100%; border: none; box-shadow: none; }
     h2 { font-size: 1.1rem; margin-bottom: 4px; }
     .subtitle { margin-bottom: 6px; font-size: 0.85rem; }
     #staff-display { height: 70px; margin: 5px 0; }
-    
-    .white-key { width: 40px; }
-    .black-key { width: 24px; height: 55%; }
 }
 
 @media (min-width: 769px) {
     #menu-btn { display: none; }
 }
+
