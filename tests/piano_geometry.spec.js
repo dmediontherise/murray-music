@@ -36,28 +36,32 @@ test('verify black key alignment relative to white keys', async ({ page }) => {
   const fs5 = '[data-midi="78"]';
 
   // Verify F#5 Position
-  // It should be roughly centered on the line between F5 and G5.
+  // It should be positioned at -0.08 * whiteWidth relative to the crack between F5 and G5.
   // The "Crack" is F5.right (which should equal G5.left).
   
-  const f5Right = await getRight(f5);
+  const f5Box = await page.locator(f5).boundingBox();
+  const f5Right = f5Box.x + f5Box.width;
   const g5Left = await getLeft(g5);
   const fs5Center = await getCenter(fs5);
+  const whiteWidth = f5Box.width;
 
   console.log(`F5 Right: ${f5Right}, G5 Left: ${g5Left}, F#5 Center: ${fs5Center}`);
 
   // The crack is approx (f5Right + g5Left) / 2 (they should be touching).
   const crackF = (f5Right + g5Left) / 2;
   
-  // F# is usually nudged LEFT (-0.15 * width). Width is ~50. So ~7.5px left.
+  // F# is nudged LEFT (-0.08 * whiteWidth per BLACK_KEY_OFFSETS table).
   const diffF = fs5Center - crackF;
   console.log(`F#5 offset from crack: ${diffF}`);
 
-  // It should be within a reasonable range (e.g. -15px to +5px).
-  expect(diffF).toBeLessThan(5); 
-  expect(diffF).toBeGreaterThan(-20);
+  const expectedDiffF = -0.08 * whiteWidth;
+  // Tolerance of 1.0px accounts for rounding at Math.round(blackCenter - bWidth / 2) in app.js
+  // and subpixel bounding box values, while remaining tight enough to fail if offset table is disabled
+  // (where expectedDiffF is ~ -3.84px at 1280x720, producing ~3.84px error when zeroed).
+  expect(Math.abs(diffF - expectedDiffF)).toBeLessThanOrEqual(1.0);
 
   // Verify G#5 Position
-  // Crack between G5 and A5
+  // Crack between G5 and A5. G# offset is 0.00 * whiteWidth (centered).
   const g5Right = await getRight(g5);
   const a5Left = await getLeft(a5);
   const gs5Center = await getCenter(gs5);
@@ -66,9 +70,8 @@ test('verify black key alignment relative to white keys', async ({ page }) => {
   const diffG = gs5Center - crackG;
   console.log(`G#5 offset from crack: ${diffG}`);
 
-  // G# is usually centered or slightly right.
-  expect(diffG).toBeLessThan(10);
-  expect(diffG).toBeGreaterThan(-5);
+  const expectedDiffG = 0.00 * whiteWidth;
+  expect(Math.abs(diffG - expectedDiffG)).toBeLessThanOrEqual(1.0);
 });
 
 const viewports = [
@@ -116,6 +119,14 @@ for (const vp of viewports) {
     // Requirement 2 & 3: Check all 15 black keys
     expect(blackKeys.length).toBe(15);
 
+    const BLACK_KEY_OFFSETS = {
+      1: -0.07,  // C#
+      3:  0.07,  // D#
+      6: -0.08,  // F#
+      8:  0.00,  // G#
+      10: 0.08   // A#
+    };
+
     for (let i = 0; i < blackKeys.length; i++) {
       const bk = blackKeys[i];
       const leftWhite = whiteKeys.find(w => w.midi === bk.midi - 1);
@@ -127,6 +138,14 @@ for (const vp of viewports) {
       const crack = (leftWhite.right + rightWhite.x) / 2;
       const diff = bk.center - crack;
       const whiteWidth = leftWhite.width;
+
+      const pc = bk.midi % 12;
+      const expectedOffset = BLACK_KEY_OFFSETS[pc] * whiteWidth;
+
+      // Tolerance of 1.0px accounts for up to 0.5px rounding from Math.round(blackCenter - bWidth / 2) in app.js
+      // plus subpixel bounding box alignment, while remaining tight enough to fail at the 390px viewport
+      // if offsets are zeroed out (where 0.07 * 32px = 2.24px offset, producing >= 1.74px error when zeroed).
+      expect(Math.abs(diff - expectedOffset)).toBeLessThanOrEqual(1.0);
 
       // Requirement 2: center within 20% of white key width from crack
       expect(Math.abs(diff)).toBeLessThanOrEqual(0.20 * whiteWidth);
