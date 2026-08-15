@@ -81,3 +81,51 @@ test('task 002c music-theory spelling fixes (G7alt and So What) are accurate', a
   expect(accuracyData.soWhatNotes).toEqual(["D4","G4","C5","F5","A5"]);
 });
 
+test('chord-sequence drills pin every step, not just the first', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => window.Curriculum && window.Theory);
+
+  const sequences = await page.evaluate(() => {
+    const C = window.Curriculum;
+    const s23 = C.CHALLENGES['2.3 Subdominant Function'].find(c => c.type === 'chord-sequence').sequence;
+    const s25 = C.CHALLENGES['2.5 Tritone Substitution'].find(c => c.type === 'chord-sequence').sequence;
+    return { s23, s25 };
+  });
+
+  expect(sequences.s23).toEqual([["F4","A4","C5","E5"],["D4","F4","A4","C5"]]);
+  expect(sequences.s25).toEqual([["D4","F4","A4","C5"],["C#4","F4","G#4","B4"],["C4","E4","G4","B4"]]);
+});
+
+test('task 009 fixes: C7 + F#maj has distinct MIDI pitches and G7alt context is pinned', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => window.Curriculum && window.Theory);
+
+  const result = await page.evaluate(() => {
+    const C = window.Curriculum;
+    const T = window.Theory;
+
+    const c7fsharp = C.CHALLENGES['4.4 Upper Structures'].find(c => c.instruction === 'Play C7 + F#maj');
+    const g7alt = C.CHALLENGES['4.5 Altered Dominants'].find(c => /G7alt/.test(c.instruction));
+
+    const notes = c7fsharp ? c7fsharp.notes : [];
+    const midiValues = notes.map(n => T.getMidi(n));
+    const uniqueMidiPitches = new Set(midiValues);
+
+    return {
+      c7fsharpNotes: notes,
+      c7fsharpContext: c7fsharp ? c7fsharp.context : null,
+      noteCount: notes.length,
+      distinctPitchCount: uniqueMidiPitches.size,
+      midiValues,
+      g7altContext: g7alt ? g7alt.context : null
+    };
+  });
+
+  expect(result.c7fsharpNotes).toEqual(["C4","E4","G4","Bb4","C#5","F#5","A#5"]);
+  expect(result.c7fsharpContext).toBe("7-Note Altered Polychord");
+  expect(result.noteCount).toBe(7);
+  expect(result.distinctPitchCount).toBe(result.noteCount);
+  expect(result.g7altContext).toBe("5-Note Altered Dominant");
+});
+
+

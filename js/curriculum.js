@@ -493,13 +493,13 @@ const Curriculum = {
         ],
         "4.4 Upper Structures": [
             {type:"triad", notes:["C4","E4","G4","B4","D5","F#4","A4"], instruction:"Play Cmaj7 + Dmaj", context:"Polychord Lydian"},
-            {type:"triad", notes:["C4","E4","G4","Bb4","F#4","A#4","C#5"], instruction:"Play C7 + F#maj", context:"7-Note Altered Polychord"},
+            {type:"triad", notes:["C4","E4","G4","Bb4","C#5","F#5","A#5"], instruction:"Play C7 + F#maj", context:"7-Note Altered Polychord"},
             {type:"triad", notes:["C4","E4","G4","Bb4","A4","C#5","E5"], instruction:"Play C7 + Amaj", context:"7-Note Upper Structure"}
         ],
         "4.5 Altered Dominants": [
             {type:"triad", notes:["G4","B4","D#5","F5"], instruction:"Play G7#5", context:"Augmented Dominant"},
             {type:"triad", notes:["G4","B4","Db5","F5"], instruction:"Play G7b5", context:"Flat-5 Dominant"},
-            {type:"triad", notes:["G4","B4","Eb5","F5","Ab5"], instruction:"Play G7alt (b9, b13)", context:"5-Note Fully Altered Dominant"}
+            {type:"triad", notes:["G4","B4","Eb5","F5","Ab5"], instruction:"Play G7alt (b9, b13)", context:"5-Note Altered Dominant"}
         ],
         "4.6 Whole Tone Scale": [
             {type:"sequence", notes:["C4","D4","E4","F#4","G#4","Bb4","C5"], instruction:"Play Whole Tone Scale", context:"Dreamy"},

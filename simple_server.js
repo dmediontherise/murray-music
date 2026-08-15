@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 const mimeTypes = {
     '.html': 'text/html',
@@ -17,7 +17,7 @@ const mimeTypes = {
     '.mp3': 'audio/mpeg'
 };
 
-http.createServer(function (request, response) {
+const server = http.createServer(function (request, response) {
     console.log('request ', request.url);
 
     // Remove query string for file path
@@ -51,6 +51,18 @@ http.createServer(function (request, response) {
         }
     });
 
-}).listen(PORT);
+});
 
-console.log(`Server running at http://localhost:${PORT}/`);
+server.on('error', function (err) {
+    if (err.code === 'EADDRINUSE') {
+        console.error(`Port ${PORT} is already in use.`);
+        process.exit(1);
+    } else {
+        console.error(err);
+        process.exit(1);
+    }
+});
+
+server.listen(PORT, '127.0.0.1', function () {
+    console.log(`Server running at http://127.0.0.1:${PORT}/`);
+});
