@@ -1,13 +1,15 @@
 const { defineConfig } = require('@playwright/test');
 
+const port = process.env.PORT || 8080;
+
 module.exports = defineConfig({
   testDir: './tests',
   webServer: {
     command: 'node simple_server.js',
-    port: 8080,
-    reuseExistingServer: !process.env.CI,
+    port: port,
+    reuseExistingServer: false,
   },
   use: {
-    baseURL: 'http://localhost:8080',
+    baseURL: `http://localhost:${port}`,
   },
 });
